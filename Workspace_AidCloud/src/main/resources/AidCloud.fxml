@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          id="dbGrid"
+          vgap="5"
+          hgap="5">
+
+    <padding>
+        <Insets top="5" left="5" right="5" bottom="5"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <Text id="lblURL"
+          text="AidCloud URL"
+          GridPane.rowIndex="0"
+          GridPane.columnIndex="0"/>
+    <TextField id="txfAidCloudURL"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1"/>
+    <TextField id="txfAidCloudPort"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="2"/>
+
+    <Text id="lblDBURL"
+          text="DB URL"
+          GridPane.rowIndex="1"
+          GridPane.columnIndex="0"/>
+    <TextField id="txfDBURL"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="1"/>
+    <TextField id="txfDBPort"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="2"/>
+    <ComboBox id="cboDBType"
+              GridPane.rowIndex="1"
+              GridPane.columnIndex="3"/>
+
+    <Text id="lblDBName"
+          text="DB Name"
+          GridPane.rowIndex="2"
+          GridPane.columnIndex="0"/>
+    <TextField id="txfDBName"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="1"
+               GridPane.columnSpan="3"/>
+
+    <Text id="lblDBUser"
+          text="DB User"
+          GridPane.rowIndex="3"
+          GridPane.columnIndex="0"/>
+    <TextField id="txfDBUser"
+               GridPane.rowIndex="3"
+               GridPane.columnIndex="1"
+               GridPane.columnSpan="3"/>
+
+    <Text id="lblDBPwd"
+          text="DB Password"
+          GridPane.rowIndex="4"
+          GridPane.columnIndex="0"/>
+    <PasswordField id="pwfDBPwd"
+                   GridPane.rowIndex="4"
+                   GridPane.columnIndex="1"
+                   GridPane.columnSpan="3"/>
+
+    <Button id="btnLaunch"
+            text="Start"
+            GridPane.rowIndex="5"
+            GridPane.columnIndex="0"
+            GridPane.columnSpan="4"
+            GridPane.halignment="CENTER"/>
+
+</GridPane>

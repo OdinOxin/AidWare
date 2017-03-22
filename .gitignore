@@ -1,0 +1,6 @@
+*.idea
+*/lib
+*/target
+*.bat
+*ToDo*.txt
+Workspace_AidDesk/src/main/java/de/odinoxin/aidcloud/service/
