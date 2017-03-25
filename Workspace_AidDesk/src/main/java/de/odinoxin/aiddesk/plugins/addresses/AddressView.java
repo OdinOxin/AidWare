@@ -27,6 +27,8 @@ public class AddressView extends RecordView<Address> {
 
     @Override
     public void bind(Address record) {
+        if(record == null)
+            return;
         this.txfStreet.textProperty().bindBidirectional(record.streetProperty());
         this.txftxfHsNo.textProperty().bindBidirectional(record.hsNoProperty());
         this.txftxfZip.textProperty().bindBidirectional(record.zipProperty());

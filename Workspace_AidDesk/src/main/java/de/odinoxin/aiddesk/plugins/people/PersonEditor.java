@@ -14,7 +14,7 @@ public class PersonEditor extends RecordEditor<Person> {
 
     public PersonEditor(Person person) {
         super("People");
-        this.setView(new PersonView());
+        this.setView(new PersonView(this));
         this.getView().bind(person);
         this.attemptLoadRecord(person);
         if (person == null)

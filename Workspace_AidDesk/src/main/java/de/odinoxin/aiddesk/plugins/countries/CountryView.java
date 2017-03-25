@@ -21,6 +21,8 @@ public class CountryView extends RecordView<Country> {
 
     @Override
     public void bind(Country record) {
+        if(record == null)
+            return;
         this.txfAlpha2.textProperty().bindBidirectional(record.alpha2Property());
         this.txfAlpha3.textProperty().bindBidirectional(record.alpha3Property());
         this.txfName.textProperty().bindBidirectional(record.nameProperty());

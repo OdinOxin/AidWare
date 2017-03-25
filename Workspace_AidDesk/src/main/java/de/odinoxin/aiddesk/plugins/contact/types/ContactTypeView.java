@@ -18,6 +18,8 @@ public class ContactTypeView extends RecordView<ContactType> {
 
     @Override
     public void bind(ContactType record) {
+        if(record == null)
+            return;
         this.txfName.textProperty().bindBidirectional(record.nameProperty());
         this.txfCode.textProperty().bindBidirectional(record.codeProperty());
         this.txfRegex.textProperty().bindBidirectional(record.regexProperty());

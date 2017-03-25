@@ -20,6 +20,8 @@ public class ContactInformationView extends RecordView<ContactInformation> {
 
     @Override
     public void bind(ContactInformation record) {
+        if(record == null)
+            return;
         this.refBoxContactType.recordProperty().bindBidirectional(record.contactTypeProperty());
         this.txfInformation.textProperty().bindBidirectional(record.informationProperty());
     }

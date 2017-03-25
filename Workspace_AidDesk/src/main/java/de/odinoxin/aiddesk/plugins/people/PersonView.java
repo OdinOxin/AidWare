@@ -23,14 +23,17 @@ public class PersonView extends RecordView<Person> {
     RefBox<Address> refBoxAddress;
     RefList<ContactInformation> refListContactInformation;
 
-    public PersonView() {
+    public PersonView(PersonEditor editor) {
         super("/plugins/personeditor.fxml");
 
         this.txfName = (TextField) this.root.lookup("#txfName");
         this.txfForename = (TextField) this.root.lookup("#txfForename");
         this.txfCode = (TextField) this.root.lookup("#txfCode");
         this.btnPwd = (Button) this.root.lookup("#btnPwd");
-//        this.btnPwd.setOnAction(ev -> new PwdEditor(this));
+        if (editor != null)
+            this.btnPwd.setOnAction(ev -> new PwdEditor(editor));
+        else
+            this.btnPwd.setDisable(true);
         Plugin.setButtonEnter(this.btnPwd);
         this.refBoxLanguage = (RefBox<Language>) this.root.lookup("#refBoxLanguage");
         this.refBoxLanguage.setProvider(new LanguageProvider());
