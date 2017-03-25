@@ -3,7 +3,6 @@
 <?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aiddesk.controls.translateable.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
@@ -71,15 +70,13 @@
         </padding>
     </Separator>
 
-    <ScrollPane id="scpDetails"
-                fitToWidth="true"
-                fitToHeight="true"
-                VBox.vgrow="ALWAYS"
-                style="-fx-background-color: transparent">
-        <padding>
-            <Insets left="-5" right="-5"/>
-        </padding>
-    </ScrollPane>
+    <VBox id="boxDetails"
+          VBox.vgrow="ALWAYS"
+          style="-fx-background-color: transparent">
+        <!--<padding>-->
+            <!--<Insets left="-5" right="-5"/>-->
+        <!--</padding>-->
+    </VBox>
 
     <Separator id="sepButtons">
         <padding>

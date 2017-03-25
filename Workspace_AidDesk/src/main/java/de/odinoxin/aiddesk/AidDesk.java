@@ -1,5 +1,7 @@
 package de.odinoxin.aiddesk;
 
+import de.odinoxin.aiddesk.dialogs.merging.MergeDialog;
+import de.odinoxin.aiddesk.plugins.people.PersonMerger;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -29,5 +31,8 @@ public class AidDesk extends Application {
 //        System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
 //        System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
         new Login(); //Start Login plugin
+//        MergeDialog dialog = new PersonMerger();
+//        dialog.setRecords(null, null, null);
+//        dialog.show();
     }
 }

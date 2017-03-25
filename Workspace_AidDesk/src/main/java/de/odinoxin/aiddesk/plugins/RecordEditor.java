@@ -9,12 +9,11 @@ import de.odinoxin.aiddesk.dialogs.Callback;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import javafx.beans.property.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
@@ -28,6 +27,8 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
     private TextField txfId;
     private RefBox<T> refBoxKey;
     private Button btnRefresh;
+    private Pane detailsView;
+    private RecordView<T> view;
     private Button btnSave;
     private Button btnDiscard;
     private Button btnDelete;
@@ -46,12 +47,10 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
      */
     private T original;
 
-    public RecordEditor(String res, String title) {
+    public RecordEditor(String title) {
         super("/plugins/recordeditor.fxml", title);
 
         try {
-            Node recordView = FXMLLoader.load(RecordEditor.class.getResource(res));
-
             this.provider = this.initProvider();
 
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
@@ -66,7 +65,7 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
             this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
             this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.provider.get(this.getRecordItem().getId())));
             this.txfId = (TextField) this.root.lookup("#txfId");
-            ((ScrollPane) this.root.lookup("#scpDetails")).setContent(recordView);
+            this.detailsView = ((VBox) this.root.lookup("#boxDetails"));
 
             this.btnSave = (Button) this.root.lookup("#btnSave");
             this.btnSave.setOnAction(ev ->
@@ -138,9 +137,31 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
     }
 
     /**
+     * Sets the view and binds the current record to it.
+     *
+     * @param recordView The view
+     */
+    protected void setView(RecordView<T> recordView) {
+        this.view = recordView;
+        this.view.bind(this.getRecordItem());
+        this.detailsView.getChildren().clear();
+        this.detailsView.getChildren().add(view);
+        this.sizeToScene();
+        this.centerOnScreen();
+    }
+
+    /**
+     * Returns the view.
+     *
+     * @return The view.
+     */
+    protected RecordView<T> getView() {
+        return this.view;
+    }
+
+    /**
      * Discard all current changes, by restoring the original item.
      */
-
     private void discard() {
         this.attemptLoadRecord(this.original);
     }
@@ -172,8 +193,10 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
         Callback apply = () ->
         {
             this.setRecord(record);
-            if (this.getRecordItem() != null)
-                this.bind();
+            if (this.getRecordItem() != null) {
+                view.bind(this.getRecordItem());
+                this.getRecordItem().setChanged(false);
+            }
         };
 
         if (this.getRecordItem() != null && this.getRecordItem().isChanged()) {
@@ -190,7 +213,10 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
     /**
      * Called, when a new record was created.
      */
-    protected abstract void onNew();
+    protected void onNew()
+    {
+        this.view.requestFocus();
+    }
 
     /**
      * Called, when the current record should be saved.
@@ -254,11 +280,6 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
             this.changedWrapper.unbind();
         this.changedWrapper.bind(record.changedProperty());
     }
-
-    /**
-     * Binding UI elements to the (new) record.
-     */
-    protected abstract void bind();
 
     /**
      * Initializes the provider.

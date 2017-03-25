@@ -4,28 +4,19 @@ import de.odinoxin.aidcloud.provider.LanguageProvider;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
+import de.odinoxin.aiddesk.plugins.people.Person;
 import javafx.application.Platform;
 import javafx.scene.control.TextField;
 
 public class LanguageEditor extends RecordEditor<Language> {
 
-    private TextField txfName;
-    private TextField txfCode;
-
     public LanguageEditor(Language language) {
-        super("/plugins/languageeditor.fxml", "Languages");
-
-        this.txfName = (TextField) this.root.lookup("#txfName");
-        this.txfCode = (TextField) this.root.lookup("#txfCode");
-
+        super("Languages");
+        setView(new LanguageView());
+        getView().bind(language);
         this.attemptLoadRecord(language);
         if (language == null)
             this.onNew();
-    }
-
-    @Override
-    protected void onNew() {
-        Platform.runLater(() -> this.txfName.requestFocus());
     }
 
     @Override
@@ -44,13 +35,6 @@ public class LanguageEditor extends RecordEditor<Language> {
             this.setRecordItem(new Language());
         else
             this.setRecordItem(language);
-    }
-
-    @Override
-    protected void bind() {
-        this.txfName.textProperty().bindBidirectional(this.getRecordItem().nameProperty());
-        this.txfCode.textProperty().bindBidirectional(this.getRecordItem().codeProperty());
-        this.getRecordItem().setChanged(false);
     }
 
     @Override

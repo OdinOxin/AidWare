@@ -1,0 +1,60 @@
+package de.odinoxin.aiddesk.plugins.people;
+
+import de.odinoxin.aidcloud.provider.AddressProvider;
+import de.odinoxin.aidcloud.provider.ContactInformationProvider;
+import de.odinoxin.aidcloud.provider.LanguageProvider;
+import de.odinoxin.aiddesk.controls.refbox.RefBox;
+import de.odinoxin.aiddesk.controls.reflist.RefList;
+import de.odinoxin.aiddesk.controls.translateable.Button;
+import de.odinoxin.aiddesk.plugins.Plugin;
+import de.odinoxin.aiddesk.plugins.RecordView;
+import de.odinoxin.aiddesk.plugins.addresses.Address;
+import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
+import de.odinoxin.aiddesk.plugins.languages.Language;
+import javafx.scene.control.TextField;
+
+public class PersonView extends RecordView<Person> {
+
+    TextField txfForename;
+    TextField txfName;
+    TextField txfCode;
+    Button btnPwd;
+    RefBox<Language> refBoxLanguage;
+    RefBox<Address> refBoxAddress;
+    RefList<ContactInformation> refListContactInformation;
+
+    public PersonView() {
+        super("/plugins/personeditor.fxml");
+
+        this.txfName = (TextField) this.root.lookup("#txfName");
+        this.txfForename = (TextField) this.root.lookup("#txfForename");
+        this.txfCode = (TextField) this.root.lookup("#txfCode");
+        this.btnPwd = (Button) this.root.lookup("#btnPwd");
+//        this.btnPwd.setOnAction(ev -> new PwdEditor(this));
+        Plugin.setButtonEnter(this.btnPwd);
+        this.refBoxLanguage = (RefBox<Language>) this.root.lookup("#refBoxLanguage");
+        this.refBoxLanguage.setProvider(new LanguageProvider());
+        this.refBoxAddress = (RefBox<Address>) this.root.lookup("#refBoxAddress");
+        this.refBoxAddress.setProvider(new AddressProvider());
+        this.refListContactInformation = (RefList<ContactInformation>) this.root.lookup("#refListContactInformation");
+        this.refListContactInformation.setProvider(new ContactInformationProvider());
+    }
+
+    @Override
+    public void bind(Person record) {
+        if (record == null)
+            return;
+        this.txfForename.textProperty().bindBidirectional(record.forenameProperty());
+        this.txfName.textProperty().bindBidirectional(record.nameProperty());
+        this.txfCode.textProperty().bindBidirectional(record.codeProperty());
+        this.btnPwd.disableProperty().bind(record.idProperty().isEqualTo(0));
+        this.refBoxLanguage.recordProperty().bindBidirectional(record.languageProperty());
+        this.refBoxAddress.recordProperty().bindBidirectional(record.addressProperty());
+        this.refListContactInformation.bindBidirectional(record.contactInformationProperty());
+    }
+
+    @Override
+    public void requestFocus() {
+        this.txfForename.requestFocus();
+    }
+}
