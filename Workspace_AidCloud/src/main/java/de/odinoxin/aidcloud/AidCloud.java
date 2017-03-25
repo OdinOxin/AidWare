@@ -31,6 +31,15 @@ public class AidCloud extends Application {
 
     private static final String[] knownArgs = {"AidCloudURL", "AidCloudPort", "DBType", "DBURL", "DBPort", "DBName", "DBUser", "DBPwd"};
 
+    TextField txfAidCloudURL;
+    TextField txfAidCloudPort;
+    TextField txfDBURL;
+    TextField txfDBPort;
+    TextField txfDBName;
+    ComboBox<DBSetting> cboDBType;
+    TextField txfDBUser;
+    PasswordField pwfDBPwd;
+
     public static void main(String[] args) {
         AidCloud.launch(args);
     }
@@ -43,14 +52,14 @@ public class AidCloud extends Application {
         primaryStage.setOnCloseRequest(ev -> System.exit(0));
         GridPane root = FXMLLoader.load(AidCloud.class.getResource("/AidCloud.fxml"));
 
-        TextField txfAidCloudURL = (TextField) root.lookup("#txfAidCloudURL");
-        TextField txfAidCloudPort = (TextField) root.lookup("#txfAidCloudPort");
-        TextField txfDBURL = (TextField) root.lookup("#txfDBURL");
-        TextField txfDBPort = (TextField) root.lookup("#txfDBPort");
-        TextField txfDBName = (TextField) root.lookup("#txfDBName");
-        ComboBox<DBSetting> cboDBType = (ComboBox<DBSetting>) root.lookup("#cboDBType");
-        TextField txfDBUser = (TextField) root.lookup("#txfDBUser");
-        PasswordField pwfDBPwd = (PasswordField) root.lookup("#pwfDBPwd");
+        txfAidCloudURL = (TextField) root.lookup("#txfAidCloudURL");
+        txfAidCloudPort = (TextField) root.lookup("#txfAidCloudPort");
+        txfDBURL = (TextField) root.lookup("#txfDBURL");
+        txfDBPort = (TextField) root.lookup("#txfDBPort");
+        txfDBName = (TextField) root.lookup("#txfDBName");
+        cboDBType = (ComboBox<DBSetting>) root.lookup("#cboDBType");
+        txfDBUser = (TextField) root.lookup("#txfDBUser");
+        pwfDBPwd = (PasswordField) root.lookup("#pwfDBPwd");
 
         if (inputArgs.containsKey(AidCloud.knownArgs[0]))
             txfAidCloudURL.setText(inputArgs.get(AidCloud.knownArgs[0]));
@@ -73,11 +82,13 @@ public class AidCloud extends Application {
                 ex.printStackTrace();
             }
         }
+        txfAidCloudURL.setOnAction(ev -> launchAidCloud(primaryStage));
 
         if (inputArgs.containsKey(AidCloud.knownArgs[1]))
             txfAidCloudPort.setText(inputArgs.get(AidCloud.knownArgs[1]));
         else
             txfAidCloudPort.setText(String.valueOf(AidCloud.PORT));
+        txfAidCloudPort.setOnAction(ev -> launchAidCloud(primaryStage));
 
         cboDBType.setCellFactory(param -> new ListCell<DBSetting>() {
             @Override
@@ -106,77 +117,84 @@ public class AidCloud extends Application {
             txfDBURL.setText(inputArgs.get(AidCloud.knownArgs[3]));
         else
             txfDBURL.setText("localhost");
+        txfDBURL.setOnAction(ev -> launchAidCloud(primaryStage));
 
         if (inputArgs.containsKey(AidCloud.knownArgs[4]))
             txfDBPort.setText(inputArgs.get(AidCloud.knownArgs[4]));
+        txfDBPort.setOnAction(ev -> launchAidCloud(primaryStage));
 
         if (inputArgs.containsKey(AidCloud.knownArgs[5]))
             txfDBName.setText(inputArgs.get(AidCloud.knownArgs[5]));
         else
             txfDBName.setText("AidCloud");
+        txfDBName.setOnAction(ev -> launchAidCloud(primaryStage));
 
         if (inputArgs.containsKey(AidCloud.knownArgs[6]))
             txfDBUser.setText(inputArgs.get(AidCloud.knownArgs[6]));
+        txfDBUser.setOnAction(ev -> launchAidCloud(primaryStage));
 
         if (inputArgs.containsKey(AidCloud.knownArgs[7]))
             pwfDBPwd.setText(inputArgs.get(AidCloud.knownArgs[7]));
+        pwfDBPwd.setOnAction(ev -> launchAidCloud(primaryStage));
 
         Button btnLaunch = (Button) root.lookup("#btnLaunch");
-        btnLaunch.setOnAction(ev -> {
-            Scene setup = primaryStage.getScene();
-
-            double width = primaryStage.getWidth();
-            double height = primaryStage.getHeight();
-            primaryStage.setScene(new Scene(new ProgressIndicator()));
-            primaryStage.setWidth(width);
-            primaryStage.setHeight(height);
-            new Thread(() -> {
-                try {
-                    Configuration cfg = new Configuration();
-                    DBSetting dbSetting = cboDBType.getSelectionModel().getSelectedItem();
-                    cfg.setProperty("hibernate.dialect", dbSetting.getDialect());
-                    cfg.setProperty("hibernate.connection.driver_class", dbSetting.getDriverClass());
-                    cfg.setProperty("hibernate.connection.url", String.format(cboDBType.getSelectionModel().getSelectedItem().getConFormat(), txfDBURL.getText(), txfDBPort.getText() == null || txfDBPort.getText().isEmpty() ? "" : ":" + txfDBPort.getText(), txfDBName.getText()));
-                    cfg.setProperty("hibernate.", txfDBUser.getText());
-                    cfg.setProperty("hibernate.connection.username", txfDBUser.getText());
-                    cfg.setProperty("hibernate.connection.password", pwfDBPwd.getText());
-                    DB.setSessionFactory(cfg.configure().buildSessionFactory());
-                    String url = txfAidCloudURL.getText();
-                    if (url.startsWith(AidCloud.ADDRESS_PREFIX))
-                        url = url.substring(AidCloud.ADDRESS_PREFIX.length());
-                    if (url.endsWith("/"))
-                        url = url.substring(0, url.length() - 1);
-                    String port = txfAidCloudPort.getText();
-                    if (port == null || port.isEmpty())
-                        port = String.valueOf(AidCloud.PORT);
-                    String adr = String.format(AidCloud.ADDRESS, url, port);
-                    Endpoint.publish(adr + "Login", new Login());
-                    Endpoint.publish(adr + "LanguageProvider", new LanguageProvider());
-                    Endpoint.publish(adr + "Translator", Translator.get());
-                    Endpoint.publish(adr + "PersonProvider", new PersonProvider());
-                    Endpoint.publish(adr + "AddressProvider", new AddressProvider());
-                    Endpoint.publish(adr + "CountryProvider", new CountryProvider());
-                    Endpoint.publish(adr + "ContactTypeProvider", new ContactTypeProvider());
-                    Endpoint.publish(adr + "ContactInformationProvider", new ContactInformationProvider());
-                    Platform.runLater(() -> {
-                        Button btnExit = new Button("Exit");
-                        btnExit.setDefaultButton(true);
-                        btnExit.setOnAction(event -> System.exit(0));
-                        primaryStage.setScene(new Scene(btnExit));
-                    });
-                    System.out.println("AidCloud is online now!");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    Platform.runLater(() -> {
-                        primaryStage.setScene(setup);
-                        new Alert(Alert.AlertType.ERROR, ex.getLocalizedMessage(), ButtonType.OK).showAndWait();
-                    });
-                }
-            }).start();
-        });
+        btnLaunch.setOnAction(ev -> launchAidCloud(primaryStage));
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+    }
+
+    private void launchAidCloud(Stage primaryStage) {
+        Scene setup = primaryStage.getScene();
+
+        double width = primaryStage.getWidth();
+        double height = primaryStage.getHeight();
+        primaryStage.setScene(new Scene(new ProgressIndicator()));
+        primaryStage.setWidth(width);
+        primaryStage.setHeight(height);
+        new Thread(() -> {
+            try {
+                Configuration cfg = new Configuration();
+                DBSetting dbSetting = cboDBType.getSelectionModel().getSelectedItem();
+                cfg.setProperty("hibernate.dialect", dbSetting.getDialect());
+                cfg.setProperty("hibernate.connection.driver_class", dbSetting.getDriverClass());
+                cfg.setProperty("hibernate.connection.url", String.format(cboDBType.getSelectionModel().getSelectedItem().getConFormat(), txfDBURL.getText(), txfDBPort.getText() == null || txfDBPort.getText().isEmpty() ? "" : ":" + txfDBPort.getText(), txfDBName.getText()));
+                cfg.setProperty("hibernate.", txfDBUser.getText());
+                cfg.setProperty("hibernate.connection.username", txfDBUser.getText());
+                cfg.setProperty("hibernate.connection.password", pwfDBPwd.getText());
+                DB.setSessionFactory(cfg.configure().buildSessionFactory());
+                String url = txfAidCloudURL.getText();
+                if (url.startsWith(AidCloud.ADDRESS_PREFIX))
+                    url = url.substring(AidCloud.ADDRESS_PREFIX.length());
+                if (url.endsWith("/"))
+                    url = url.substring(0, url.length() - 1);
+                String port = txfAidCloudPort.getText();
+                if (port == null || port.isEmpty())
+                    port = String.valueOf(AidCloud.PORT);
+                String adr = String.format(AidCloud.ADDRESS, url, port);
+                Endpoint.publish(adr + "Login", new Login());
+                Endpoint.publish(adr + "LanguageProvider", new LanguageProvider());
+                Endpoint.publish(adr + "Translator", Translator.get());
+                Endpoint.publish(adr + "PersonProvider", new PersonProvider());
+                Endpoint.publish(adr + "AddressProvider", new AddressProvider());
+                Endpoint.publish(adr + "CountryProvider", new CountryProvider());
+                Endpoint.publish(adr + "ContactTypeProvider", new ContactTypeProvider());
+                Endpoint.publish(adr + "ContactInformationProvider", new ContactInformationProvider());
+                Platform.runLater(() -> {
+                    Button btnExit = new Button("Exit");
+                    btnExit.setDefaultButton(true);
+                    btnExit.setOnAction(event -> System.exit(0));
+                    primaryStage.setScene(new Scene(btnExit));
+                });
+                System.out.println("AidCloud is online now!");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Platform.runLater(() -> {
+                    primaryStage.setScene(setup);
+                    new Alert(Alert.AlertType.ERROR, ex.getLocalizedMessage(), ButtonType.OK).showAndWait();
+                });
+            }
+        }).start();
     }
 
     private class DBSetting {
