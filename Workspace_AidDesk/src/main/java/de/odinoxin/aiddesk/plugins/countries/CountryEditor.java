@@ -4,14 +4,13 @@ import de.odinoxin.aidcloud.provider.CountryProvider;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
+import de.odinoxin.aiddesk.plugins.RecordView;
 import javafx.scene.control.TextField;
 
 public class CountryEditor extends RecordEditor<Country> {
 
     public CountryEditor(Country country) {
         super("Countries");
-        setView(new CountryView());
-        getView().bind(country);
         this.attemptLoadRecord(country);
         if (country == null)
             this.onNew();
@@ -38,5 +37,10 @@ public class CountryEditor extends RecordEditor<Country> {
     @Override
     protected Provider<Country> initProvider() {
         return new CountryProvider();
+    }
+
+    @Override
+    protected RecordView<Country> newView(Country record) {
+        return new CountryView(record);
     }
 }

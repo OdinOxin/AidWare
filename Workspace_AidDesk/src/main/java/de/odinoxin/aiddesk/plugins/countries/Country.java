@@ -2,8 +2,12 @@ package de.odinoxin.aiddesk.plugins.countries;
 
 import de.odinoxin.aidcloud.service.CountryEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Country extends RecordItem<CountryEntity> {
     private StringProperty alpha2 = new SimpleStringProperty();
@@ -101,5 +105,15 @@ public class Country extends RecordItem<CountryEntity> {
         countryEntity.setName(this.getName());
         countryEntity.setAreaCode(this.getAreaCode());
         return countryEntity;
+    }
+
+    @Override
+    protected List<ReadOnlyProperty<?>> getProperties() {
+        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
+        properties.add(this.alpha2);
+        properties.add(this.alpha3);
+        properties.add(this.name);
+        properties.add(this.areaCode);
+        return properties;
     }
 }

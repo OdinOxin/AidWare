@@ -6,6 +6,7 @@ import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.Login;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
+import de.odinoxin.aiddesk.plugins.RecordView;
 import javafx.scene.control.Alert;
 
 public class PersonEditor extends RecordEditor<Person> {
@@ -14,8 +15,6 @@ public class PersonEditor extends RecordEditor<Person> {
 
     public PersonEditor(Person person) {
         super("People");
-        this.setView(new PersonView(this));
-        this.getView().bind(person);
         this.attemptLoadRecord(person);
         if (person == null)
             this.onNew();
@@ -47,6 +46,10 @@ public class PersonEditor extends RecordEditor<Person> {
     @Override
     protected Provider<Person> initProvider() {
         return new PersonProvider();
+    }
+
+    protected RecordView<Person> newView(Person record) {
+        return new PersonView(record, this);
     }
 
     void changePwd(String currentPwd, String newPwd) {

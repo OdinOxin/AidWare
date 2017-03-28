@@ -14,20 +14,25 @@ public class AddressView extends RecordView<Address> {
     private TextField txftxfCity;
     private RefBox<Country> refBoxCountry;
 
-    public AddressView()
-    {
-        super("/plugins/addresseditor.fxml");
+    AddressView() {
+        this(null);
+    }
+
+    AddressView(Address address) {
+        super(address, "/plugins/addressview.fxml");
         this.txfStreet = (TextField) this.root.lookup("#txfStreet");
         this.txftxfHsNo = (TextField) this.root.lookup("#txfHsNo");
         this.txftxfZip = (TextField) this.root.lookup("#txfZip");
         this.txftxfCity = (TextField) this.root.lookup("#txfCity");
         this.refBoxCountry = (RefBox<Country>) this.root.lookup("#refBoxCountry");
         this.refBoxCountry.setProvider(new CountryProvider());
+        this.bind(address);
     }
 
     @Override
     public void bind(Address record) {
-        if(record == null)
+        super.bind(record);
+        if (record == null)
             return;
         this.txfStreet.textProperty().bindBidirectional(record.streetProperty());
         this.txftxfHsNo.textProperty().bindBidirectional(record.hsNoProperty());

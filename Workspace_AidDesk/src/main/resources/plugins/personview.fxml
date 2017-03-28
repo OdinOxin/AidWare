@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.odinoxin.aiddesk.controls.Header?>
+<?import de.odinoxin.aiddesk.controls.*?>
 <?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aiddesk.controls.reflist.RefList?>
 <?import de.odinoxin.aiddesk.controls.translateable.*?>
@@ -56,21 +56,22 @@
                maxWidth="125"
                GridPane.rowIndex="1"
                GridPane.columnIndex="0"/>
-        <TextField id="txfForename"
-                   maxWidth="400"
-                   GridPane.rowIndex="1"
-                   GridPane.columnIndex="1"/>
-
+        <SelectablePane GridPane.rowIndex="1"
+                        GridPane.columnIndex="1">
+            <TextField id="txfForename"
+                       maxWidth="400"/>
+        </SelectablePane>
         <Label id="lblName"
                text="Name"
                minWidth="125"
                maxWidth="125"
                GridPane.rowIndex="2"
                GridPane.columnIndex="0"/>
-        <TextField id="txfName"
-                   maxWidth="400"
-                   GridPane.rowIndex="2"
-                   GridPane.columnIndex="1"/>
+        <SelectablePane GridPane.rowIndex="2"
+                        GridPane.columnIndex="1">
+            <TextField id="txfName"
+                       maxWidth="400"/>
+        </SelectablePane>
 
         <Label id="lblCode"
                text="Kürzel"
@@ -78,10 +79,11 @@
                maxWidth="125"
                GridPane.rowIndex="3"
                GridPane.columnIndex="0"/>
-        <TextField id="txfCode"
-                   maxWidth="400"
-                   GridPane.rowIndex="3"
-                   GridPane.columnIndex="1"/>
+        <SelectablePane GridPane.rowIndex="3"
+                        GridPane.columnIndex="1">
+            <TextField id="txfCode"
+                       maxWidth="400"/>
+        </SelectablePane>
 
         <Label id="txtPwd"
                text="Password"
@@ -101,11 +103,12 @@
                maxWidth="125"
                GridPane.rowIndex="5"
                GridPane.columnIndex="0"/>
-        <RefBox id="refBoxLanguage"
-                showEditButton="true"
-                showNewButton="true"
-                GridPane.rowIndex="5"
-                GridPane.columnIndex="1"/>
+        <SelectablePane GridPane.rowIndex="5"
+                        GridPane.columnIndex="1">
+            <RefBox id="refBoxLanguage"
+                    showEditButton="true"
+                    showNewButton="true"/>
+        </SelectablePane>
     </GridPane>
 
     <GridPane GridPane.rowIndex="0"
@@ -127,13 +130,13 @@
         <Header text="Address"
                 GridPane.rowIndex="0"
                 GridPane.columnIndex="0"/>
-
-        <RefBox id="refBoxAddress"
-                showNewButton="true"
-                showEditButton="true"
-                showDetails="true"
-                GridPane.rowIndex="1"
-                GridPane.columnIndex="0"/>
+        <SelectablePane GridPane.rowIndex="1"
+                        GridPane.columnIndex="0">
+            <RefBox id="refBoxAddress"
+                    showNewButton="true"
+                    showEditButton="true"
+                    showDetails="true"/>
+        </SelectablePane>
 
         <Header text="Contact information"
                 GridPane.rowIndex="2"

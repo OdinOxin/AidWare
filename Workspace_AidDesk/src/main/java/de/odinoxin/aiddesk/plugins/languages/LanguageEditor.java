@@ -4,16 +4,12 @@ import de.odinoxin.aidcloud.provider.LanguageProvider;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
-import de.odinoxin.aiddesk.plugins.people.Person;
-import javafx.application.Platform;
-import javafx.scene.control.TextField;
+import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class LanguageEditor extends RecordEditor<Language> {
 
     public LanguageEditor(Language language) {
         super("Languages");
-        setView(new LanguageView());
-        getView().bind(language);
         this.attemptLoadRecord(language);
         if (language == null)
             this.onNew();
@@ -40,5 +36,10 @@ public class LanguageEditor extends RecordEditor<Language> {
     @Override
     protected Provider<Language> initProvider() {
         return new LanguageProvider();
+    }
+
+    @Override
+    protected RecordView<Language> newView(Language record) {
+        return new LanguageView(record);
     }
 }

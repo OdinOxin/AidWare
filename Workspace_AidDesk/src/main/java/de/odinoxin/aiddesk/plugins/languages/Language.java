@@ -2,8 +2,12 @@ package de.odinoxin.aiddesk.plugins.languages;
 
 import de.odinoxin.aidcloud.service.LanguageEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Language extends RecordItem<LanguageEntity> {
 
@@ -70,5 +74,13 @@ public class Language extends RecordItem<LanguageEntity> {
         entity.setName(this.getName());
         entity.setCode(this.getCode());
         return entity;
+    }
+
+    @Override
+    protected List<ReadOnlyProperty<?>> getProperties() {
+        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
+        properties.add(this.name);
+        properties.add(this.code);
+        return properties;
     }
 }

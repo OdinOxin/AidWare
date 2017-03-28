@@ -32,7 +32,7 @@ import java.util.List;
  *
  * @param <T> The type to deal with.
  */
-public class RefBox<T extends RecordItem> extends VBox {
+public class RefBox<T extends RecordItem<?>> extends VBox {
 
     private static final int MAX_SEARCH_RESULT = 10;
 

@@ -1,0 +1,14 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.layout.HBox?>
+<fx:root type="javafx.scene.layout.HBox"
+         xmlns:fx="http://javafx.com/fxml"
+         alignment="CENTER_LEFT">
+
+    <RadioButton id="rbtSelected">
+        <padding>
+            <Insets left="3" right="5"/>
+        </padding>
+    </RadioButton>
+
+</fx:root>

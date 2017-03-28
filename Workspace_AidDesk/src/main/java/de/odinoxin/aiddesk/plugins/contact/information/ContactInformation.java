@@ -3,10 +3,10 @@ package de.odinoxin.aiddesk.plugins.contact.information;
 import de.odinoxin.aidcloud.service.ContactInformationEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.contact.types.ContactType;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactInformation extends RecordItem<ContactInformationEntity> {
 
@@ -73,5 +73,13 @@ public class ContactInformation extends RecordItem<ContactInformationEntity> {
         entity.setContactType(this.getContactType() == null ? null : this.getContactType().toEntity());
         entity.setInformation(this.getInformation());
         return entity;
+    }
+
+    @Override
+    protected List<ReadOnlyProperty<?>> getProperties() {
+        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
+        properties.add(this.contactType);
+        properties.add(this.information);
+        return properties;
     }
 }

@@ -4,13 +4,12 @@ import de.odinoxin.aidcloud.provider.ContactTypeProvider;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
+import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class ContactTypeEditor extends RecordEditor<ContactType> {
 
     public ContactTypeEditor(ContactType contactType) {
         super("Contact type");
-        setView(new ContactTypeView());
-        getView().bind(contactType);
         this.attemptLoadRecord(contactType);
         if (contactType == null)
             this.onNew();
@@ -37,5 +36,10 @@ public class ContactTypeEditor extends RecordEditor<ContactType> {
     @Override
     protected Provider<ContactType> initProvider() {
         return new ContactTypeProvider();
+    }
+
+    @Override
+    protected RecordView<ContactType> newView(ContactType record) {
+        return new ContactTypeView(record);
     }
 }

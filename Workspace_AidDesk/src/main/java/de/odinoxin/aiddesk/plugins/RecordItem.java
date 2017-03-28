@@ -1,14 +1,13 @@
 package de.odinoxin.aiddesk.plugins;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
 
-import java.lang.reflect.ParameterizedType;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Base class for RecordItems.
+ *
  * @param <T> Class of the related service entity class.
  */
 public abstract class RecordItem<T> implements Cloneable {
@@ -28,6 +27,7 @@ public abstract class RecordItem<T> implements Cloneable {
 
     /**
      * Clones the RecordItem
+     *
      * @return a clone of the RecordItem
      */
     @Override
@@ -59,7 +59,22 @@ public abstract class RecordItem<T> implements Cloneable {
 
     /**
      * Convertes the RecordItem into the related service entity class.
+     *
      * @return the converted entity
      */
     public abstract T toEntity();
+
+    protected abstract List<ReadOnlyProperty<?>> getProperties();
+
+    public List<String> getDifferentPropertyNames(RecordItem<?> other) {
+        if (other == null || !this.getClass().getName().equals(other.getClass().getName()) || this.getId() != other.getId())
+            return null;
+        List<ReadOnlyProperty<?>> properties = getProperties();
+        List<ReadOnlyProperty<?>> otherProperties = other.getProperties();
+        return properties.parallelStream().filter(prop ->
+                otherProperties.parallelStream().anyMatch(otherProp -> prop.getName().equals(otherProp.getName())
+                        && ((prop.getValue() == null && otherProp.getValue() == null)
+                        || (prop.getValue() != null && otherProp.getValue() != null && !prop.getValue().equals(otherProp.getValue()))))
+        ).map(prop -> prop.getName()).collect(Collectors.toList());
+    }
 }

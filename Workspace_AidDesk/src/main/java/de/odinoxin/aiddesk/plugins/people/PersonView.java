@@ -3,6 +3,7 @@ package de.odinoxin.aiddesk.plugins.people;
 import de.odinoxin.aidcloud.provider.AddressProvider;
 import de.odinoxin.aidcloud.provider.ContactInformationProvider;
 import de.odinoxin.aidcloud.provider.LanguageProvider;
+import de.odinoxin.aiddesk.controls.SelectablePane;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.controls.reflist.RefList;
 import de.odinoxin.aiddesk.controls.translateable.Button;
@@ -23,8 +24,12 @@ public class PersonView extends RecordView<Person> {
     RefBox<Address> refBoxAddress;
     RefList<ContactInformation> refListContactInformation;
 
-    public PersonView(PersonEditor editor) {
-        super("/plugins/personeditor.fxml");
+    PersonView(PersonEditor editor) {
+        this(null, editor);
+    }
+
+    PersonView(Person person, PersonEditor editor) {
+        super(person, "/plugins/personview.fxml");
 
         this.txfName = (TextField) this.root.lookup("#txfName");
         this.txfForename = (TextField) this.root.lookup("#txfForename");
@@ -41,10 +46,12 @@ public class PersonView extends RecordView<Person> {
         this.refBoxAddress.setProvider(new AddressProvider());
         this.refListContactInformation = (RefList<ContactInformation>) this.root.lookup("#refListContactInformation");
         this.refListContactInformation.setProvider(new ContactInformationProvider());
+        this.bind(person);
     }
 
     @Override
     public void bind(Person record) {
+        super.bind(record);
         if (record == null)
             return;
         this.txfForename.textProperty().bindBidirectional(record.forenameProperty());
@@ -54,6 +61,13 @@ public class PersonView extends RecordView<Person> {
         this.refBoxLanguage.recordProperty().bindBidirectional(record.languageProperty());
         this.refBoxAddress.recordProperty().bindBidirectional(record.addressProperty());
         this.refListContactInformation.bindBidirectional(record.contactInformationProperty());
+
+        this.selectables.clear();
+        this.selectables.put(record.forenameProperty().getName(), (SelectablePane) txfForename.getParent());
+        this.selectables.put(record.nameProperty().getName(), (SelectablePane) txfName.getParent());
+        this.selectables.put(record.codeProperty().getName(), (SelectablePane) txfCode.getParent());
+        this.selectables.put(record.languageProperty().getName(), (SelectablePane) refBoxLanguage.getParent());
+        this.selectables.put(record.addressProperty().getName(), (SelectablePane) refBoxAddress.getParent());
     }
 
     @Override

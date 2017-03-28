@@ -8,12 +8,12 @@ import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.dialogs.Callback;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
+import de.odinoxin.aiddesk.dialogs.merging.MergeDialog;
 import javafx.beans.property.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 import java.util.Optional;
 
@@ -22,13 +22,12 @@ import java.util.Optional;
  *
  * @param <T> The type of the RecordItem to edit
  */
-public abstract class RecordEditor<T extends RecordItem> extends Plugin {
+public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
 
     private TextField txfId;
     private RefBox<T> refBoxKey;
     private Button btnRefresh;
-    private Pane detailsView;
-    private RecordView<T> view;
+    private RecordView<T> view = newView(null);
     private Button btnSave;
     private Button btnDiscard;
     private Button btnDelete;
@@ -52,6 +51,7 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
 
         try {
             this.provider = this.initProvider();
+            this.view = newView(null);
 
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
@@ -65,7 +65,7 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
             this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
             this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.provider.get(this.getRecordItem().getId())));
             this.txfId = (TextField) this.root.lookup("#txfId");
-            this.detailsView = ((VBox) this.root.lookup("#boxDetails"));
+            ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
 
             this.btnSave = (Button) this.root.lookup("#btnSave");
             this.btnSave.setOnAction(ev ->
@@ -80,7 +80,9 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
                 } catch (ConcurrentFault_Exception ex) {
                     ex.printStackTrace();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    MergeDialog mergeDialog = new MergeDialog<T>(newView(getOriginalItem()), newView(this.provider.get(this.getRecordItem().getId())), newView(getRecordItem()));
+                    mergeDialog.show();
+//                    ex.printStackTrace();
                 }
             });
             setButtonEnter(this.btnSave);
@@ -134,20 +136,6 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
-
-    /**
-     * Sets the view and binds the current record to it.
-     *
-     * @param recordView The view
-     */
-    protected void setView(RecordView<T> recordView) {
-        this.view = recordView;
-        this.view.bind(this.getRecordItem());
-        this.detailsView.getChildren().clear();
-        this.detailsView.getChildren().add(view);
-        this.sizeToScene();
-        this.centerOnScreen();
     }
 
     /**
@@ -213,8 +201,7 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
     /**
      * Called, when a new record was created.
      */
-    protected void onNew()
-    {
+    protected void onNew() {
         this.view.requestFocus();
     }
 
@@ -296,4 +283,6 @@ public abstract class RecordEditor<T extends RecordItem> extends Plugin {
     protected Provider<T> getProvider() {
         return this.provider;
     }
+
+    protected abstract RecordView<T> newView(T record);
 }

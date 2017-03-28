@@ -2,8 +2,12 @@ package de.odinoxin.aiddesk.plugins.contact.types;
 
 import de.odinoxin.aidcloud.service.ContactTypeEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactType extends RecordItem<ContactTypeEntity> {
 
@@ -33,8 +37,7 @@ public class ContactType extends RecordItem<ContactTypeEntity> {
         this.setChanged(false);
     }
 
-    public ContactType(ContactTypeEntity entity)
-    {
+    public ContactType(ContactTypeEntity entity) {
         this(entity.getId(), entity.getName(), entity.getCode(), entity.getRegex());
     }
 
@@ -87,5 +90,14 @@ public class ContactType extends RecordItem<ContactTypeEntity> {
         entity.setCode(this.getCode());
         entity.setRegex(this.getRegex());
         return entity;
+    }
+
+    @Override
+    protected List<ReadOnlyProperty<?>> getProperties() {
+        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
+        properties.add(this.name);
+        properties.add(this.code);
+        properties.add(this.regex);
+        return properties;
     }
 }

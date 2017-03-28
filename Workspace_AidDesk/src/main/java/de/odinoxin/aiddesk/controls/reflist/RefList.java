@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
  *
  * @param <T> The type of the records.
  */
-public class RefList<T extends RecordItem> extends VBox {
+public class RefList<T extends RecordItem<?>> extends VBox {
 
     private ObservableList<T> items;
     private Provider<T> provider;

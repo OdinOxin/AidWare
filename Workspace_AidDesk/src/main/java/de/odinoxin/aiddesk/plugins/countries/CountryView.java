@@ -10,18 +10,23 @@ public class CountryView extends RecordView<Country> {
     private TextField txfName;
     private TextField txfAreaCode;
 
-    public CountryView()
-    {
-        super("/plugins/countryeditor.fxml");
+    CountryView() {
+        this(null);
+    }
+
+    CountryView(Country country) {
+        super(country, "/plugins/countryview.fxml");
         this.txfAlpha2 = (TextField) this.root.lookup("#txfAlpha2");
         this.txfAlpha3 = (TextField) this.root.lookup("#txfAlpha3");
         this.txfName = (TextField) this.root.lookup("#txfName");
         this.txfAreaCode = (TextField) this.root.lookup("#txfAreaCode");
+        this.bind(country);
     }
 
     @Override
     public void bind(Country record) {
-        if(record == null)
+        super.bind(record);
+        if (record == null)
             return;
         this.txfAlpha2.textProperty().bindBidirectional(record.alpha2Property());
         this.txfAlpha3.textProperty().bindBidirectional(record.alpha3Property());

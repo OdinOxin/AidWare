@@ -4,13 +4,12 @@ import de.odinoxin.aidcloud.provider.AddressProvider;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
+import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class AddressEditor extends RecordEditor<Address> {
 
     public AddressEditor(Address address) {
         super("Addresses");
-        setView(new AddressView());
-        getView().bind(address);
         this.attemptLoadRecord(address);
         if (address == null)
             this.onNew();
@@ -37,5 +36,10 @@ public class AddressEditor extends RecordEditor<Address> {
     @Override
     protected Provider<Address> initProvider() {
         return new AddressProvider();
+    }
+
+    @Override
+    protected RecordView<Address> newView(Address record) {
+        return new AddressView(record);
     }
 }

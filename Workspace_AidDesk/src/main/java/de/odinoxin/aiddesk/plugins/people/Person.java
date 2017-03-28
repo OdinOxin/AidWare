@@ -6,10 +6,7 @@ import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
 import de.odinoxin.aiddesk.plugins.languages.Language;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -17,14 +14,14 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Person extends RecordItem {
+public class Person extends RecordItem<PersonEntity> {
 
-    private StringProperty name = new SimpleStringProperty();
-    private StringProperty forename = new SimpleStringProperty();
-    private StringProperty code = new SimpleStringProperty();
-    private StringProperty pwd = new SimpleStringProperty();
-    private ObjectProperty<Language> language = new SimpleObjectProperty<>();
-    private ObjectProperty<Address> address = new SimpleObjectProperty<>();
+    private StringProperty name = new SimpleStringProperty(null, "Name");
+    private StringProperty forename = new SimpleStringProperty(null, "Forename");
+    private StringProperty code = new SimpleStringProperty(null, "Code");
+    private StringProperty pwd = new SimpleStringProperty(null, "Pwd");
+    private ObjectProperty<Language> language = new SimpleObjectProperty<>(null, "Language");
+    private ObjectProperty<Address> address = new SimpleObjectProperty<>(null, "Address");
     private ObservableList<ContactInformation> contactInformation = FXCollections.observableArrayList();
 
     public Person() {
@@ -173,5 +170,17 @@ public class Person extends RecordItem {
             if (info != null)
                 entity.getContactInformation().add(info.toEntity());
         return entity;
+    }
+
+    @Override
+    protected List<ReadOnlyProperty<?>> getProperties() {
+        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
+        properties.add(this.name);
+        properties.add(this.forename);
+        properties.add(this.code);
+        properties.add(this.pwd);
+        properties.add(this.language);
+        properties.add(this.address);
+        return properties;
     }
 }

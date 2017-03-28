@@ -3,10 +3,10 @@ package de.odinoxin.aiddesk.plugins.addresses;
 import de.odinoxin.aidcloud.service.AddressEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.countries.Country;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Address extends RecordItem<AddressEntity> {
 
@@ -121,5 +121,16 @@ public class Address extends RecordItem<AddressEntity> {
         entity.setCity(this.getCity());
         entity.setCountry(this.getCountry() == null ? null : this.getCountry().toEntity());
         return entity;
+    }
+
+    @Override
+    protected List<ReadOnlyProperty<?>> getProperties() {
+        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
+        properties.add(this.street);
+        properties.add(this.hsNo);
+        properties.add(this.zip);
+        properties.add(this.city);
+        properties.add(this.country);
+        return properties;
     }
 }
