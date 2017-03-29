@@ -79,9 +79,8 @@ public abstract class RecordItem<T> implements Cloneable {
                 if (properties.get(key).getValue() instanceof RecordItem<?>)
                     return ((RecordItem<?>) properties.get(key).getValue()).getId() != ((RecordItem<?>) otherProperties.get(key).getValue()).getId();
                 return !properties.get(key).getValue().equals(otherProperties.get(key).getValue());
-            } else
-                return (properties.get(key).getValue() == null && otherProperties.get(key).getValue() != null)
-                        || (properties.get(key).getValue() != null && otherProperties.get(key).getValue() == null);
+            }
+            return properties.get(key).getValue() != null || otherProperties.get(key).getValue() != null;
         }).collect(Collectors.toList());
     }
 }
