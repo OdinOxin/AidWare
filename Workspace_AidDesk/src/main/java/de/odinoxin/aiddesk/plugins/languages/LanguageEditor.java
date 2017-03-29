@@ -17,7 +17,7 @@ public class LanguageEditor extends RecordEditor<Language> {
 
     @Override
     protected Language onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalItem());
+        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class LanguageEditor extends RecordEditor<Language> {
     }
 
     @Override
-    protected RecordView<Language> newView(Language record) {
+    public RecordView<Language> newView(Language record) {
         return new LanguageView(record);
     }
 }

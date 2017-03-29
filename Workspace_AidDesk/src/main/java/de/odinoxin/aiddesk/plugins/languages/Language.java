@@ -2,7 +2,7 @@ package de.odinoxin.aiddesk.plugins.languages;
 
 import de.odinoxin.aidcloud.service.LanguageEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
-import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -76,8 +76,8 @@ public class Language extends RecordItem<LanguageEntity> {
     }
 
     @Override
-    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
-        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+    protected Hashtable<String, Property<?>> getProperties() {
+        Hashtable<String, Property<?>> properties = new Hashtable<>();
         properties.put(this.name.getName(), this.name);
         properties.put(this.code.getName(), this.code);
         return properties;

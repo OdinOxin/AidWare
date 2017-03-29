@@ -80,8 +80,8 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
                 } catch (ConcurrentFault_Exception ex) {
                     ex.printStackTrace();
                 } catch (Exception ex) {
-                    T resultRecord = (T) getOriginalItem().clone();
-                    MergeDialog mergeDialog = new MergeDialog<T>(getOriginalItem(), newView(this.provider.get(this.getRecordItem().getId())), newView(getRecordItem()), newView(resultRecord));
+                    T resultRecord = (T) getOriginalRecordItem().clone();
+                    MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
                     mergeDialog.show();
 //                    ex.printStackTrace();
                 }
@@ -178,7 +178,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param record The record to load.
      */
-    protected void attemptLoadRecord(T record) {
+    public void attemptLoadRecord(T record) {
         Callback apply = () ->
         {
             this.setRecord(record);
@@ -252,8 +252,26 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         return this.recordItem.get();
     }
 
-    protected T getOriginalItem() {
+    public T getOriginalRecordItem() {
         return this.original;
+    }
+
+    /**
+     * Returns the current record from the server.
+     *
+     * @return The current record from the server.
+     */
+    public T getServerRecordItem() {
+        return this.provider.get(this.getRecordItem().getId());
+    }
+
+    /**
+     * Returns a clone of the record item.
+     *
+     * @return A clone of the record item.
+     */
+    public T getClonedRecordItem() {
+        return (T) this.getOriginalRecordItem().clone();
     }
 
     /**
@@ -267,6 +285,15 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         if (this.changedWrapper.isBound())
             this.changedWrapper.unbind();
         this.changedWrapper.bind(record.changedProperty());
+    }
+
+    /**
+     * Replaces the value, which is interpreted as original record.
+     *
+     * @param record The new original.
+     */
+    public void setOriginalRecordItem(T record) {
+        this.original = record;
     }
 
     /**
@@ -285,5 +312,5 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         return this.provider;
     }
 
-    protected abstract RecordView<T> newView(T record);
+    public abstract RecordView<T> newView(T record);
 }

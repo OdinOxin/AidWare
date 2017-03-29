@@ -56,22 +56,22 @@
                maxWidth="125"
                GridPane.rowIndex="1"
                GridPane.columnIndex="0"/>
-        <SelectablePane GridPane.rowIndex="1"
-                        GridPane.columnIndex="1">
-            <TextField id="txfForename"
-                       maxWidth="400"/>
-        </SelectablePane>
+        <MergeablePane GridPane.rowIndex="1"
+                       GridPane.columnIndex="1"
+                       maxWidth="400">
+            <TextField id="txfForename"/>
+        </MergeablePane>
         <Label id="lblName"
                text="Name"
                minWidth="125"
                maxWidth="125"
                GridPane.rowIndex="2"
                GridPane.columnIndex="0"/>
-        <SelectablePane GridPane.rowIndex="2"
-                        GridPane.columnIndex="1">
+        <MergeablePane GridPane.rowIndex="2"
+                       GridPane.columnIndex="1">
             <TextField id="txfName"
                        maxWidth="400"/>
-        </SelectablePane>
+        </MergeablePane>
 
         <Label id="lblCode"
                text="Kürzel"
@@ -79,11 +79,11 @@
                maxWidth="125"
                GridPane.rowIndex="3"
                GridPane.columnIndex="0"/>
-        <SelectablePane GridPane.rowIndex="3"
-                        GridPane.columnIndex="1">
-            <TextField id="txfCode"
-                       maxWidth="400"/>
-        </SelectablePane>
+        <MergeablePane GridPane.rowIndex="3"
+                       GridPane.columnIndex="1"
+                       maxWidth="400">
+            <TextField id="txfCode"/>
+        </MergeablePane>
 
         <Label id="txtPwd"
                text="Password"
@@ -91,11 +91,12 @@
                maxWidth="125"
                GridPane.rowIndex="4"
                GridPane.columnIndex="0"/>
-        <Button id="btnPwd"
-                text="Change"
-                prefWidth="125"
-                GridPane.rowIndex="4"
-                GridPane.columnIndex="1"/>
+        <MergeablePane GridPane.rowIndex="4"
+                       GridPane.columnIndex="1">
+            <Button id="btnPwd"
+                    text="Change"
+                    prefWidth="125"/>
+        </MergeablePane>
 
         <Label id="lblLanguage"
                text="Language"
@@ -103,12 +104,12 @@
                maxWidth="125"
                GridPane.rowIndex="5"
                GridPane.columnIndex="0"/>
-        <SelectablePane GridPane.rowIndex="5"
-                        GridPane.columnIndex="1">
+        <MergeablePane GridPane.rowIndex="5"
+                       GridPane.columnIndex="1">
             <RefBox id="refBoxLanguage"
                     showEditButton="true"
                     showNewButton="true"/>
-        </SelectablePane>
+        </MergeablePane>
     </GridPane>
 
     <GridPane GridPane.rowIndex="0"
@@ -130,20 +131,20 @@
         <Header text="Address"
                 GridPane.rowIndex="0"
                 GridPane.columnIndex="0"/>
-        <SelectablePane GridPane.rowIndex="1"
-                        GridPane.columnIndex="0">
+        <MergeablePane GridPane.rowIndex="1"
+                       GridPane.columnIndex="0">
             <RefBox id="refBoxAddress"
                     showNewButton="true"
                     showEditButton="true"
                     showDetails="true"/>
-        </SelectablePane>
+        </MergeablePane>
 
         <Header text="Contact information"
                 GridPane.rowIndex="2"
                 GridPane.columnIndex="0"/>
-        <RefList id="refListContactInformation"
-                 GridPane.rowIndex="3"
-                 GridPane.columnIndex="0">
-        </RefList>
+        <MergeablePane GridPane.rowIndex="3"
+                       GridPane.columnIndex="0">
+            <RefList id="refListContactInformation"/>
+        </MergeablePane>
     </GridPane>
 </GridPane>

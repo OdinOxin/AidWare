@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
-public class SelectablePane extends HBox {
+public class MergeablePane extends HBox {
 
     private static final Background TRANSPARENT = new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, null));
 
@@ -25,8 +25,8 @@ public class SelectablePane extends HBox {
     private ChangeListener<Boolean> lastListener = null;
     private BooleanProperty contentDisabled = new SimpleBooleanProperty();
 
-    public SelectablePane() {
-        FXMLLoader fxmlLoader = new FXMLLoader(SelectablePane.class.getResource("/controls/selectablepane.fxml"));
+    public MergeablePane() {
+        FXMLLoader fxmlLoader = new FXMLLoader(MergeablePane.class.getResource("/controls/mergeablepane.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -46,12 +46,6 @@ public class SelectablePane extends HBox {
             }
         });
         setSelectable(false); // Toggle once to default
-//        contentDisabled.addListener((observable, oldValue, newValue) ->
-//        {
-//            Node node = this.getChildren().get(1);
-//            if (node != null)
-//                node.setDisable(newValue);
-//        });
         this.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
             for (int i = 1; i < this.getChildren().size(); i++) {
                 this.getChildren().get(i).disableProperty().bind(this.contentDisabled);
@@ -112,9 +106,9 @@ public class SelectablePane extends HBox {
         if (node != null) {
             if (node instanceof TextField)
                 ((TextField) node).setText(content.toString());
-            if (node instanceof CheckBox)
+            else if (node instanceof CheckBox)
                 ((CheckBox) node).setSelected((boolean) content);
-            if (node instanceof RefBox)
+            else if (node instanceof RefBox)
                 ((RefBox) node).setRecord((RecordItem<?>) content);
         }
     }

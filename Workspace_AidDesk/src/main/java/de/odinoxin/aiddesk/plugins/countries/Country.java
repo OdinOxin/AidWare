@@ -2,11 +2,10 @@ package de.odinoxin.aiddesk.plugins.countries;
 
 import de.odinoxin.aidcloud.service.CountryEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
-import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Country extends RecordItem<CountryEntity> {
@@ -108,8 +107,8 @@ public class Country extends RecordItem<CountryEntity> {
     }
 
     @Override
-    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
-        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+    protected Hashtable<String, Property<?>> getProperties() {
+        Hashtable<String, Property<?>> properties = new Hashtable<>();
         properties.put(this.alpha2.getName(), this.alpha2);
         properties.put(this.alpha3.getName(), this.alpha3);
         properties.put(this.name.getName(), this.name);

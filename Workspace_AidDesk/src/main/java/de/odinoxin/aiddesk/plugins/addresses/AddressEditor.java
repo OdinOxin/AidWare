@@ -17,7 +17,7 @@ public class AddressEditor extends RecordEditor<Address> {
 
     @Override
     protected Address onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalItem());
+        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class AddressEditor extends RecordEditor<Address> {
     }
 
     @Override
-    protected RecordView<Address> newView(Address record) {
+    public RecordView<Address> newView(Address record) {
         return new AddressView(record);
     }
 }

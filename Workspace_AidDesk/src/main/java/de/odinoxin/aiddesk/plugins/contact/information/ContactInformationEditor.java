@@ -17,7 +17,7 @@ public class ContactInformationEditor extends RecordEditor<ContactInformation> {
 
     @Override
     protected ContactInformation onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalItem());
+        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ContactInformationEditor extends RecordEditor<ContactInformation> {
     }
 
     @Override
-    protected RecordView<ContactInformation> newView(ContactInformation record) {
+    public RecordView<ContactInformation> newView(ContactInformation record) {
         return new ContactInformationView(record);
     }
 }

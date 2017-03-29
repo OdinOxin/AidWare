@@ -25,7 +25,7 @@ public class PersonEditor extends RecordEditor<Person> {
         if (this.currentPwdw != null && this.getRecordItem().getPwd() != null)
             if (!PersonProvider.changePwd(this.getRecordItem().getId(), this.currentPwdw, this.getRecordItem().getPwd()))
                 new MsgDialog(this, Alert.AlertType.ERROR, "Fehlgeschlagen!", "Passwort konnte nicht geändert werden.").showAndWait();
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalItem());
+        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
     }
 
     @Override
@@ -48,7 +48,8 @@ public class PersonEditor extends RecordEditor<Person> {
         return new PersonProvider();
     }
 
-    protected RecordView<Person> newView(Person record) {
+    @Override
+    public RecordView<Person> newView(Person record) {
         return new PersonView(record, this);
     }
 

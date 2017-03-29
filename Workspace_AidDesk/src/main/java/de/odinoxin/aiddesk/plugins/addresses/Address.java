@@ -123,8 +123,8 @@ public class Address extends RecordItem<AddressEntity> {
     }
 
     @Override
-    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
-        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+    protected Hashtable<String, Property<?>> getProperties() {
+        Hashtable<String, Property<?>> properties = new Hashtable<>();
         properties.put(this.street.getName(), this.street);
         properties.put(this.hsNo.getName(), this.hsNo);
         properties.put(this.zip.getName(), this.zip);

@@ -75,8 +75,8 @@ public class ContactInformation extends RecordItem<ContactInformationEntity> {
     }
 
     @Override
-    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
-        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+    protected Hashtable<String, Property<?>> getProperties() {
+        Hashtable<String, Property<?>> properties = new Hashtable<>();
         properties.put(this.contactType.getName(), this.contactType);
         properties.put(this.information.getName(), this.information);
         return properties;

@@ -1,9 +1,10 @@
 package de.odinoxin.aiddesk.dialogs.merging;
 
-import de.odinoxin.aiddesk.controls.SelectablePane;
+import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.dialogs.Callback;
 import de.odinoxin.aiddesk.plugins.Plugin;
+import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.RecordView;
 import javafx.scene.control.ScrollPane;
@@ -24,33 +25,37 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
 
     private Button btnMerge;
 
-    private Hashtable<String, SelectablePane> panesServer;
-    private Hashtable<String, SelectablePane> panesLocal;
-    private Hashtable<String, SelectablePane> panesResult;
+    private Hashtable<String, MergeablePane> panesServer;
+    private Hashtable<String, MergeablePane> panesLocal;
+    private Hashtable<String, MergeablePane> panesResult;
 
-    public MergeDialog(T original, RecordView<T> serverView, RecordView<T> localView, RecordView<T> resultView) {
+    public MergeDialog(RecordEditor<T> editor) {
         super("/dialogs/mergedialog.fxml", "Merging");
         this.initModality(Modality.APPLICATION_MODAL);
         btnMerge = ((Button) root.lookup("#btnMerge"));
-        btnMerge.setOnAction(event -> this.close());
+        btnMerge.setOnAction(event ->
+        {
+            editor.getRecordItem().setChanged(false);
+            editor.attemptLoadRecord(resultView.getRecord());
+            editor.setOriginalRecordItem(serverView.getRecord());
+            editor.getRecordItem().setChanged(true);
+            this.close();
+        });
         ((Button) root.lookup("#btnCancel")).setOnAction(event -> this.close());
-        SplitPane horizontalSplitter = ((SplitPane) this.root.lookup("#horizontalSplitter"));
         SplitPane verticalSplitter = ((SplitPane) this.root.lookup("#verticalSplitter"));
-        this.original = original;
-        this.serverView = serverView;
-        this.localView = localView;
-        this.resultView = resultView;
-        panesServer = this.serverView.getSelectables();
-        panesLocal = this.localView.getSelectables();
-        panesResult = this.resultView.getSelectables();
+        this.original = editor.getOriginalRecordItem();
+        this.serverView = editor.newView(editor.getServerRecordItem());
+        this.localView = editor.newView(editor.getRecordItem());
+        this.resultView = editor.newView(editor.getClonedRecordItem());
+        panesServer = this.serverView.getMergeables();
+        panesLocal = this.localView.getMergeables();
+        panesResult = this.resultView.getMergeables();
+        panesServer.values().forEach(mergeablePane -> mergeablePane.setContentDisabled(true));
+        panesLocal.values().forEach(mergeablePane -> mergeablePane.setContentDisabled(true));
         // Lookup not avaiable here
         ((ScrollPane) ((VBox) ((SplitPane) verticalSplitter.getItems().get(0)).getItems().get(0)).getChildren().get(1)).setContent(this.serverView);
         ((ScrollPane) ((VBox) ((SplitPane) verticalSplitter.getItems().get(0)).getItems().get(1)).getChildren().get(1)).setContent(this.localView);
         ((ScrollPane) ((VBox) verticalSplitter.getItems().get(1)).getChildren().get(1)).setContent(this.resultView);
-
-        this.serverView.getRecord().setChanged(false);
-        this.localView.getRecord().setChanged(false);
-        this.resultView.getRecord().setChanged(false);
         this.evaluateDifferences();
         this.checkAccepted();
     }

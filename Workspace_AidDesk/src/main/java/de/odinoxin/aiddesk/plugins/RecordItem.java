@@ -65,13 +65,13 @@ public abstract class RecordItem<T> implements Cloneable {
      */
     public abstract T toEntity();
 
-    protected abstract Hashtable<String, ReadOnlyProperty<?>> getProperties();
+    protected abstract Hashtable<String, Property<?>> getProperties();
 
     public List<String> getDifferentPropertyNames(RecordItem<?> other) {
         if (other == null || !this.getClass().getName().equals(other.getClass().getName()) || this.getId() != other.getId())
             return null;
-        Hashtable<String, ReadOnlyProperty<?>> properties = getProperties();
-        Hashtable<String, ReadOnlyProperty<?>> otherProperties = other.getProperties();
+        Hashtable<String, Property<?>> properties = getProperties();
+        Hashtable<String, Property<?>> otherProperties = other.getProperties();
         return properties.keySet().stream().filter(key ->
         {
             boolean notNull = properties.get(key).getValue() != null && otherProperties.get(key).getValue() != null;

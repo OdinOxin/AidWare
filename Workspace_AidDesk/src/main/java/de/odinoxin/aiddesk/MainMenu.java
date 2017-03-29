@@ -14,7 +14,7 @@ import de.odinoxin.aiddesk.plugins.contact.information.ContactInformationEditor;
 import de.odinoxin.aiddesk.plugins.contact.types.ContactTypeEditor;
 import de.odinoxin.aiddesk.plugins.countries.CountryEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
-import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.Property;
 import javafx.scene.control.ButtonType;
 import javafx.stage.WindowEvent;
 
@@ -162,7 +162,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         }
 
         @Override
-        protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
+        protected Hashtable<String, Property<?>> getProperties() {
             return null;
         }
     }

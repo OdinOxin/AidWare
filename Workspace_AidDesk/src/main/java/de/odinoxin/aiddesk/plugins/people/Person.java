@@ -174,8 +174,8 @@ public class Person extends RecordItem<PersonEntity> {
     }
 
     @Override
-    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
-        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+    protected Hashtable<String, Property<?>> getProperties() {
+        Hashtable<String, Property<?>> properties = new Hashtable<>();
         properties.put(this.name.getName(), this.name);
         properties.put(this.forename.getName(), this.forename);
         properties.put(this.code.getName(), this.code);

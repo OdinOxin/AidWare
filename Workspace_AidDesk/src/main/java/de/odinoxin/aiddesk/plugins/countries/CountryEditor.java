@@ -5,7 +5,6 @@ import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordView;
-import javafx.scene.control.TextField;
 
 public class CountryEditor extends RecordEditor<Country> {
 
@@ -18,7 +17,7 @@ public class CountryEditor extends RecordEditor<Country> {
 
     @Override
     protected Country onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalItem());
+        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
     }
 
     @Override
@@ -40,7 +39,7 @@ public class CountryEditor extends RecordEditor<Country> {
     }
 
     @Override
-    protected RecordView<Country> newView(Country record) {
+    public RecordView<Country> newView(Country record) {
         return new CountryView(record);
     }
 }
