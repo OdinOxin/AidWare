@@ -47,10 +47,15 @@ public class MergeablePane extends HBox {
         });
         setSelectable(false); // Toggle once to default
         this.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
+            double maxWidth = 0;
             for (int i = 1; i < this.getChildren().size(); i++) {
                 this.getChildren().get(i).disableProperty().bind(this.contentDisabled);
                 HBox.setHgrow(this.getChildren().get(i), Priority.ALWAYS);
+                double localMax = this.getChildren().get(i).maxWidth(-1);
+                if (maxWidth < localMax)
+                    maxWidth = localMax;
             }
+            this.maxWidthProperty().bind(((RadioButton) this.getChildren().get(0)).widthProperty().add(maxWidth));
         });
     }
 

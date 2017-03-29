@@ -30,9 +30,9 @@
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="0"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
-        <TextField id="txfStreet"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfStreet"
+                   maxWidth="400"/>
     </MergeablePane>
     <Label id="lblHsNo"
            text="HsNr"
@@ -41,9 +41,9 @@
            GridPane.rowIndex="1"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="1"
-                   GridPane.columnIndex="1"
-                   maxWidth="75">
-        <TextField id="txfHsNo"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfHsNo"
+                   maxWidth="75"/>
     </MergeablePane>
 
     <Label id="lblZip"
@@ -53,9 +53,9 @@
            GridPane.rowIndex="2"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="2"
-                   GridPane.columnIndex="1"
-                   maxWidth="75">
-        <TextField id="txfZip"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfZip"
+                   maxWidth="75"/>
     </MergeablePane>
     <Label id="lblCity"
            text="City"
@@ -64,9 +64,9 @@
            GridPane.rowIndex="3"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="3"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
-        <TextField id="txfCity"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfCity"
+                   maxWidth="400"/>
     </MergeablePane>
 
     <Label id="lblCountry"
@@ -76,11 +76,11 @@
            GridPane.rowIndex="4"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="4"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
+                   GridPane.columnIndex="1">
         <RefBox id="refBoxCountry"
                 showNewButton="true"
-                showEditButton="true"/>
+                showEditButton="true"
+                maxWidth="400"/>
     </MergeablePane>
 
 </GridPane>

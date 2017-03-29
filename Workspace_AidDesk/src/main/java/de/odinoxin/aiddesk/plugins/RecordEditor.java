@@ -8,7 +8,7 @@ import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.dialogs.Callback;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
-import de.odinoxin.aiddesk.dialogs.merging.MergeDialog;
+import de.odinoxin.aiddesk.dialogs.MergeDialog;
 import javafx.beans.property.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

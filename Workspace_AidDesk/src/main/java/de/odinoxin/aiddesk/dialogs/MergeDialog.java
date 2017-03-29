@@ -1,4 +1,4 @@
-package de.odinoxin.aiddesk.dialogs.merging;
+package de.odinoxin.aiddesk.dialogs;
 
 import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.translateable.Button;
