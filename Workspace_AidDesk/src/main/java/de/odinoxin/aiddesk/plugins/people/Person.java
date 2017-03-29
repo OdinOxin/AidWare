@@ -12,6 +12,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 public class Person extends RecordItem<PersonEntity> {
@@ -173,14 +174,14 @@ public class Person extends RecordItem<PersonEntity> {
     }
 
     @Override
-    protected List<ReadOnlyProperty<?>> getProperties() {
-        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
-        properties.add(this.name);
-        properties.add(this.forename);
-        properties.add(this.code);
-        properties.add(this.pwd);
-        properties.add(this.language);
-        properties.add(this.address);
+    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
+        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+        properties.put(this.name.getName(), this.name);
+        properties.put(this.forename.getName(), this.forename);
+        properties.put(this.code.getName(), this.code);
+        properties.put(this.pwd.getName(), this.pwd);
+        properties.put(this.language.getName(), this.language);
+        properties.put(this.address.getName(), this.address);
         return properties;
     }
 }

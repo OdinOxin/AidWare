@@ -80,7 +80,8 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
                 } catch (ConcurrentFault_Exception ex) {
                     ex.printStackTrace();
                 } catch (Exception ex) {
-                    MergeDialog mergeDialog = new MergeDialog<T>(newView(getOriginalItem()), newView(this.provider.get(this.getRecordItem().getId())), newView(getRecordItem()));
+                    T resultRecord = (T) getOriginalItem().clone();
+                    MergeDialog mergeDialog = new MergeDialog<T>(getOriginalItem(), newView(this.provider.get(this.getRecordItem().getId())), newView(getRecordItem()), newView(resultRecord));
                     mergeDialog.show();
 //                    ex.printStackTrace();
                 }

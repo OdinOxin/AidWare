@@ -1,15 +1,17 @@
 package de.odinoxin.aiddesk.controls;
 
+import de.odinoxin.aiddesk.controls.refbox.RefBox;
+import de.odinoxin.aiddesk.plugins.RecordItem;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class SelectablePane extends HBox {
     private BooleanProperty selectable = new SimpleBooleanProperty(true);
     private final RadioButton rbtSelected;
     private ChangeListener<Boolean> lastListener = null;
+    private BooleanProperty contentDisabled = new SimpleBooleanProperty();
 
     public SelectablePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(SelectablePane.class.getResource("/controls/selectablepane.fxml"));
@@ -43,6 +46,18 @@ public class SelectablePane extends HBox {
             }
         });
         setSelectable(false); // Toggle once to default
+//        contentDisabled.addListener((observable, oldValue, newValue) ->
+//        {
+//            Node node = this.getChildren().get(1);
+//            if (node != null)
+//                node.setDisable(newValue);
+//        });
+        this.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
+            for (int i = 1; i < this.getChildren().size(); i++) {
+                this.getChildren().get(i).disableProperty().bind(this.contentDisabled);
+                HBox.setHgrow(this.getChildren().get(i), Priority.ALWAYS);
+            }
+        });
     }
 
     public boolean isSelectable() {
@@ -65,5 +80,42 @@ public class SelectablePane extends HBox {
         if (lastListener != null)
             this.rbtSelected.selectedProperty().removeListener(lastListener);
         this.rbtSelected.selectedProperty().addListener(changeListener);
+    }
+
+    public boolean isContentDisabled() {
+        return contentDisabled.get();
+    }
+
+    public void setContentDisabled(boolean contentDisabled) {
+        this.contentDisabled.set(contentDisabled);
+    }
+
+    public Object get() {
+        Node node = null;
+        if (this.getChildren().size() > 1)
+            node = this.getChildren().get(1);
+        if (node != null) {
+            if (node instanceof TextField)
+                return ((TextField) node).getText();
+            if (node instanceof CheckBox)
+                return ((CheckBox) node).isSelected();
+            if (node instanceof RefBox)
+                return ((RefBox) node).getRecord();
+        }
+        return null;
+    }
+
+    public void set(Object content) {
+        Node node = null;
+        if (this.getChildren().size() > 1)
+            node = this.getChildren().get(1);
+        if (node != null) {
+            if (node instanceof TextField)
+                ((TextField) node).setText(content.toString());
+            if (node instanceof CheckBox)
+                ((CheckBox) node).setSelected((boolean) content);
+            if (node instanceof RefBox)
+                ((RefBox) node).setRecord((RecordItem<?>) content);
+        }
     }
 }

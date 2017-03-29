@@ -5,7 +5,8 @@
          xmlns:fx="http://javafx.com/fxml"
          alignment="CENTER_LEFT">
 
-    <RadioButton id="rbtSelected">
+    <RadioButton id="rbtSelected"
+                 HBox.hgrow="NEVER">
         <padding>
             <Insets left="3" right="5"/>
         </padding>

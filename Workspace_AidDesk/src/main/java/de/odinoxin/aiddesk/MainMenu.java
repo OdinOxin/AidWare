@@ -19,6 +19,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Optional;
 
@@ -161,7 +162,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         }
 
         @Override
-        protected List<ReadOnlyProperty<?>> getProperties() {
+        protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
             return null;
         }
     }

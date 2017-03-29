@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 
 public class Country extends RecordItem<CountryEntity> {
     private StringProperty alpha2 = new SimpleStringProperty();
@@ -108,12 +108,12 @@ public class Country extends RecordItem<CountryEntity> {
     }
 
     @Override
-    protected List<ReadOnlyProperty<?>> getProperties() {
-        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
-        properties.add(this.alpha2);
-        properties.add(this.alpha3);
-        properties.add(this.name);
-        properties.add(this.areaCode);
+    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
+        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+        properties.put(this.alpha2.getName(), this.alpha2);
+        properties.put(this.alpha3.getName(), this.alpha3);
+        properties.put(this.name.getName(), this.name);
+        properties.put(this.areaCode.getName(), this.areaCode);
         return properties;
     }
 }

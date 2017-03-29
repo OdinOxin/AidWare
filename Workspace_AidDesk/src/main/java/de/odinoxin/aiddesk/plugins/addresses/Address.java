@@ -5,8 +5,7 @@ import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.countries.Country;
 import javafx.beans.property.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 
 public class Address extends RecordItem<AddressEntity> {
 
@@ -124,13 +123,13 @@ public class Address extends RecordItem<AddressEntity> {
     }
 
     @Override
-    protected List<ReadOnlyProperty<?>> getProperties() {
-        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
-        properties.add(this.street);
-        properties.add(this.hsNo);
-        properties.add(this.zip);
-        properties.add(this.city);
-        properties.add(this.country);
+    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
+        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+        properties.put(this.street.getName(), this.street);
+        properties.put(this.hsNo.getName(), this.hsNo);
+        properties.put(this.zip.getName(), this.zip);
+        properties.put(this.city.getName(), this.city);
+        properties.put(this.country.getName(), this.country);
         return properties;
     }
 }

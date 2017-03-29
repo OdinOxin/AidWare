@@ -2,6 +2,7 @@ package de.odinoxin.aiddesk.plugins;
 
 import javafx.beans.property.*;
 
+import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -64,17 +65,23 @@ public abstract class RecordItem<T> implements Cloneable {
      */
     public abstract T toEntity();
 
-    protected abstract List<ReadOnlyProperty<?>> getProperties();
+    protected abstract Hashtable<String, ReadOnlyProperty<?>> getProperties();
 
     public List<String> getDifferentPropertyNames(RecordItem<?> other) {
         if (other == null || !this.getClass().getName().equals(other.getClass().getName()) || this.getId() != other.getId())
             return null;
-        List<ReadOnlyProperty<?>> properties = getProperties();
-        List<ReadOnlyProperty<?>> otherProperties = other.getProperties();
-        return properties.parallelStream().filter(prop ->
-                otherProperties.parallelStream().anyMatch(otherProp -> prop.getName().equals(otherProp.getName())
-                        && ((prop.getValue() == null && otherProp.getValue() == null)
-                        || (prop.getValue() != null && otherProp.getValue() != null && !prop.getValue().equals(otherProp.getValue()))))
-        ).map(prop -> prop.getName()).collect(Collectors.toList());
+        Hashtable<String, ReadOnlyProperty<?>> properties = getProperties();
+        Hashtable<String, ReadOnlyProperty<?>> otherProperties = other.getProperties();
+        return properties.keySet().stream().filter(key ->
+        {
+            boolean notNull = properties.get(key).getValue() != null && otherProperties.get(key).getValue() != null;
+            if (notNull) {
+                if (properties.get(key).getValue() instanceof RecordItem<?>)
+                    return ((RecordItem<?>) properties.get(key).getValue()).getId() != ((RecordItem<?>) otherProperties.get(key).getValue()).getId();
+                return !properties.get(key).getValue().equals(otherProperties.get(key).getValue());
+            } else
+                return (properties.get(key).getValue() == null && otherProperties.get(key).getValue() != null)
+                        || (properties.get(key).getValue() != null && otherProperties.get(key).getValue() == null);
+        }).collect(Collectors.toList());
     }
 }

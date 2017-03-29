@@ -6,8 +6,7 @@ import javafx.beans.property.ReadOnlyProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 
 public class ContactType extends RecordItem<ContactTypeEntity> {
 
@@ -93,11 +92,11 @@ public class ContactType extends RecordItem<ContactTypeEntity> {
     }
 
     @Override
-    protected List<ReadOnlyProperty<?>> getProperties() {
-        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
-        properties.add(this.name);
-        properties.add(this.code);
-        properties.add(this.regex);
+    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
+        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+        properties.put(this.name.getName(), this.name);
+        properties.put(this.code.getName(), this.code);
+        properties.put(this.regex.getName(), this.regex);
         return properties;
     }
 }

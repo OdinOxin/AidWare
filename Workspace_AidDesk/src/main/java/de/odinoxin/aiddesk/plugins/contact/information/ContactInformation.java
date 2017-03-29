@@ -5,8 +5,7 @@ import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.contact.types.ContactType;
 import javafx.beans.property.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 
 public class ContactInformation extends RecordItem<ContactInformationEntity> {
 
@@ -76,10 +75,10 @@ public class ContactInformation extends RecordItem<ContactInformationEntity> {
     }
 
     @Override
-    protected List<ReadOnlyProperty<?>> getProperties() {
-        List<ReadOnlyProperty<?>> properties = new ArrayList<>();
-        properties.add(this.contactType);
-        properties.add(this.information);
+    protected Hashtable<String, ReadOnlyProperty<?>> getProperties() {
+        Hashtable<String, ReadOnlyProperty<?>> properties = new Hashtable<>();
+        properties.put(this.contactType.getName(), this.contactType);
+        properties.put(this.information.getName(), this.information);
         return properties;
     }
 }

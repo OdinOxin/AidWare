@@ -3,54 +3,60 @@
 <?import de.odinoxin.aiddesk.controls.Header?>
 <?import de.odinoxin.aiddesk.controls.translateable.Button?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <VBox xmlns="http://javafx.com/javafx/8"
       id="mergeBox">
-    <SplitPane id="mergeSplitter"
-               VBox.vgrow="ALWAYS"
-               dividerPositions="0.33f, 0.66f">
-        <VBox>
-            <Header text="Original">
+    <SplitPane id="verticalSplitter"
+               orientation="VERTICAL">
+
+        <SplitPane id="horizontalSplitter"
+                   VBox.vgrow="ALWAYS">
+            <VBox>
+                <Header text="Server">
+                    <padding>
+                        <Insets left="5" top="15" right="5" bottom="10"/>
+                    </padding>
+                </Header>
+                <ScrollPane id="scpServer"
+                            fitToWidth="true"
+                            fitToHeight="true"
+                            VBox.vgrow="ALWAYS"/>
+            </VBox>
+            <VBox>
+                <Header text="Local">
+                    <padding>
+                        <Insets left="5" top="15" right="5" bottom="10"/>
+                    </padding>
+                </Header>
+                <ScrollPane id="scpLocal"
+                            fitToWidth="true"
+                            fitToHeight="true"
+                            VBox.vgrow="ALWAYS"/>
+            </VBox>
+        </SplitPane>
+
+        <VBox alignment="TOP_CENTER">
+            <Header text="Result">
                 <padding>
                     <Insets left="5" top="15" right="5" bottom="10"/>
                 </padding>
             </Header>
-            <ScrollPane id="scpOriginal"
+            <ScrollPane id="scpResult"
                         fitToWidth="true"
                         fitToHeight="true"
                         VBox.vgrow="ALWAYS"/>
         </VBox>
-        <VBox>
-            <Header text="Server">
-                <padding>
-                    <Insets left="5" top="15" right="5" bottom="10"/>
-                </padding>
-            </Header>
-            <ScrollPane id="scpServer"
-                        fitToWidth="true"
-                        fitToHeight="true"
-                        VBox.vgrow="ALWAYS"/>
-        </VBox>
-        <VBox>
-            <Header text="Local">
-                <padding>
-                    <Insets left="5" top="15" right="5" bottom="10"/>
-                </padding>
-            </Header>
-            <ScrollPane id="scpLocal"
-                        fitToWidth="true"
-                        fitToHeight="true"
-                        VBox.vgrow="ALWAYS"/>
-        </VBox>
+
     </SplitPane>
+
     <HBox alignment="CENTER_RIGHT"
           spacing="5">
         <padding>
             <Insets left="5" top="5" right="5" bottom="5"/>
         </padding>
-        <Button text="Merge"
+        <Button id="btnMerge"
+                text="Merge"
                 disable="true"/>
         <Button id="btnCancel"
                 text="Cancel"/>
