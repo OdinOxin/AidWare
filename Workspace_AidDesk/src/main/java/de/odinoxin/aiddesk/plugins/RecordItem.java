@@ -2,6 +2,7 @@ package de.odinoxin.aiddesk.plugins;
 
 import javafx.beans.property.*;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public abstract class RecordItem<T> implements Cloneable {
 
     public List<String> getDifferentPropertyNames(RecordItem<?> other) {
         if (other == null || !this.getClass().getName().equals(other.getClass().getName()) || this.getId() != other.getId())
-            return null;
+            return new ArrayList<>();
         Hashtable<String, Property<?>> properties = getProperties();
         Hashtable<String, Property<?>> otherProperties = other.getProperties();
         return properties.keySet().stream().filter(key ->
