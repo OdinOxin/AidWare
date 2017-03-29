@@ -104,7 +104,7 @@ public class AidCloud extends Application {
         });
         cboDBType.getItems().addAll(
                 new DBSetting("MSSQL 2012", "com.microsoft.sqlserver.jdbc.SQLServerDriver", "org.hibernate.dialect.SQLServer2012Dialect", "jdbc:sqlserver://%s%s;databaseName=%s"),
-                new DBSetting("MySQL", "com.mysql.jdbc.Driver", "org.hibernate.dialect.MySQLDialect", "jdbc:mysql://%s%s/%s"));
+                new DBSetting("MySQL", "com.mysql.jdbc.Driver", "org.hibernate.dialect.MySQL5Dialect", "jdbc:mysql://%s%s/%s"));
         cboDBType.getSelectionModel().selectFirst();
         if (inputArgs.containsKey(AidCloud.knownArgs[2])) {
             String query = inputArgs.get(AidCloud.knownArgs[2]);
