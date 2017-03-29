@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.control.TextField?>
+<?import de.odinoxin.aiddesk.controls.MergeablePane?>
 <?import de.odinoxin.aiddesk.controls.translateable.Label?>
-
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
           vgap="5"
           hgap="5">
@@ -30,38 +28,42 @@
            maxWidth="125"
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
-    <TextField id="txfAlpha2"
-               maxWidth="75"
-               GridPane.rowIndex="0"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="0"
+                   GridPane.columnIndex="1"
+                   maxWidth="75">
+        <TextField id="txfAlpha2"/>
+    </MergeablePane>
     <Label id="lblAlpha3"
            text="Alpha3"
            minWidth="125"
            maxWidth="125"
            GridPane.rowIndex="1"
            GridPane.columnIndex="0"/>
-    <TextField id="txfAlpha3"
-               maxWidth="75"
-               GridPane.rowIndex="1"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"
+                   maxWidth="75">
+        <TextField id="txfAlpha3"/>
+    </MergeablePane>
     <Label id="lblName"
            text="Name"
            minWidth="125"
            maxWidth="125"
            GridPane.rowIndex="2"
            GridPane.columnIndex="0"/>
-    <TextField id="txfName"
-               maxWidth="400"
-               GridPane.rowIndex="2"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="2"
+                   GridPane.columnIndex="1"
+                   maxWidth="400">
+        <TextField id="txfName"/>
+    </MergeablePane>
     <Label id="lblAreaCode"
            text="Vorwahl"
            minWidth="125"
            maxWidth="125"
            GridPane.rowIndex="3"
            GridPane.columnIndex="0"/>
-    <TextField id="txfAreaCode"
-               maxWidth="75"
-               GridPane.rowIndex="3"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="3"
+                   GridPane.columnIndex="1"
+                   maxWidth="75">
+        <TextField id="txfAreaCode"/>
+    </MergeablePane>
 </GridPane>

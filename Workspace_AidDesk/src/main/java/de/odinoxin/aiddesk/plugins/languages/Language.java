@@ -10,8 +10,8 @@ import java.util.Hashtable;
 
 public class Language extends RecordItem<LanguageEntity> {
 
-    private StringProperty name = new SimpleStringProperty();
-    private StringProperty code = new SimpleStringProperty();
+    private StringProperty name = new SimpleStringProperty(null, "Name");
+    private StringProperty code = new SimpleStringProperty(null, "Code");
 
     public Language() {
         super();

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.control.TextField?>
+<?import de.odinoxin.aiddesk.controls.*?>
 <?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
-<?import de.odinoxin.aiddesk.controls.translateable.Label?>
-
+<?import de.odinoxin.aiddesk.controls.translateable.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
           vgap="5"
           hgap="5">
@@ -31,20 +29,22 @@
            maxWidth="125"
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
-    <TextField id="txfStreet"
-               maxWidth="400"
-               GridPane.rowIndex="0"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="0"
+                   GridPane.columnIndex="1"
+                   maxWidth="400">
+        <TextField id="txfStreet"/>
+    </MergeablePane>
     <Label id="lblHsNo"
            text="HsNr"
            minWidth="125"
            maxWidth="125"
            GridPane.rowIndex="1"
            GridPane.columnIndex="0"/>
-    <TextField id="txfHsNo"
-               maxWidth="75"
-               GridPane.rowIndex="1"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="1"
+                   GridPane.columnIndex="1"
+                   maxWidth="75">
+        <TextField id="txfHsNo"/>
+    </MergeablePane>
 
     <Label id="lblZip"
            text="ZIP"
@@ -52,20 +52,22 @@
            maxWidth="125"
            GridPane.rowIndex="2"
            GridPane.columnIndex="0"/>
-    <TextField id="txfZip"
-               maxWidth="75"
-               GridPane.rowIndex="2"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="2"
+                   GridPane.columnIndex="1"
+                   maxWidth="75">
+        <TextField id="txfZip"/>
+    </MergeablePane>
     <Label id="lblCity"
            text="City"
            minWidth="125"
            maxWidth="125"
            GridPane.rowIndex="3"
            GridPane.columnIndex="0"/>
-    <TextField id="txfCity"
-               maxWidth="400"
-               GridPane.rowIndex="3"
-               GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="3"
+                   GridPane.columnIndex="1"
+                   maxWidth="400">
+        <TextField id="txfCity"/>
+    </MergeablePane>
 
     <Label id="lblCountry"
            text="Country"
@@ -73,11 +75,12 @@
            maxWidth="125"
            GridPane.rowIndex="4"
            GridPane.columnIndex="0"/>
-    <RefBox id="refBoxCountry"
-            maxWidth="400"
-            showNewButton="true"
-            showEditButton="true"
-            GridPane.rowIndex="4"
-            GridPane.columnIndex="1"/>
+    <MergeablePane GridPane.rowIndex="4"
+                   GridPane.columnIndex="1"
+                   maxWidth="400">
+        <RefBox id="refBoxCountry"
+                showNewButton="true"
+                showEditButton="true"/>
+    </MergeablePane>
 
 </GridPane>

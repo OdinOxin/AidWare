@@ -10,9 +10,9 @@ import java.util.Hashtable;
 
 public class ContactType extends RecordItem<ContactTypeEntity> {
 
-    private StringProperty name = new SimpleStringProperty();
-    private StringProperty code = new SimpleStringProperty();
-    private StringProperty regex = new SimpleStringProperty();
+    private StringProperty name = new SimpleStringProperty(null, "Name");
+    private StringProperty code = new SimpleStringProperty(null, "Code");
+    private StringProperty regex = new SimpleStringProperty(null, "Regex");
 
     public ContactType() {
         super();

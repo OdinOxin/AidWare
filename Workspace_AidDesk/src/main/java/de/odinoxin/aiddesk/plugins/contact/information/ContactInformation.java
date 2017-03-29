@@ -9,8 +9,8 @@ import java.util.Hashtable;
 
 public class ContactInformation extends RecordItem<ContactInformationEntity> {
 
-    private ObjectProperty<ContactType> contactType = new SimpleObjectProperty<>();
-    private StringProperty information = new SimpleStringProperty();
+    private ObjectProperty<ContactType> contactType = new SimpleObjectProperty<>(null, "ContactType");
+    private StringProperty information = new SimpleStringProperty(null, "Information");
 
     public ContactInformation() {
         super();

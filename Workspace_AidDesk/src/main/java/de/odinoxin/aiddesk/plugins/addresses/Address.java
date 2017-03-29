@@ -9,11 +9,11 @@ import java.util.Hashtable;
 
 public class Address extends RecordItem<AddressEntity> {
 
-    private StringProperty street = new SimpleStringProperty();
-    private StringProperty hsNo = new SimpleStringProperty();
-    private StringProperty zip = new SimpleStringProperty();
-    private StringProperty city = new SimpleStringProperty();
-    private ObjectProperty<Country> country = new SimpleObjectProperty<>();
+    private StringProperty street = new SimpleStringProperty(null, "Street");
+    private StringProperty hsNo = new SimpleStringProperty(null, "HsNo");
+    private StringProperty zip = new SimpleStringProperty(null, "Zip");
+    private StringProperty city = new SimpleStringProperty(null, "City");
+    private ObjectProperty<Country> country = new SimpleObjectProperty<>(null, "Country");
 
     public Address() {
         super();

@@ -9,10 +9,10 @@ import javafx.beans.property.StringProperty;
 import java.util.Hashtable;
 
 public class Country extends RecordItem<CountryEntity> {
-    private StringProperty alpha2 = new SimpleStringProperty();
-    private StringProperty alpha3 = new SimpleStringProperty();
-    private StringProperty name = new SimpleStringProperty();
-    private StringProperty areaCode = new SimpleStringProperty();
+    private StringProperty alpha2 = new SimpleStringProperty(null, "Alpha2");
+    private StringProperty alpha3 = new SimpleStringProperty(null, "Alpha3");
+    private StringProperty name = new SimpleStringProperty(null, "Name");
+    private StringProperty areaCode = new SimpleStringProperty(null, "AreaCode");
 
     public Country() {
         super();
