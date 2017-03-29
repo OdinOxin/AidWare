@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Workspace_AidCloud/AidCloud.iml" filepath="$PROJECT_DIR$/Workspace_AidCloud/AidCloud.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Workspace_AidDesk/AidDesk.iml" filepath="$PROJECT_DIR$/Workspace_AidDesk/AidDesk.iml" />
+    </modules>
+  </component>
+</project>
