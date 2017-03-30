@@ -30,9 +30,9 @@
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="0"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
-        <TextField id="txfName"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfName"
+                   maxWidth="400"/>
     </MergeablePane>
     <Label id="lblCode"
            text="Abbreviation"
@@ -41,8 +41,8 @@
            GridPane.rowIndex="1"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="1"
-                   GridPane.columnIndex="1"
-                   maxWidth="75">
-        <TextField id="txfCode"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfCode"
+                   maxWidth="75"/>
     </MergeablePane>
 </GridPane>

@@ -82,7 +82,6 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
                 } catch (ConcurrentFault_Exception ex) {
                     ex.printStackTrace();
                 } catch (Exception ex) {
-                    T resultRecord = (T) getOriginalRecordItem().clone();
                     MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
                     mergeDialog.show();
 //                    ex.printStackTrace();
@@ -273,6 +272,8 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * @return A clone of the record item.
      */
     public T getClonedRecordItem() {
+        if (this.getOriginalRecordItem() == null)
+            return null;
         return (T) this.getOriginalRecordItem().clone();
     }
 

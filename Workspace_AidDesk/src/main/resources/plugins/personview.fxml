@@ -57,9 +57,9 @@
                GridPane.rowIndex="1"
                GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="1"
-                       GridPane.columnIndex="1"
-                       maxWidth="400">
-            <TextField id="txfForename"/>
+                       GridPane.columnIndex="1">
+            <TextField id="txfForename"
+                       maxWidth="400"/>
         </MergeablePane>
         <Label id="lblName"
                text="Name"
@@ -68,9 +68,9 @@
                GridPane.rowIndex="2"
                GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="2"
-                       GridPane.columnIndex="1"
-                       maxWidth="400">
-            <TextField id="txfName"/>
+                       GridPane.columnIndex="1">
+            <TextField id="txfName"
+                       maxWidth="400"/>
         </MergeablePane>
 
         <Label id="lblCode"
@@ -80,9 +80,9 @@
                GridPane.rowIndex="3"
                GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="3"
-                       GridPane.columnIndex="1"
-                       maxWidth="400">
-            <TextField id="txfCode"/>
+                       GridPane.columnIndex="1">
+            <TextField id="txfCode"
+                       maxWidth="400"/>
         </MergeablePane>
 
         <Label id="txtPwd"

@@ -31,11 +31,11 @@
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="0"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
+                   GridPane.columnIndex="1">
         <RefBox id="refBoxContactType"
                 showNewButton="true"
-                showEditButton="true"/>
+                showEditButton="true"
+                maxWidth="400"/>
     </MergeablePane>
     <Label id="lblInformation"
            text="Information"
@@ -44,8 +44,8 @@
            GridPane.rowIndex="1"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="1"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
-        <TextField id="txfInformation"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfInformation"
+                   maxWidth="400"/>
     </MergeablePane>
 </GridPane>

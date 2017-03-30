@@ -55,7 +55,7 @@ public class MergeablePane extends HBox {
                 if (maxWidth < localMax)
                     maxWidth = localMax;
             }
-            this.maxWidthProperty().bind(((RadioButton) this.getChildren().get(0)).widthProperty().add(maxWidth));
+            this.maxWidthProperty().bind(((RadioButton) this.getChildren().get(0)).prefWidthProperty().add(maxWidth));
         });
     }
 

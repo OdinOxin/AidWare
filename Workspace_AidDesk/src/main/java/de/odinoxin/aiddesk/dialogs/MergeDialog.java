@@ -13,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -63,7 +64,9 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
     private void evaluateDifferences() {
         List<String> diffOriginalServer = this.original.getDifferentPropertyNames(this.serverView.getRecord());
         List<String> diffOriginalLocal = this.original.getDifferentPropertyNames(this.localView.getRecord());
-        List<String> diffServerLocal = this.serverView.getRecord().getDifferentPropertyNames(this.localView.getRecord());
+        List<String> diffServerLocal = new ArrayList<>();
+        if (this.serverView.getRecord() != null)
+            diffServerLocal.addAll(this.serverView.getRecord().getDifferentPropertyNames(this.localView.getRecord()));
 
         panesResult.keySet().forEach(s ->
         {
