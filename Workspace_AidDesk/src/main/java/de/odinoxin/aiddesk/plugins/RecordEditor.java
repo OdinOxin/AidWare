@@ -53,7 +53,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         try {
             this.provider = this.initProvider();
             this.view = newView(null);
-
+            this.setHotKeys(this.getView());
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
             this.refBoxKey.setOnNewAction(ev ->
@@ -69,7 +69,6 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
 
             this.btnSave = (Button) this.root.lookup("#btnSave");
-            this.setButtonCtrlS(this.btnSave);
             this.btnSave.setOnAction(ev ->
             {
                 try {
@@ -318,20 +317,18 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     public abstract RecordView<T> newView(T record);
 
     /**
-     * Adds Control+S as click action to the given button.
+     * Adds all hotkeys as click action to the given view.
      *
-     * @param btn The button to manipulate.
+     * @param v The view to add the keys.
      */
-    public void setButtonCtrlS(Button btn) {
-        btn.setOnKeyPressed(ev ->
-        {
-            System.out.println(ev.getCode().toString());
-            /**
-            if (ev.getCode() == KeyCode.ENTER) {
-                btn.fire();
+    public void setHotKeys(RecordView v) {
+        v.setOnKeyPressed(ev -> {
+
+            if(ev.isControlDown() && ev.getCode() == KeyCode.S)
+            {
+                btnSave.fire();
                 ev.consume();
             }
-             **/
         });
     }
 }
