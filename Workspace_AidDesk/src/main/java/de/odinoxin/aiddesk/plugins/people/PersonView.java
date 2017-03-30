@@ -15,13 +15,13 @@ import javafx.scene.control.TextField;
 
 public class PersonView extends RecordView<Person> {
 
-    TextField txfForename;
-    TextField txfName;
-    TextField txfCode;
-    Button btnPwd;
-    RefBox<Language> refBoxLanguage;
-    RefBox<Address> refBoxAddress;
-    RefList<ContactInformation> refListContactInformation;
+    private TextField txfForename;
+    private TextField txfName;
+    private TextField txfCode;
+    private Button btnPwd;
+    private RefBox<Language> refBoxLanguage;
+    private RefBox<Address> refBoxAddress;
+    private RefList<ContactInformation> refListContactInformation;
 
     PersonView(PersonEditor editor) {
         this(null, editor);

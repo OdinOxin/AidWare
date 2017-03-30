@@ -29,9 +29,9 @@
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="0"
-                   GridPane.columnIndex="1"
-                   maxWidth="75">
-        <TextField id="txfAlpha2"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfAlpha2"
+                   maxWidth="75"/>
     </MergeablePane>
     <Label id="lblAlpha3"
            text="Alpha3"
@@ -40,9 +40,9 @@
            GridPane.rowIndex="1"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="1"
-                   GridPane.columnIndex="1"
-                   maxWidth="75">
-        <TextField id="txfAlpha3"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfAlpha3"
+                   maxWidth="75"/>
     </MergeablePane>
     <Label id="lblName"
            text="Name"
@@ -51,9 +51,9 @@
            GridPane.rowIndex="2"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="2"
-                   GridPane.columnIndex="1"
-                   maxWidth="400">
-        <TextField id="txfName"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfName"
+                   maxWidth="400"/>
     </MergeablePane>
     <Label id="lblAreaCode"
            text="Vorwahl"
@@ -62,8 +62,8 @@
            GridPane.rowIndex="3"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="3"
-                   GridPane.columnIndex="1"
-                   maxWidth="75">
-        <TextField id="txfAreaCode"/>
+                   GridPane.columnIndex="1">
+        <TextField id="txfAreaCode"
+                   maxWidth="75"/>
     </MergeablePane>
 </GridPane>
