@@ -10,6 +10,7 @@ import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aiddesk.dialogs.MergeDialog;
 import javafx.beans.property.*;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
@@ -57,80 +58,24 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             this.view.setOnKeyPressed(ev -> HotkeyEvent(ev));
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
-            this.refBoxKey.setOnNewAction(ev ->
-            {
-                this.attemptLoadRecord(null);
-                this.refBoxKey.setRecord(this.getRecordItem());
-                this.onNew();
-            });
+            this.refBoxKey.setOnNewAction(ev -> refBoxNewAction());
             this.refBoxKey.recordProperty().addListener((observable, oldValue, newValue) -> this.attemptLoadRecord(newValue == null || this.provider == null ? null : this.provider.get(newValue.getId())));
+            super.setOnCloseRequest(ev -> closeRequest());
             this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
             this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.provider.get(this.getRecordItem().getId())));
             this.txfId = (TextField) this.root.lookup("#txfId");
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
 
             this.btnSave = (Button) this.root.lookup("#btnSave");
-            this.btnSave.setOnAction(ev ->
-            {
-                try {
-                    T newObj = this.onSave();
-                    if (newObj != null) {
-                        this.getRecordItem().setChanged(false);
-                        this.attemptLoadRecord(newObj);
-                        this.refBoxKey.setRecord(newObj);
-                    }
-                } catch (ConcurrentFault_Exception ex) {
-                    ex.printStackTrace();
-                } catch (Exception ex) {
-                    MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
-                    mergeDialog.show();
-//                    ex.printStackTrace();
-                }
-            });
+            this.btnSave.setOnAction(ev -> saveAction());
             setButtonEnter(this.btnSave);
             this.btnDiscard = (Button) this.root.lookup("#btnDiscard");
             this.btnDiscard.setOnAction(ev -> this.discard());
             setButtonEnter(this.btnDiscard);
-            this.recordItem().addListener((observable, oldValue, newValue) ->
-            {
-                if (newValue == null) {
-                    this.original = null;
-                    this.txfId.setText("");
-                    this.btnSave.setDisable(true);
-                    this.btnDiscard.setDisable(true);
-                    this.btnDelete.setDisable(true);
-                } else {
-                    this.original = (T) newValue.clone();
-                    this.txfId.setText(newValue.getId() == 0 ? TranslatorProvider.getTranslation("New") : String.valueOf(newValue.getId()));
-                    if (this.btnSave.disableProperty().isBound())
-                        this.btnSave.disableProperty().unbind();
-                    this.btnSave.disableProperty().bind(this.storeable.not().or(newValue.changedProperty().not()));
-                    if (this.btnDiscard.disableProperty().isBound())
-                        this.btnDiscard.disableProperty().unbind();
-                    this.btnDiscard.disableProperty().bind(newValue.changedProperty().not());
-                    if (this.btnDelete.disableProperty().isBound())
-                        this.btnDelete.disableProperty().unbind();
-                    this.btnDelete.disableProperty().bind(this.deletable.not().or(newValue.idProperty().isEqualTo(0)));
-                }
-            });
+            this.recordItem().addListener((observable, oldValue, newValue) -> recordItemListener(observable, oldValue, newValue));
 
             this.btnDelete = (Button) this.root.lookup("#btnDelete");
-            this.btnDelete.setOnAction(ev ->
-            {
-                if (this.getRecordItem() != null && this.getRecordItem().getId() != 0) {
-                    DecisionDialog dialog = new DecisionDialog(this, "Delete data?", "Delete data irrevocably?");
-                    Optional<ButtonType> dialogRes = dialog.showAndWait();
-                    if (dialogRes.isPresent() && ButtonType.OK.equals(dialogRes.get())) {
-                        boolean succeeded = this.onDelete();
-                        if (succeeded) {
-                            this.attemptLoadRecord(null);
-                            this.refBoxKey.setRecord(null);
-                            this.onNew();
-                            new MsgDialog(this, Alert.AlertType.INFORMATION, "Deleted!", "Successfully deleted.").show();
-                        }
-                    }
-                }
-            });
+            this.btnDelete.setOnAction(ev -> deleteAction());
             setButtonEnter(this.btnDelete);
             this.show();
             this.sizeToScene();
@@ -325,12 +270,106 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     public void HotkeyEvent(KeyEvent ev) {
         if(ev.isControlDown() && ev.getCode() == KeyCode.S)
         {
-            btnSave.fire();
+            saveAction();
             ev.consume();
         }
         if(ev.isControlDown() && ev.getCode() == KeyCode.N)
         {
+            refBoxNewAction();
             ev.consume();
+        }
+    }
+
+    /**
+     * An action that leaves the RecordEditor empty
+     *
+     */
+    public void refBoxNewAction()
+    {
+        this.attemptLoadRecord(null);
+        this.refBoxKey.setRecord(this.getRecordItem());
+        this.onNew();
+    }
+
+    /**
+     * An action that starts to save the record
+     *
+     */
+    public void saveAction()
+    {
+        try {
+            T newObj = this.onSave();
+            if (newObj != null) {
+                this.getRecordItem().setChanged(false);
+                this.attemptLoadRecord(newObj);
+                this.refBoxKey.setRecord(newObj);
+            }
+        } catch (ConcurrentFault_Exception ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
+            mergeDialog.show();
+//                    ex.printStackTrace();
+        }
+    }
+
+    /**
+     * An action that delete the record
+     *
+     */
+    public void deleteAction()
+    {
+        if (this.getRecordItem() != null && this.getRecordItem().getId() != 0) {
+            DecisionDialog dialog = new DecisionDialog(this, "Delete data?", "Delete data irrevocably?");
+            Optional<ButtonType> dialogRes = dialog.showAndWait();
+            if (dialogRes.isPresent() && ButtonType.OK.equals(dialogRes.get())) {
+                boolean succeeded = this.onDelete();
+                if (succeeded) {
+                    this.attemptLoadRecord(null);
+                    this.refBoxKey.setRecord(null);
+                    this.onNew();
+                    new MsgDialog(this, Alert.AlertType.INFORMATION, "Deleted!", "Successfully deleted.").show();
+                }
+            }
+        }
+    }
+
+    /**
+     * An action that ask the user if the edited record should be saved or not
+     *
+     */
+    public void closeRequest()
+    {
+        //TODO
+    }
+
+     /**
+     * I don't know what this Method do //TODO: OdinOxin
+     *
+     * @param observable ?.
+     * @param oldValue ?.
+     * @param newValue ?.
+     */
+    public void recordItemListener(ObservableValue observable, T oldValue, T newValue)
+    {
+        if (newValue == null) {
+            this.original = null;
+            this.txfId.setText("");
+            this.btnSave.setDisable(true);
+            this.btnDiscard.setDisable(true);
+            this.btnDelete.setDisable(true);
+        } else {
+            this.original = (T) newValue.clone();
+            this.txfId.setText(newValue.getId() == 0 ? TranslatorProvider.getTranslation("New") : String.valueOf(newValue.getId()));
+            if (this.btnSave.disableProperty().isBound())
+                this.btnSave.disableProperty().unbind();
+            this.btnSave.disableProperty().bind(this.storeable.not().or(newValue.changedProperty().not()));
+            if (this.btnDiscard.disableProperty().isBound())
+                this.btnDiscard.disableProperty().unbind();
+            this.btnDiscard.disableProperty().bind(newValue.changedProperty().not());
+            if (this.btnDelete.disableProperty().isBound())
+                this.btnDelete.disableProperty().unbind();
+            this.btnDelete.disableProperty().bind(this.deletable.not().or(newValue.idProperty().isEqualTo(0)));
         }
     }
 }
