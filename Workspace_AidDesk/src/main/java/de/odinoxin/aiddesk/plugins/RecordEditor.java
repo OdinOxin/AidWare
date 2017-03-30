@@ -14,6 +14,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 
 import java.util.Optional;
 
@@ -68,6 +69,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
 
             this.btnSave = (Button) this.root.lookup("#btnSave");
+            this.setButtonCtrlS(this.btnSave);
             this.btnSave.setOnAction(ev ->
             {
                 try {
@@ -313,4 +315,22 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     }
 
     public abstract RecordView<T> newView(T record);
+
+    /**
+     * Adds Control+S as click action to the given button.
+     *
+     * @param btn The button to manipulate.
+     */
+    public void setButtonCtrlS(Button btn) {
+        btn.setOnKeyPressed(ev ->
+        {
+            System.out.println(ev.getCode().toString());
+            /**
+            if (ev.getCode() == KeyCode.ENTER) {
+                btn.fire();
+                ev.consume();
+            }
+             **/
+        });
+    }
 }
