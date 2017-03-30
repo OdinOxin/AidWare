@@ -45,7 +45,8 @@ public class ContactInformation implements Recordable {
     public Object clone() {
         try {
             ContactInformation clone = (ContactInformation) super.clone();
-            clone.setContactType((ContactType) clone.getContactType().clone());
+            if (clone.getContactType() != null)
+                clone.setContactType((ContactType) clone.getContactType().clone());
             return clone;
         } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();

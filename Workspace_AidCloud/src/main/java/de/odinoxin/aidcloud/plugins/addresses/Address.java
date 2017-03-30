@@ -54,7 +54,8 @@ public class Address implements Recordable {
     public Object clone() {
         try {
             Address clone = (Address) super.clone();
-            clone.setCountry((Country) clone.getCountry().clone());
+            if (clone.getCountry() != null)
+                clone.setCountry((Country) clone.getCountry().clone());
             return clone;
         } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();
