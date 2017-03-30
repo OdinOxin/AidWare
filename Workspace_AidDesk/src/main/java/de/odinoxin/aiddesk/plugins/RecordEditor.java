@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         try {
             this.provider = this.initProvider();
             this.view = newView(null);
-            this.setHotKeys(this.getView());
+            this.view.setOnKeyPressed(ev -> HotkeyEvent(ev));
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
             this.refBoxKey.setOnNewAction(ev ->
@@ -317,18 +318,19 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     public abstract RecordView<T> newView(T record);
 
     /**
-     * Adds all hotkeys as click action to the given view.
+     * Adds all hotkeys as click action.
      *
-     * @param v The view to add the keys.
+     * @param ev The Event to add the keys.
      */
-    public void setHotKeys(RecordView v) {
-        v.setOnKeyPressed(ev -> {
-
-            if(ev.isControlDown() && ev.getCode() == KeyCode.S)
-            {
-                btnSave.fire();
-                ev.consume();
-            }
-        });
+    public void HotkeyEvent(KeyEvent ev) {
+        if(ev.isControlDown() && ev.getCode() == KeyCode.S)
+        {
+            btnSave.fire();
+            ev.consume();
+        }
+        if(ev.isControlDown() && ev.getCode() == KeyCode.N)
+        {
+            ev.consume();
+        }
     }
 }
