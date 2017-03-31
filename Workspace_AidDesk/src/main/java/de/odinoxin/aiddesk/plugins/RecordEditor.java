@@ -11,6 +11,7 @@ import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aiddesk.dialogs.MergeDialog;
 import javafx.beans.property.*;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
@@ -60,7 +61,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             this.refBoxKey.setProvider(this.provider);
             this.refBoxKey.setOnNewAction(ev -> refBoxNewAction());
             this.refBoxKey.recordProperty().addListener((observable, oldValue, newValue) -> this.attemptLoadRecord(newValue == null || this.provider == null ? null : this.provider.get(newValue.getId())));
-            super.setOnCloseRequest(ev -> closeRequest());
+            super.setOnCloseRequest(ev -> closeRequest(ev));
             this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
             this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.provider.get(this.getRecordItem().getId())));
             this.txfId = (TextField) this.root.lookup("#txfId");
@@ -125,24 +126,14 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * @param record The record to load.
      */
     public void attemptLoadRecord(T record) {
-        Callback apply = () ->
-        {
-            this.setRecord(record);
-            if (this.getRecordItem() != null) {
-                view.bind(this.getRecordItem());
-                this.getRecordItem().setChanged(false);
-            }
-        };
-
         if (this.getRecordItem() != null && this.getRecordItem().isChanged()) {
-            DecisionDialog dialog = new DecisionDialog(this, "Discard changes?", "Discard current changes?");
-            Optional<ButtonType> dialogRes = dialog.showAndWait();
-            if (ButtonType.OK.equals(dialogRes.get()))
-                apply.call();
+            boolean discard = discardDialog();
+            if (discard)
+                discardRecord(record);
             else
                 this.refBoxKey.setRecord(this.getRecordItem());
         } else
-            apply.call();
+            discardRecord(record);
     }
 
     /**
@@ -337,10 +328,16 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     /**
      * An action that ask the user if the edited record should be saved or not
      *
+     * @param ev The Event to cancel the original closeRequest
      */
-    public void closeRequest()
+    public void closeRequest(Event ev)
     {
-        //TODO
+        boolean discard = discardDialog();
+        if (discard){
+            discardRecord(getRecordItem());
+        } else {
+            ev.consume();
+        }
     }
 
      /**
@@ -370,6 +367,31 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             if (this.btnDelete.disableProperty().isBound())
                 this.btnDelete.disableProperty().unbind();
             this.btnDelete.disableProperty().bind(this.deletable.not().or(newValue.idProperty().isEqualTo(0)));
+        }
+    }
+    /**
+     * This method opens a dialog where the user is asked if the changes should be discardet
+     *
+     * @return true if the user pressed OK and false if not
+     */
+    public boolean discardDialog(){
+        DecisionDialog dialog = new DecisionDialog(this, "Discard changes?", "Discard current changes?");
+        Optional<ButtonType> dialogRes = dialog.showAndWait();
+        if (ButtonType.OK.equals(dialogRes.get()))
+            return true;
+        return false;
+    }
+
+    /**
+     * This method discard the record
+     *
+     * @param record  is the record wich should closed
+     */
+    public void discardRecord(T record){
+        this.setRecord(record);
+        if (this.getRecordItem() != null) {
+            view.bind(this.getRecordItem());
+            this.getRecordItem().setChanged(false);
         }
     }
 }
