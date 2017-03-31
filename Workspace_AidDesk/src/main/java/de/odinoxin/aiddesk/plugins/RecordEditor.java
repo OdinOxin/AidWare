@@ -332,11 +332,13 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      */
     public void closeRequest(Event ev)
     {
-        boolean discard = discardDialog();
-        if (discard){
-            discardRecord(getRecordItem());
-        } else {
-            ev.consume();
+        if (this.getRecordItem() != null && this.getRecordItem().isChanged()) {
+            boolean discard = discardDialog();
+            if (discard) {
+                discardRecord(getRecordItem());
+            } else {
+                ev.consume();
+            }
         }
     }
 
