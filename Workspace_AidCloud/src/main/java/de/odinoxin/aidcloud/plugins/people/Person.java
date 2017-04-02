@@ -79,6 +79,23 @@ public class Person implements Recordable {
     @Override
     public Object clone() {
         return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getAddress(), this.getContactInformation());
+//        try {
+//            Person clone = (Person) super.clone();
+//            if (clone.getLanguage() != null)
+//                clone.setLanguage((Language) clone.getLanguage().clone());
+//            if (clone.getAddress() != null)
+//                clone.setAddress((Address) clone.getAddress().clone());
+//            if (clone.getContactInformation() != null) {
+//                List<ContactInformation> newList = new ArrayList<>();
+//                for (ContactInformation ci : clone.getContactInformation())
+//                    newList.add((ContactInformation) ci.clone());
+//                clone.setContactInformation(newList);
+//            }
+//            return clone;
+//        } catch (CloneNotSupportedException ex) {
+//            ex.printStackTrace();
+//        }
+//        return null;
     }
 
     @Override
