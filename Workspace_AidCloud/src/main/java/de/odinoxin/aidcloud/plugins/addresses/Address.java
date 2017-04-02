@@ -76,7 +76,7 @@ public class Address implements Recordable {
                 && ((address.getHsNo() == null && this.getHsNo() == null) || (address.getHsNo() != null && address.getHsNo().equals(this.getHsNo())))
                 && ((address.getZip() == null && this.getZip() == null) || (address.getZip() != null && address.getZip().equals(this.getZip())))
                 && ((address.getCity() == null && this.getCity() == null) || (address.getCity() != null && address.getCity().equals(this.getCity())))
-                && address.getCountry().equals(this.getCountry());
+                && ((address.getCountry() == null && this.getCountry() == null) || (address.getCountry() != null && this.getCountry() != null && address.getCountry().getId() == this.getCountry().getId()));
     }
 
     @Override

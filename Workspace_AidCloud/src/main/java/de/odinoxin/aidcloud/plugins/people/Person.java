@@ -110,13 +110,14 @@ public class Person implements Recordable {
                 && ((person.getName() == null && this.getName() == null) || (person.getName() != null && person.getName().equals(this.getName())))
                 && ((person.getForename() == null && this.getForename() == null) || (person.getForename() != null && person.getForename().equals(this.getForename())))
                 && ((person.getCode() == null && this.getCode() == null) || (person.getCode() != null && person.getCode().equals(this.getCode())))
-                && ((person.getLanguage() == null && this.getLanguage() == null) || (person.getLanguage() != null && person.getLanguage().equals(this.getLanguage())))
-                && ((person.getAddress() == null && this.getAddress() == null) || (person.getAddress() != null && person.getAddress().equals(this.getAddress())))) {
+                && ((person.getLanguage() == null && this.getLanguage() == null) || (person.getLanguage() != null && this.getLanguage() != null && person.getLanguage().getId() == this.getLanguage().getId()))
+                && ((person.getAddress() == null && this.getAddress() == null) || (person.getAddress() != null && this.getAddress() != null && person.getAddress().getId() == this.getAddress().getId()))) {
             if (person.getContactInformation() != null
                     && this.getContactInformation() != null
                     && person.getContactInformation().size() == this.getContactInformation().size()) {
                 for (int i = 0; i < this.getContactInformation().size(); i++)
-                    if (!person.getContactInformation().get(i).equals(this.getContactInformation().get(i)))
+                    if (person.getContactInformation().get(i) == null || this.getContactInformation().get(i) == null
+                            || person.getContactInformation().get(i).getId() != this.getContactInformation().get(i).getId())
                         return false;
                 return true;
             } else if (person.getContactInformation() == null

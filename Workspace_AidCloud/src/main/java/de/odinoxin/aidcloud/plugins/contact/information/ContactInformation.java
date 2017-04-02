@@ -63,7 +63,7 @@ public class ContactInformation implements Recordable {
             return false;
         ContactInformation contactInformation = (ContactInformation) obj;
         return contactInformation.getId() == this.getId()
-                && ((contactInformation.getContactType() == null && this.getContactType() == null) || (contactInformation.getContactType() != null && contactInformation.getContactType().equals(this.getContactType())))
+                && ((contactInformation.getContactType() == null && this.getContactType() == null) || (contactInformation.getContactType() != null && this.getContactType() != null && contactInformation.getContactType().getId() == this.getContactType().getId()))
                 && ((contactInformation.getInformation() == null && this.getInformation() == null) || (contactInformation.getInformation() != null && contactInformation.getInformation().equals(this.getInformation())));
     }
 
