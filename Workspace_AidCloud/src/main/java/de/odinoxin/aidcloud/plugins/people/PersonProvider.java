@@ -98,7 +98,7 @@ public class PersonProvider extends RecordHandler<Person> {
 
     @Override
     public void generateDefaults() {
-        if (!this.anyRecords()) {
+        if (this.countRecords() <= 0) {
             Person admin = new Person();
             admin.setForename("AidDesk");
             admin.setName("Admin");

@@ -8,6 +8,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @WebService
@@ -37,6 +40,11 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("Enter and repeat password.", "Geben Sie das neue Passwort ein und wiederholen Sie dieses korrekt.", "Enter the new password and repeat it correctly."),
             new Translation("Enter current password.", "Geben Sie das aktuelle Passwort an, um ein neues Passwort zu speichern.", "Enter the current password, in order to save a new one."),
 
+            new Translation("Merging", "Zusammenführen", null),
+            new Translation("Merge", "Zusammenführen", null),
+            new Translation("Server", null, null),
+            new Translation("Local", "Lokal", null),
+            new Translation("Result", "Ergebnis", null),
             new Translation("Discard changes?", "Änderugen verwerfen?", null),
             new Translation("Discard current changes?", "Möchten Sie die aktuellen Änderungen verwerfen?", "Do you want to discard the current changes?"),
             new Translation("Delete", "Löschen", null),
@@ -119,13 +127,21 @@ public class Translator extends RecordHandler<Translation> {
 
     @Override
     public void generateDefaults() {
-        if (!this.anyRecords()) {
-            Session session = DB.open();
-            session.beginTransaction();
-            for (Translation translation : TRANSLATIONS)
-                session.save(translation);
-            session.getTransaction().commit();
-            session.close();
+        if (this.countRecords() != TRANSLATIONS.length) {
+            try (Session session = DB.open()) {
+                session.beginTransaction();
+                for (Translation translation : TRANSLATIONS) {
+                    CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
+                    CriteriaQuery<Integer> query = builder.createQuery(Integer.class);
+                    Root<Translation> translationRoot = query.from(Translation.class);
+                    query.select(translationRoot.get(Translation_.id));
+                    query.where(builder.equal(translationRoot.get(Translation_.sys), translation.getSys()));
+                    if (session.getEntityManagerFactory().createEntityManager().createQuery(query).getResultList().size() > 0)
+                        session.delete(new Translation(session.getEntityManagerFactory().createEntityManager().createQuery(query).getResultList().get(0)));
+                    session.save(translation);
+                }
+                session.getTransaction().commit();
+            }
         }
     }
 }

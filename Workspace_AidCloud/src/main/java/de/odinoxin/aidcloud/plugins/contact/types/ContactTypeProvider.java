@@ -55,7 +55,7 @@ public class ContactTypeProvider extends RecordHandler<ContactType> {
 
     @Override
     public void generateDefaults() {
-        if (!this.anyRecords()) {
+        if (this.countRecords() <= 0) {
             ContactType tel = new ContactType();
             tel.setCode("Tel");
             tel.setName("Telephone");
