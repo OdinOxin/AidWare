@@ -3,6 +3,7 @@ package de.odinoxin.aiddesk.plugins.people;
 import de.odinoxin.aidcloud.provider.AddressProvider;
 import de.odinoxin.aidcloud.provider.ContactInformationProvider;
 import de.odinoxin.aidcloud.provider.LanguageProvider;
+import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.controls.reflist.RefList;
 import de.odinoxin.aiddesk.controls.translateable.Button;
@@ -68,8 +69,8 @@ public class PersonView extends RecordView<Person> {
     }
 
     @Override
-    public void setViewMode(ViewMode mode) {
-        super.setViewMode(mode);
-        btnPwd.setDisable(mode != ViewMode.EDITING);
+    public void setViewMode(ViewMode viewMode) {
+        super.setViewMode(viewMode);
+        ((MergeablePane) this.btnPwd.getParent()).setContentEditable(viewMode == ViewMode.EDITING);
     }
 }

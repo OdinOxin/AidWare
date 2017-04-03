@@ -114,9 +114,6 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
             panesServer.get(s).setSelectable(selectable);
             panesLocal.get(s).setSelectable(selectable);
             panesResult.get(s).setSelectable(false);
-            panesServer.get(s).setSelected(false);
-            panesLocal.get(s).setSelected(false);
-            panesResult.get(s).setSelected(false);
             panesServer.get(s).setSelectedListener((observable, oldValue, newValue) ->
             {
                 if (newValue) {

@@ -52,7 +52,7 @@ public class MergeablePane extends HBox {
                 if (this.getChildren().get(i) instanceof RefBox<?>)
                     ((RefBox<?>) this.getChildren().get(i)).changeableProperty().bind(this.contentEditable);
                 if (this.getChildren().get(i) instanceof ButtonBase)
-                    this.getChildren().get(i).disableProperty().bind(this.contentEditable);
+                    this.getChildren().get(i).disableProperty().bind(this.contentEditable.not());
                 HBox.setHgrow(this.getChildren().get(i), Priority.ALWAYS);
                 double localMax = this.getChildren().get(i).maxWidth(-1);
                 double localPref = this.getChildren().get(i).prefWidth(-1);
