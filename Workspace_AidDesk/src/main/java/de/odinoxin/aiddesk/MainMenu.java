@@ -13,6 +13,7 @@ import de.odinoxin.aiddesk.plugins.addresses.AddressEditor;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformationEditor;
 import de.odinoxin.aiddesk.plugins.contact.types.ContactTypeEditor;
 import de.odinoxin.aiddesk.plugins.countries.CountryEditor;
+import de.odinoxin.aiddesk.plugins.languages.LanguageEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
 import javafx.beans.property.Property;
 import javafx.scene.control.ButtonType;
@@ -35,16 +36,14 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
     /**
      * Avaiable plugins
      */
-    private static final PluginItem[] PLUGIN_ITEMS =
-            {
-                    new PluginItem(0, "MainMenu"),
-                    new PluginItem(1, "PersonEditor"),
-                    new PluginItem(2, "AddressEditor"),
-                    new PluginItem(3, "CountryEditor"),
-                    new PluginItem(4, "ContactTypeEditor"),
-                    new PluginItem(5, "ContactInformationEditor"),
-            };
-
+    private static final PluginItem[] PLUGIN_ITEMS = {
+            new PluginItem("PersonEditor", PersonEditor.class, PluginItem.MASTERDATA),
+            new PluginItem("AddressEditor", AddressEditor.class, PluginItem.MASTERDATA),
+            new PluginItem("CountryEditor", CountryEditor.class, PluginItem.MASTERDATA),
+            new PluginItem("LanguageEditor", LanguageEditor.class, PluginItem.MASTERDATA),
+            new PluginItem("ContactTypeEditor", ContactTypeEditor.class, PluginItem.MASTERDATA),
+            new PluginItem("ContactInformationEditor", ContactInformationEditor.class, PluginItem.MASTERDATA),
+    };
 
     public MainMenu() {
         super("/mainmenu.fxml", "Main menu");
@@ -53,23 +52,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         this.refBoxPlugins.setProvider(this);
         this.refBoxPlugins.recordProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                switch (newValue.getId()) {
-                    case 1:
-                        new PersonEditor(null);
-                        break;
-                    case 2:
-                        new AddressEditor(null);
-                        break;
-                    case 3:
-                        new CountryEditor(null);
-                        break;
-                    case 4:
-                        new ContactTypeEditor(null);
-                        break;
-                    case 5:
-                        new ContactInformationEditor(null);
-                        break;
-                }
+                newValue.launch();
                 this.refBoxPlugins.setRecord(null);
             }
         });
@@ -123,14 +106,25 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
     public RefBoxListItem<PluginItem> getRefBoxItem(PluginItem item) {
         if (item == null)
             return null;
-        return new RefBoxListItem<>(item, item.getName(), "");
+        return new RefBoxListItem<>(item, item.getName(), item.getSubText());
     }
 
     @Override
-    public List<RefBoxListItem<PluginItem>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<PluginItem>> search(List<String> exprs, int max) {
         List<RefBoxListItem<PluginItem>> items = new ArrayList<>();
-        for (PluginItem item : PLUGIN_ITEMS)
-            items.add(getRefBoxItem(item));
+        for (PluginItem item : PLUGIN_ITEMS) {
+            RefBoxListItem<PluginItem> refBoxItem = getRefBoxItem(item);
+            if (exprs != null)
+                for (String expr : exprs) {
+                    expr = expr.toLowerCase();
+                    if (refBoxItem.getText().toLowerCase().contains(expr) || refBoxItem.getSubText().toLowerCase().contains(expr)) {
+                        items.add(refBoxItem);
+                        break;
+                    }
+                }
+            else
+                items.add(refBoxItem);
+        }
         return items;
     }
 
@@ -140,20 +134,41 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
     }
 
     static class PluginItem extends RecordItem<Object> {
+        private static int nextID = 0;
         private String name;
+        private String subText;
+        private Class<? extends Plugin> pluginClass;
+        static final String MASTERDATA = TranslatorProvider.getTranslation("MasterData");
 
-        public PluginItem(int id, String name) {
-            this.setId(id);
+        public PluginItem(String name, Class<? extends Plugin> pluginClass, String subText) {
+            this.setId(nextID++);
             this.name = TranslatorProvider.getTranslation(name);
+            this.pluginClass = pluginClass;
+            this.subText = subText;
         }
 
         @Override
         protected Object clone() {
-            return new PluginItem(this.getId(), this.getName());
+            PluginItem item = new PluginItem(this.getName(), this.pluginClass, this.subText);
+            item.setId(this.getId());
+            return item;
         }
 
         public String getName() {
             return name;
+        }
+
+        public String getSubText() {
+            return subText;
+        }
+
+        void launch() {
+            try {
+                if (this.pluginClass != null)
+                    this.pluginClass.newInstance();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         }
 
         @Override

@@ -28,7 +28,9 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("New", "Neu", null),
             new Translation("Selection", "Auswahl", null),
 
+            new Translation("MainMenu", "Hauptmenü", "Main menu"),
             new Translation("Main Menu", "Hauptmenü", "Main menu"),
+            new Translation("MasterData", "Stammdaten Editor", "Masterdata editor"),
             new Translation("Log out", "Ausloggen", null),
             new Translation("Log out?", "Ausloggen?", null),
             new Translation("Log out and close all related windows?", "Ausloggen und alle zugehörigen Fenster schließen?", null),
@@ -56,9 +58,11 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("More items avaiable!", "Mehr Einträge verfügbar!", null),
             new Translation("Load more items...", "Weitere Einträge laden...", null),
 
+            new Translation("LanguageEditor", "Sprachen", "Languages"),
             new Translation("Languages", "Sprachen", null),
             new Translation("Language", "Sprache", null),
 
+            new Translation("PersonEditor", "Personen", "People"),
             new Translation("People", "Personen", null),
             new Translation("Person", "Person", null),
             new Translation("Name"),
@@ -69,6 +73,7 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("New password", "Neues Passwort", null),
             new Translation("Repetition", "Wiederholung", null),
 
+            new Translation("AddressEditor", "Adressen", "Addresses"),
             new Translation("Addresses", "Adressen", null),
             new Translation("Address", "Adresse", null),
             new Translation("Street", "Straße", null),
@@ -77,16 +82,19 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("City", "Ort", null),
             new Translation("Country", "Land", null),
 
+            new Translation("CountryEditor", "Länder", "Countries"),
             new Translation("Countries", "Länder", null),
             new Translation("Alpha2"),
             new Translation("Alpha3"),
             new Translation("Vorwahl", null, "Area code"),
 
+            new Translation("ContactTypeEditor", "Kontaktarten", "Contact types"),
             new Translation("Contact types", "Kontaktarten", null),
             new Translation("Contact type", "Kontaktart", null),
             new Translation("Abbreviation", "Abkürzung", null),
             new Translation("Format"),
 
+            new Translation("ContactInformationEditor", "Kontaktinformationen", "Contact information"),
             new Translation("Contact information", "Kontaktinformationen", null),
             new Translation("Information"),
     };

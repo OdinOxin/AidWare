@@ -15,6 +15,7 @@
 
     <RefBox id="refBoxPlugins"
             translate="true"
+            showID="false"
             VBox.vgrow="ALWAYS"/>
 
     <Separator orientation="HORIZONTAL"/>

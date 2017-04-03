@@ -8,6 +8,10 @@ import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class AddressEditor extends RecordEditor<Address> {
 
+    public AddressEditor() {
+        this(null);
+    }
+
     public AddressEditor(Address address) {
         super("Addresses");
         this.attemptLoadRecord(address);

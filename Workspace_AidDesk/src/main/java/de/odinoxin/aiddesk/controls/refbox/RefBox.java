@@ -66,6 +66,13 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      * Whether the detail area is displayed.
      */
     private BooleanProperty showDetails = new SimpleBooleanProperty(this, "showDetails", false);
+    /**
+     * Whether the ID is displayed.
+     */
+    private BooleanProperty showID = new SimpleBooleanProperty(this, "showID", true);
+    /**
+     * Whether the content should be translated.
+     */
     private BooleanProperty translate = new SimpleBooleanProperty(this, "translate", false);
     /**
      * How many rows in the details area are expected.
@@ -265,6 +272,14 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.showDetails.set(showDetails);
     }
 
+    public boolean isShowID() {
+        return showID.get();
+    }
+
+    public void setShowID(boolean showID) {
+        this.showID.set(showID);
+    }
+
     public boolean isTranslate() {
         return translate.get();
     }
@@ -308,6 +323,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
 
     public BooleanProperty showDetails() {
         return this.showDetails;
+    }
+
+    public BooleanProperty showID() {
+        return this.showID;
     }
 
     public IntegerProperty detailsRowsProperty() {
@@ -371,7 +390,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
             this.refBoxList.hide();
         this.refBoxList = new RefBoxList<>(this.localToScreen(0, this.txfText.getHeight()));
         this.refBoxList.setPrefWidth(this.getWidth());
-        this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max));
+        this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max, showID.get()));
 
         String[] highlight = this.txfText.getText() == null || this.txfText.getText().isEmpty() ? null : this.txfText.getText().split(" ");
         if (this.provider != null) {

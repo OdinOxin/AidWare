@@ -3,6 +3,7 @@ package de.odinoxin.aiddesk.controls.refbox;
 import de.odinoxin.aidcloud.provider.TranslatorProvider;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -15,6 +16,7 @@ import java.util.regex.Pattern;
 
 /**
  * {@link ListCell} for {@link RefBoxListItem}.
+ *
  * @param <T> The type of the record.
  */
 class RefBoxListItemCell<T extends RecordItem> extends ListCell<RefBoxListItem<T>> {
@@ -22,14 +24,17 @@ class RefBoxListItemCell<T extends RecordItem> extends ListCell<RefBoxListItem<T
     private GridPane grdItem;
     private int matched;
     private int max;
+    private boolean showID;
 
-    public RefBoxListItemCell(int max) {
+    public RefBoxListItemCell(int max, boolean showID) {
         this.max = max;
+        this.showID = showID;
     }
 
     /**
      * Updates the content and style.
-     * @param item The new record to represent.
+     *
+     * @param item  The new record to represent.
      * @param empty Whether the record is a null item, or empty.
      */
     @Override
@@ -41,7 +46,10 @@ class RefBoxListItemCell<T extends RecordItem> extends ListCell<RefBoxListItem<T
                 this.matched = 0;
                 this.grdItem = FXMLLoader.load(RefBox.class.getResource("/controls/refboxlistitem.fxml"));
 
+                Node tflID = this.grdItem.lookup("#ID");
                 if (this.getIndex() < this.max) {
+                    tflID.setVisible(showID);
+                    tflID.setManaged(showID);
                     String idText = String.valueOf(item.getRecord().getId());
                     this.markup("ID", idText, item.getHighlight());
                     this.markup("Text", item.getText(), item.getHighlight());
@@ -63,6 +71,8 @@ class RefBoxListItemCell<T extends RecordItem> extends ListCell<RefBoxListItem<T
                     }
                 } else {
                     item.setRecord(null);
+                    tflID.setVisible(false);
+                    tflID.setManaged(false);
                     this.markup("Text", TranslatorProvider.getTranslation("More items avaiable!"), null);
                     this.markup("SubText", TranslatorProvider.getTranslation("Load more items..."), null);
                 }
@@ -131,9 +141,10 @@ class RefBoxListItemCell<T extends RecordItem> extends ListCell<RefBoxListItem<T
 
     /**
      * Adds a {@link Text} the the given {@link TextFlow}.
-     * @param tfl The {@link TextFlow} to add the new {@link Text}.
+     *
+     * @param tfl     The {@link TextFlow} to add the new {@link Text}.
      * @param subText Whether the style for subtexts should be used.
-     * @param text The content.
+     * @param text    The content.
      */
     private void addText(TextFlow tfl, boolean subText, String text) {
         Text txt = new Text(text);

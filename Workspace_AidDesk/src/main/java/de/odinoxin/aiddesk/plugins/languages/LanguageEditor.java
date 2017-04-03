@@ -8,6 +8,10 @@ import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class LanguageEditor extends RecordEditor<Language> {
 
+    public LanguageEditor() {
+        this(null);
+    }
+
     public LanguageEditor(Language language) {
         super("Languages");
         this.attemptLoadRecord(language);

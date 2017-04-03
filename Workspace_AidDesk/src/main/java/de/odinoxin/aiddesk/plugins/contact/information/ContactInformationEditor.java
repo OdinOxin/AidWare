@@ -8,6 +8,10 @@ import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class ContactInformationEditor extends RecordEditor<ContactInformation> {
 
+    public ContactInformationEditor() {
+        this(null);
+    }
+
     public ContactInformationEditor(ContactInformation contactInformation) {
         super("Contact information");
         this.attemptLoadRecord(contactInformation);

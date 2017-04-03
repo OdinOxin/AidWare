@@ -13,6 +13,10 @@ public class PersonEditor extends RecordEditor<Person> {
 
     private String currentPwdw;
 
+    public PersonEditor() {
+        this(null);
+    }
+
     public PersonEditor(Person person) {
         super("People");
         this.attemptLoadRecord(person);

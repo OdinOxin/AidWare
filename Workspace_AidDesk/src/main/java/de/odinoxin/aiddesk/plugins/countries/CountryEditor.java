@@ -8,6 +8,10 @@ import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class CountryEditor extends RecordEditor<Country> {
 
+    public CountryEditor() {
+        this(null);
+    }
+
     public CountryEditor(Country country) {
         super("Countries");
         this.attemptLoadRecord(country);
