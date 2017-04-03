@@ -17,20 +17,20 @@ public class ContactInformationEditor extends RecordEditor<ContactInformation> {
 
     @Override
     protected ContactInformation onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
+        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
     @Override
     protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecordItem().getId());
+        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override
     protected void setRecord(ContactInformation contactInformation) {
         if (contactInformation == null)
-            this.setRecordItem(new ContactInformation());
+            super.setRecord(new ContactInformation());
         else
-            this.setRecordItem(contactInformation);
+            super.setRecord(contactInformation);
     }
 
     @Override

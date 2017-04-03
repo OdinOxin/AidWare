@@ -22,24 +22,24 @@ public class PersonEditor extends RecordEditor<Person> {
 
     @Override
     protected Person onSave() throws ConcurrentFault_Exception {
-        if (this.currentPwdw != null && this.getRecordItem().getPwd() != null)
-            if (!PersonProvider.changePwd(this.getRecordItem().getId(), this.currentPwdw, this.getRecordItem().getPwd()))
+        if (this.currentPwdw != null && this.getRecord().getPwd() != null)
+            if (!PersonProvider.changePwd(this.getRecord().getId(), this.currentPwdw, this.getRecord().getPwd()))
                 new MsgDialog(this, Alert.AlertType.ERROR, "Fehlgeschlagen!", "Passwort konnte nicht geändert werden.").showAndWait();
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
+        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
     @Override
     protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecordItem().getId());
+        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override
     protected void setRecord(Person person) {
         if (person == null)
-            this.setRecordItem(new Person());
+            super.setRecord(new Person());
         else {
             this.setDeletable(person.getId() != Login.getPerson().getId());
-            this.setRecordItem(person);
+            super.setRecord(person);
         }
     }
 
@@ -55,6 +55,6 @@ public class PersonEditor extends RecordEditor<Person> {
 
     void changePwd(String currentPwd, String newPwd) {
         this.currentPwdw = currentPwd;
-        this.getRecordItem().setPwd(newPwd);
+        this.getRecord().setPwd(newPwd);
     }
 }

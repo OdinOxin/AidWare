@@ -17,20 +17,20 @@ public class LanguageEditor extends RecordEditor<Language> {
 
     @Override
     protected Language onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
+        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
     @Override
     protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecordItem().getId());
+        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override
     protected void setRecord(Language language) {
         if (language == null)
-            this.setRecordItem(new Language());
+            super.setRecord(new Language());
         else
-            this.setRecordItem(language);
+            super.setRecord(language);
     }
 
     @Override

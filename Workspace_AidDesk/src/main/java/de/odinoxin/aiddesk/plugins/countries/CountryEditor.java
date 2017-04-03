@@ -17,20 +17,20 @@ public class CountryEditor extends RecordEditor<Country> {
 
     @Override
     protected Country onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
+        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
     @Override
     protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecordItem().getId());
+        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override
     protected void setRecord(Country country) {
         if (country == null)
-            this.setRecordItem(new Country());
+            super.setRecord(new Country());
         else
-            this.setRecordItem(country);
+            super.setRecord(country);
     }
 
     @Override

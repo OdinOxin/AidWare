@@ -2,7 +2,6 @@ package de.odinoxin.aiddesk.dialogs;
 
 import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.translateable.Button;
-import de.odinoxin.aiddesk.dialogs.Callback;
 import de.odinoxin.aiddesk.plugins.Plugin;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordItem;
@@ -36,18 +35,18 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
         btnMerge = ((Button) root.lookup("#btnMerge"));
         btnMerge.setOnAction(event ->
         {
-            editor.getRecordItem().setChanged(false);
+            editor.getRecord().setChanged(false);
             editor.attemptLoadRecord(resultView.getRecord());
-            editor.setOriginalRecordItem(serverView.getRecord());
-            editor.getRecordItem().setChanged(true);
+            editor.setOriginalRecord(serverView.getRecord());
+            editor.getRecord().setChanged(true);
             this.close();
         });
         ((Button) root.lookup("#btnCancel")).setOnAction(event -> this.close());
         SplitPane verticalSplitter = ((SplitPane) this.root.lookup("#verticalSplitter"));
-        this.original = editor.getOriginalRecordItem();
-        this.serverView = editor.newView(editor.getServerRecordItem());
-        this.localView = editor.newView(editor.getRecordItem());
-        this.resultView = editor.newView(editor.getClonedRecordItem());
+        this.original = editor.getOriginalRecord();
+        this.serverView = editor.newView(editor.getServerRecord());
+        this.localView = editor.newView(editor.getRecord());
+        this.resultView = editor.newView(editor.getClonedRecord());
         panesServer = this.serverView.getMergeables();
         panesLocal = this.localView.getMergeables();
         panesResult = this.resultView.getMergeables();
