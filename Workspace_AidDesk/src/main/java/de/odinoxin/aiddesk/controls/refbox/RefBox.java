@@ -55,6 +55,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      */
     private ObjectProperty<T> record = new SimpleObjectProperty<>(this, "record", null);
     /**
+     * Whether the record can be changed.
+     */
+    private BooleanProperty changeable = new SimpleBooleanProperty(this, "changeable", true);
+    /**
      * Whether the new button is displayed.
      */
     private BooleanProperty showNewButton = new SimpleBooleanProperty(this, "showNewButton", false);
@@ -111,9 +115,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
             if (ev.getCode() == KeyCode.DOWN)
                 this.search();
         });
+        this.txfText.editableProperty().bind(changeableProperty());
         this.txfText.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) ->
         {
-            if (this.ignoreTextChange)
+            if (this.ignoreTextChange || !isChangeable())
                 return;
             this.keepText = true;
             this.setRecord(null);
@@ -313,6 +318,18 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         return record;
     }
 
+    public BooleanProperty changeableProperty() {
+        return changeable;
+    }
+
+    public boolean isChangeable() {
+        return changeable.get();
+    }
+
+    public void setChangeable(boolean changeable) {
+        this.changeable.set(changeable);
+    }
+
     public BooleanProperty showNewButton() {
         return showNewButton;
     }
@@ -388,10 +405,11 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.txfText.requestFocus();
         if (this.refBoxList != null)
             this.refBoxList.hide();
+        if (!this.isChangeable())
+            return;
         this.refBoxList = new RefBoxList<>(this.localToScreen(0, this.txfText.getHeight()));
         this.refBoxList.setPrefWidth(this.getWidth());
         this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max, showID.get()));
-
         String[] highlight = this.txfText.getText() == null || this.txfText.getText().isEmpty() ? null : this.txfText.getText().split(" ");
         if (this.provider != null) {
             List<RefBoxListItem<T>> result = this.provider.search(highlight == null ? null : Arrays.asList(highlight), max);

@@ -66,4 +66,10 @@ public class PersonView extends RecordView<Person> {
     public void requestFocus() {
         this.txfForename.requestFocus();
     }
+
+    @Override
+    public void setViewMode(ViewMode mode) {
+        super.setViewMode(mode);
+        btnPwd.setDisable(mode != ViewMode.EDITING);
+    }
 }

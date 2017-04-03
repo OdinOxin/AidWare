@@ -58,6 +58,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         try {
             this.provider = this.initProvider();
             this.view = newView(null);
+            this.view.setViewMode(RecordView.ViewMode.EDITING);
             this.view.setOnKeyPressed(ev -> HotkeyEvent(ev));
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
