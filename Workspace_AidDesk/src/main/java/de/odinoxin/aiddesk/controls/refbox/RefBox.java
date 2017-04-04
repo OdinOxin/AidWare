@@ -3,6 +3,7 @@ package de.odinoxin.aiddesk.controls.refbox;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordItem;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -55,6 +56,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      */
     private ObjectProperty<T> record = new SimpleObjectProperty<>(this, "record", null);
     /**
+     * Whether the record can be changed.
+     */
+    private BooleanProperty changeable = new SimpleBooleanProperty(this, "changeable", true);
+    /**
      * Whether the new button is displayed.
      */
     private BooleanProperty showNewButton = new SimpleBooleanProperty(this, "showNewButton", false);
@@ -66,6 +71,13 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      * Whether the detail area is displayed.
      */
     private BooleanProperty showDetails = new SimpleBooleanProperty(this, "showDetails", false);
+    /**
+     * Whether the ID is displayed.
+     */
+    private BooleanProperty showID = new SimpleBooleanProperty(this, "showID", true);
+    /**
+     * Whether the content should be translated.
+     */
     private BooleanProperty translate = new SimpleBooleanProperty(this, "translate", false);
     /**
      * How many rows in the details area are expected.
@@ -104,9 +116,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
             if (ev.getCode() == KeyCode.DOWN)
                 this.search();
         });
+        this.txfText.editableProperty().bind(changeableProperty());
         this.txfText.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) ->
         {
-            if (this.ignoreTextChange)
+            if (this.ignoreTextChange || !isChangeable())
                 return;
             this.keepText = true;
             this.setRecord(null);
@@ -129,12 +142,12 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
             }
         });
 
-        this.hbxButtons.widthProperty().addListener((observable, oldValue, newValue) -> this.txfText.setPadding(new Insets(5, (double) newValue, 5, 5)));
-        this.showNewButton.addListener((observable, oldValue, newValue) ->
-        {
-            this.btnNew.setVisible(newValue);
-            this.btnNew.setManaged(newValue);
+        this.hbxButtons.widthProperty().addListener((observable, oldValue, newValue) -> {
+            this.txfText.setPadding(new Insets(5, (double) newValue, 5, 5));
+            this.setMinWidth((double) newValue + 50);
+            Platform.runLater(this::requestLayout);
         });
+        this.showNewButton.addListener((observable, oldValue, newValue) -> this.update());
         this.btnNew.minHeightProperty().bind(this.txfText.heightProperty());
         this.btnNew.maxHeightProperty().bind(this.txfText.heightProperty());
         this.btnNew.setOnAction(ev -> {
@@ -157,8 +170,6 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
                     break;
             }
         });
-        this.btnNew.setVisible(this.isShowNewButton());
-        this.btnNew.setManaged(this.isShowNewButton());
         this.btnNew.focusedProperty().addListener(this.getBtnHighlighter(this.btnNew));
         this.showEditButton.addListener((observable, oldValue, newValue) -> this.update());
         this.btnEdit.minHeightProperty().bind(this.txfText.heightProperty());
@@ -265,6 +276,14 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.showDetails.set(showDetails);
     }
 
+    public boolean isShowID() {
+        return showID.get();
+    }
+
+    public void setShowID(boolean showID) {
+        this.showID.set(showID);
+    }
+
     public boolean isTranslate() {
         return translate.get();
     }
@@ -298,6 +317,18 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         return record;
     }
 
+    public BooleanProperty changeableProperty() {
+        return changeable;
+    }
+
+    public boolean isChangeable() {
+        return changeable.get();
+    }
+
+    public void setChangeable(boolean changeable) {
+        this.changeable.set(changeable);
+    }
+
     public BooleanProperty showNewButton() {
         return showNewButton;
     }
@@ -308,6 +339,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
 
     public BooleanProperty showDetails() {
         return this.showDetails;
+    }
+
+    public BooleanProperty showID() {
+        return this.showID;
     }
 
     public IntegerProperty detailsRowsProperty() {
@@ -332,6 +367,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     private void update() {
         this.ignoreTextChange = true;
         RefBoxListItem<T> item;
+        boolean showNewBtn = false;
+        boolean showEditBtn = false;
         if (this.provider != null) {
             if (this.getRecord() != null) {
                 item = this.provider.getRefBoxItem(this.getRecord());
@@ -344,15 +381,18 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
                     this.txfText.setText("");
                 this.txfDetails.setText("");
             }
-            boolean showEditBtn = this.getRecord() != null && this.isShowEditButton();
-            this.btnEdit.setVisible(showEditBtn);
-            this.btnEdit.setManaged(showEditBtn);
+            showNewBtn = this.isShowNewButton() && isChangeable();
+            showEditBtn = this.getRecord() != null && this.isShowEditButton() && isChangeable();
         } else if (!this.isDisabled()) {
             item = new RefBoxListItem<T>(null, "Provider not set!", "", new String[]{"Provider", "not", "set!"});
             this.setText(item.getText());
             this.txfDetails.setText(item.getSubText());
             this.state.set(State.NO_RESULTS);
         }
+        this.btnNew.setVisible(showNewBtn);
+        this.btnNew.setManaged(showNewBtn);
+        this.btnEdit.setVisible(showEditBtn);
+        this.btnEdit.setManaged(showEditBtn);
         this.ignoreTextChange = false;
     }
 
@@ -369,10 +409,11 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.txfText.requestFocus();
         if (this.refBoxList != null)
             this.refBoxList.hide();
+        if (!this.isChangeable())
+            return;
         this.refBoxList = new RefBoxList<>(this.localToScreen(0, this.txfText.getHeight()));
         this.refBoxList.setPrefWidth(this.getWidth());
-        this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max));
-
+        this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max, showID.get()));
         String[] highlight = this.txfText.getText() == null || this.txfText.getText().isEmpty() ? null : this.txfText.getText().split(" ");
         if (this.provider != null) {
             List<RefBoxListItem<T>> result = this.provider.search(highlight == null ? null : Arrays.asList(highlight), max);

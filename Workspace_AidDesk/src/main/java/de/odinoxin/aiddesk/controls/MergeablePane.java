@@ -8,9 +8,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -23,7 +21,8 @@ public class MergeablePane extends HBox {
     private BooleanProperty selectable = new SimpleBooleanProperty(true);
     private final RadioButton rbtSelected;
     private ChangeListener<Boolean> lastListener = null;
-    private BooleanProperty contentDisabled = new SimpleBooleanProperty();
+    private BooleanProperty contentDisabled = new SimpleBooleanProperty(false);
+    private BooleanProperty contentEditable = new SimpleBooleanProperty(true);
 
     public MergeablePane() {
         FXMLLoader fxmlLoader = new FXMLLoader(MergeablePane.class.getResource("/controls/mergeablepane.fxml"));
@@ -40,22 +39,33 @@ public class MergeablePane extends HBox {
         rbtSelected.managedProperty().bind(rbtSelected.visibleProperty());
         selectable.addListener((observable, oldValue, newValue) -> {
             rbtSelected.setVisible(newValue);
-            if (!newValue) {
+            if (!newValue)
                 this.setBackground(TRANSPARENT);
-                this.setEffect(null);
-            }
         });
         setSelectable(false); // Toggle once to default
         this.getChildren().addListener((ListChangeListener.Change<? extends Node> c) -> {
-            double maxWidth = 0;
+            double maxWidth = 0, prefWidth = 0;
             for (int i = 1; i < this.getChildren().size(); i++) {
                 this.getChildren().get(i).disableProperty().bind(this.contentDisabled);
+                if (this.getChildren().get(i) instanceof TextInputControl)
+                    ((TextInputControl) this.getChildren().get(i)).editableProperty().bind(this.contentEditable);
+                else if (this.getChildren().get(i) instanceof RefBox<?>)
+                    ((RefBox<?>) this.getChildren().get(i)).changeableProperty().bind(this.contentEditable);
+                else if (this.getChildren().get(i) instanceof ButtonBase)
+                    this.getChildren().get(i).disableProperty().bind(this.contentEditable.not());
                 HBox.setHgrow(this.getChildren().get(i), Priority.ALWAYS);
                 double localMax = this.getChildren().get(i).maxWidth(-1);
+                double localPref = this.getChildren().get(i).prefWidth(-1);
                 if (maxWidth < localMax)
                     maxWidth = localMax;
+                if (prefWidth < localPref)
+                    prefWidth = localPref;
             }
-            this.maxWidthProperty().bind(((RadioButton) this.getChildren().get(0)).prefWidthProperty().add(maxWidth));
+            RadioButton rbnSelection = ((RadioButton) this.getChildren().get(0));
+            if (maxWidth > 0)
+                this.maxWidthProperty().bind(rbnSelection.widthProperty().add(maxWidth));
+            if (prefWidth > 0)
+                this.prefWidthProperty().bind(rbnSelection.widthProperty().add(prefWidth));
         });
     }
 
@@ -87,6 +97,18 @@ public class MergeablePane extends HBox {
 
     public void setContentDisabled(boolean contentDisabled) {
         this.contentDisabled.set(contentDisabled);
+    }
+
+    public BooleanProperty contentEditableProperty() {
+        return contentEditable;
+    }
+
+    public boolean isContentEditable() {
+        return contentEditable.get();
+    }
+
+    public void setContentEditable(boolean contentEditable) {
+        this.contentEditable.set(contentEditable);
     }
 
     public Object get() {

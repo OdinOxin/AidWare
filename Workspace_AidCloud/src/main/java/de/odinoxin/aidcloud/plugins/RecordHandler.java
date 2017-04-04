@@ -115,14 +115,12 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
 
     }
 
-    protected boolean anyRecords() {
-        boolean anyRecords = false;
+    protected long countRecords() {
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
             CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
             criteria.select(builder.count(criteria.from((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0])));
-            anyRecords = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList().get(0) > 0;
+            return session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList().get(0);
         }
-        return anyRecords;
     }
 }

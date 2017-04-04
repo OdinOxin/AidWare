@@ -21,6 +21,7 @@ public abstract class RecordView<T extends RecordItem<?>> extends GridPane {
     protected T record;
     protected Node root;
     private Hashtable<String, MergeablePane> mergeables;
+    private ViewMode viewMode;
 
     public RecordView(T record, String res) {
         this.record = record;
@@ -45,6 +46,14 @@ public abstract class RecordView<T extends RecordItem<?>> extends GridPane {
     }
 
     public abstract void requestFocus();
+
+    public ViewMode getViewMode() {
+        return viewMode;
+    }
+
+    public void setViewMode(ViewMode viewMode) {
+        this.viewMode = viewMode;
+    }
 
     public Hashtable<String, MergeablePane> getMergeables() {
         if (this.mergeables == null) {
@@ -74,5 +83,11 @@ public abstract class RecordView<T extends RecordItem<?>> extends GridPane {
             if (node instanceof Parent)
                 findMergeables((Parent) node);
         }
+    }
+
+    public enum ViewMode {
+        DISPLAYING,
+        EDITING,
+        MERGING,
     }
 }

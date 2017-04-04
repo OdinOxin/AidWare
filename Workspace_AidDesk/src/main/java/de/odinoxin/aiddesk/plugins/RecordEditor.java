@@ -6,16 +6,14 @@ import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
-import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aiddesk.dialogs.MergeDialog;
+import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import javafx.beans.property.*;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 import java.util.Optional;
@@ -39,7 +37,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     /**
      * The current record.
      */
-    private ObjectProperty<T> recordItem = new SimpleObjectProperty<>();
+    private ObjectProperty<T> record = new SimpleObjectProperty<>();
     private BooleanProperty storeable = new SimpleBooleanProperty(true);
     private BooleanProperty deletable = new SimpleBooleanProperty(true);
     private ReadOnlyBooleanWrapper changedWrapper = new ReadOnlyBooleanWrapper();
@@ -49,20 +47,30 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      */
     private T original;
 
+    /**
+     * Initializes the RecordEditor.
+     *
+     * @param title The (translated) title of the editor.
+     */
     public RecordEditor(String title) {
         super("/plugins/recordeditor.fxml", title);
 
         try {
             this.provider = this.initProvider();
             this.view = newView(null);
+            this.view.setViewMode(RecordView.ViewMode.EDITING);
             this.view.setOnKeyPressed(ev -> HotkeyEvent(ev));
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
             this.refBoxKey.setOnNewAction(ev -> refBoxNewAction());
-            this.refBoxKey.recordProperty().addListener((observable, oldValue, newValue) -> this.attemptLoadRecord(newValue == null || this.provider == null ? null : this.provider.get(newValue.getId())));
+            this.refBoxKey.recordProperty().addListener((observable, oldValue, newValue) -> {
+                if ((newValue == null && this.getRecord() != null && this.getRecord().getId() != 0)
+                        || (newValue != null && newValue != this.getRecord()))
+                    this.attemptLoadRecord(newValue == null || this.provider == null ? null : this.provider.get(newValue.getId()));
+            });
             super.setOnCloseRequest(ev -> closeRequest(ev));
             this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
-            this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.provider.get(this.getRecordItem().getId())));
+            this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.getServerRecord()));
             this.txfId = (TextField) this.root.lookup("#txfId");
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
 
@@ -72,8 +80,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             this.btnDiscard = (Button) this.root.lookup("#btnDiscard");
             this.btnDiscard.setOnAction(ev -> this.discard());
             setButtonEnter(this.btnDiscard);
-            this.recordItem().addListener((observable, oldValue, newValue) -> recordItemListener(observable, oldValue, newValue));
-
+            this.recordItem().addListener((observable, oldValue, newValue) -> bindButtons(newValue));
             this.btnDelete = (Button) this.root.lookup("#btnDelete");
             this.btnDelete.setOnAction(ev -> deleteAction());
             setButtonEnter(this.btnDelete);
@@ -93,28 +100,12 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     }
 
     /**
-     * Returns the view.
-     *
-     * @return The view.
-     */
-    protected RecordView<T> getView() {
-        return this.view;
-    }
-
-    /**
-     * Discard all current changes, by restoring the original item.
-     */
-    private void discard() {
-        this.attemptLoadRecord(this.original);
-    }
-
-    /**
      * Returns the current record.
      *
      * @return The current record.
      */
     public ObjectProperty<T> recordItem() {
-        return recordItem;
+        return record;
     }
 
     /**
@@ -132,14 +123,13 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * @param record The record to load.
      */
     public void attemptLoadRecord(T record) {
-        if (this.getRecordItem() != null && this.getRecordItem().isChanged()) {
-            boolean discard = discardDialog();
-            if (discard)
-                discardRecord(record);
+        if (this.getRecord() != null && this.getRecord().isChanged()) {
+            if (discardDialog())
+                setRecord(record);
             else
-                this.refBoxKey.setRecord(this.getRecordItem());
+                this.refBoxKey.setRecord(this.getRecord());
         } else
-            discardRecord(record);
+            setRecord(record);
     }
 
     /**
@@ -157,6 +147,13 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     protected abstract T onSave() throws ConcurrentFault_Exception;
 
     /**
+     * Called, when the current record should be deleted.
+     *
+     * @return Success indicator
+     */
+    protected abstract boolean onDelete();
+
+    /**
      * Sets, whether saving is enabled.
      *
      * @param storeable True, if saving is enabled; False otherwise.
@@ -164,13 +161,6 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     protected void setStoreable(boolean storeable) {
         this.storeable.set(storeable);
     }
-
-    /**
-     * Called, when the current record should be deleted.
-     *
-     * @return Success indicator
-     */
-    protected abstract boolean onDelete();
 
     /**
      * Sets, whether the deleting is enabled.
@@ -186,16 +176,33 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param record The record to set.
      */
-    protected abstract void setRecord(T record);
-
-    /**
-     * @return The current record item.
-     */
-    public T getRecordItem() {
-        return this.recordItem.get();
+    protected void setRecord(T record) {
+        this.record.set(record);
+        this.refBoxKey.setRecord(record);
+        if (this.changedWrapper.isBound())
+            this.changedWrapper.unbind();
+        this.changedWrapper.bind(record.changedProperty());
+        if (this.getRecord() != null) {
+            view.bind(this.getRecord());
+            this.getRecord().setChanged(false);
+        }
     }
 
-    public T getOriginalRecordItem() {
+    /**
+     * Returns the current record.
+     *
+     * @return The current record.
+     */
+    public T getRecord() {
+        return this.record.get();
+    }
+
+    /**
+     * Returns the original record.
+     *
+     * @return The original record.
+     */
+    public T getOriginalRecord() {
         return this.original;
     }
 
@@ -204,32 +211,19 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @return The current record from the server.
      */
-    public T getServerRecordItem() {
-        return this.provider.get(this.getRecordItem().getId());
+    public T getServerRecord() {
+        return this.provider.get(this.getRecord().getId());
     }
 
     /**
-     * Returns a clone of the record item.
+     * Returns a clone of the original record.
      *
-     * @return A clone of the record item.
+     * @return A clone of the original record.
      */
-    public T getClonedRecordItem() {
-        if (this.getOriginalRecordItem() == null)
+    public T getClonedRecord() {
+        if (this.getOriginalRecord() == null)
             return null;
-        return (T) this.getOriginalRecordItem().clone();
-    }
-
-    /**
-     * Sets the current record item.
-     * Should only called by implementations of setRecord()!
-     *
-     * @param record The record to set.
-     */
-    protected void setRecordItem(T record) {
-        this.recordItem.set(record);
-        if (this.changedWrapper.isBound())
-            this.changedWrapper.unbind();
-        this.changedWrapper.bind(record.changedProperty());
+        return (T) this.getOriginalRecord().clone();
     }
 
     /**
@@ -237,7 +231,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param record The new original.
      */
-    public void setOriginalRecordItem(T record) {
+    public void setOriginalRecord(T record) {
         this.original = record;
     }
 
@@ -257,6 +251,12 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         return this.provider;
     }
 
+    /**
+     * Creates a new view and binds the given record to it.
+     *
+     * @param record The record to bind.
+     * @return The created view.
+     */
     public abstract RecordView<T> newView(T record);
 
     /**
@@ -265,61 +265,56 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * @param ev The Event to add the keys.
      */
     private void HotkeyEvent(KeyEvent ev) {
-        if(ev.isControlDown() && ev.getCode() == KeyCode.S)
-        {
-            saveAction();
-            ev.consume();
-        }
-        if(ev.isControlDown() && ev.getCode() == KeyCode.N)
-        {
-            refBoxNewAction();
-            ev.consume();
-        }
-    }
-
-    /**
-     * An action that leaves the RecordEditor empty
-     *
-     */
-    private void refBoxNewAction()
-    {
-        this.attemptLoadRecord(null);
-        this.refBoxKey.setRecord(this.getRecordItem());
-        this.onNew();
-    }
-
-    /**
-     * An action that starts to save the record
-     *
-     */
-    private void saveAction()
-    {
-        if(this.getRecordItem().isChanged())
-        {
-            try {
-                T newObj = this.onSave();
-                if (newObj != null) {
-                    this.getRecordItem().setChanged(false);
-                    this.attemptLoadRecord(newObj);
-                    this.refBoxKey.setRecord(newObj);
-                }
-            } catch (ConcurrentFault_Exception ex) {
-                ex.printStackTrace();
-            } catch (Exception ex) {
-                MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
-                mergeDialog.show();
-//                    ex.printStackTrace();
+        if (ev.isControlDown()) {
+            switch (ev.getCode()) {
+                case S:
+                    saveAction();
+                    ev.consume();
+                    break;
+                case N:
+                    refBoxNewAction();
+                    ev.consume();
+                    break;
             }
         }
     }
 
     /**
-     * An action that delete the record
-     *
+     * An action that leaves the RecordEditor empty
      */
-    private void deleteAction()
-    {
-        if (this.getRecordItem() != null && this.getRecordItem().getId() != 0) {
+    private void refBoxNewAction() {
+        this.attemptLoadRecord(null);
+        this.refBoxKey.setRecord(this.getRecord());
+        this.onNew();
+    }
+
+    /**
+     * An action that starts to save the record
+     */
+    private void saveAction() {
+		if(this.getRecord().isChanged()) {
+			try {
+				T newObj = this.onSave();
+				if (newObj != null) {
+					this.getRecord().setChanged(false);
+					this.attemptLoadRecord(newObj);
+					this.refBoxKey.setRecord(newObj);
+				}
+			} catch (ConcurrentFault_Exception ex) {
+				ex.printStackTrace();
+			} catch (Exception ex) {
+				MergeDialog mergeDialog = new MergeDialog<T>(this);
+				mergeDialog.show();
+//                ex.printStackTrace();
+			}
+        }
+    }
+
+    /**
+     * An action that delete the record
+     */
+    private void deleteAction() {
+        if (this.getRecord() != null && this.getRecord().getId() != 0) {
             DecisionDialog dialog = new DecisionDialog(this, "Delete data?", "Delete data irrevocably?");
             Optional<ButtonType> dialogRes = dialog.showAndWait();
             if (dialogRes.isPresent() && ButtonType.OK.equals(dialogRes.get())) {
@@ -339,70 +334,53 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param ev The Event to cancel the original closeRequest
      */
-    private void closeRequest(Event ev)
-    {
-        if (this.getRecordItem() != null && this.getRecordItem().isChanged()) {
-            boolean discard = discardDialog();
-            if (discard) {
-                discardRecord(getRecordItem());
-            } else {
-                ev.consume();
-            }
-        }
+    private void closeRequest(Event ev) {
+        if (this.getRecord() != null && this.getRecord().isChanged() && !discardDialog())
+            ev.consume();
     }
 
-     /**
-     * I don't know what this Method do //TODO: OdinOxin
+    /**
+     * Binds the buttons to the new record and stores the record as original item.
      *
-     * @param observable ?.
-     * @param oldValue ?.
-     * @param newValue ?.
+     * @param record The record to bind and to use as original item.
      */
-    private void recordItemListener(ObservableValue observable, T oldValue, T newValue)
-    {
-        if (newValue == null) {
+    private void bindButtons(T record) {
+        if (record == null) {
             this.original = null;
             this.txfId.setText("");
             this.btnSave.setDisable(true);
             this.btnDiscard.setDisable(true);
             this.btnDelete.setDisable(true);
         } else {
-            this.original = (T) newValue.clone();
-            this.txfId.setText(newValue.getId() == 0 ? TranslatorProvider.getTranslation("New") : String.valueOf(newValue.getId()));
+            this.original = (T) record.clone();
+            this.txfId.setText(record.getId() == 0 ? TranslatorProvider.getTranslation("New") : String.valueOf(record.getId()));
             if (this.btnSave.disableProperty().isBound())
                 this.btnSave.disableProperty().unbind();
-            this.btnSave.disableProperty().bind(this.storeable.not().or(newValue.changedProperty().not()));
+            this.btnSave.disableProperty().bind(this.storeable.not().or(record.changedProperty().not()));
             if (this.btnDiscard.disableProperty().isBound())
                 this.btnDiscard.disableProperty().unbind();
-            this.btnDiscard.disableProperty().bind(newValue.changedProperty().not());
+            this.btnDiscard.disableProperty().bind(record.changedProperty().not());
             if (this.btnDelete.disableProperty().isBound())
                 this.btnDelete.disableProperty().unbind();
-            this.btnDelete.disableProperty().bind(this.deletable.not().or(newValue.idProperty().isEqualTo(0)));
+            this.btnDelete.disableProperty().bind(this.deletable.not().or(record.idProperty().isEqualTo(0)));
         }
     }
+
     /**
      * This method opens a dialog where the user is asked if the changes should be discardet
      *
      * @return true if the user pressed OK and false if not
      */
-    private boolean discardDialog(){
+    private boolean discardDialog() {
         DecisionDialog dialog = new DecisionDialog(this, "Discard changes?", "Discard current changes?");
         Optional<ButtonType> dialogRes = dialog.showAndWait();
-        if (ButtonType.OK.equals(dialogRes.get()))
-            return true;
-        return false;
+        return ButtonType.OK.equals(dialogRes.get());
     }
 
     /**
-     * This method discard the record
-     *
-     * @param record  is the record wich should closed
+     * Discard all current changes, by restoring the original item.
      */
-    private void discardRecord(T record){
-        this.setRecord(record);
-        if (this.getRecordItem() != null) {
-            view.bind(this.getRecordItem());
-            this.getRecordItem().setChanged(false);
-        }
+    private void discard() {
+        this.attemptLoadRecord(this.original);
     }
 }

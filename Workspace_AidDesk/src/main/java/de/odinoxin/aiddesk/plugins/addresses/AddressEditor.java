@@ -8,6 +8,10 @@ import de.odinoxin.aiddesk.plugins.RecordView;
 
 public class AddressEditor extends RecordEditor<Address> {
 
+    public AddressEditor() {
+        this(null);
+    }
+
     public AddressEditor(Address address) {
         super("Addresses");
         this.attemptLoadRecord(address);
@@ -17,20 +21,20 @@ public class AddressEditor extends RecordEditor<Address> {
 
     @Override
     protected Address onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecordItem(), this.getOriginalRecordItem());
+        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
     @Override
     protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecordItem().getId());
+        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override
     protected void setRecord(Address address) {
         if (address == null)
-            this.setRecordItem(new Address());
+            super.setRecord(new Address());
         else
-            this.setRecordItem(address);
+            super.setRecord(address);
     }
 
     @Override

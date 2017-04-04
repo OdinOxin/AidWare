@@ -54,7 +54,7 @@ public class LanguageProvider extends RecordHandler<Language> {
 
     @Override
     public void generateDefaults() {
-        if (!this.anyRecords()) {
+        if (this.countRecords() <= 0) {
             Language german = new Language();
             german.setName("Deutsch");
             german.setCode("DEU");

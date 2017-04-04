@@ -8,6 +8,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @WebService
@@ -25,7 +28,9 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("New", "Neu", null),
             new Translation("Selection", "Auswahl", null),
 
+            new Translation("MainMenu", "Hauptmenü", "Main menu"),
             new Translation("Main Menu", "Hauptmenü", "Main menu"),
+            new Translation("MasterData", "Stammdaten Editor", "Masterdata editor"),
             new Translation("Log out", "Ausloggen", null),
             new Translation("Log out?", "Ausloggen?", null),
             new Translation("Log out and close all related windows?", "Ausloggen und alle zugehörigen Fenster schließen?", null),
@@ -37,6 +42,11 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("Enter and repeat password.", "Geben Sie das neue Passwort ein und wiederholen Sie dieses korrekt.", "Enter the new password and repeat it correctly."),
             new Translation("Enter current password.", "Geben Sie das aktuelle Passwort an, um ein neues Passwort zu speichern.", "Enter the current password, in order to save a new one."),
 
+            new Translation("Merging", "Zusammenführen", null),
+            new Translation("Merge", "Zusammenführen", null),
+            new Translation("Server", null, null),
+            new Translation("Local", "Lokal", null),
+            new Translation("Result", "Ergebnis", null),
             new Translation("Discard changes?", "Änderugen verwerfen?", null),
             new Translation("Discard current changes?", "Möchten Sie die aktuellen Änderungen verwerfen?", "Do you want to discard the current changes?"),
             new Translation("Delete", "Löschen", null),
@@ -48,9 +58,11 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("More items avaiable!", "Mehr Einträge verfügbar!", null),
             new Translation("Load more items...", "Weitere Einträge laden...", null),
 
+            new Translation("LanguageEditor", "Sprachen", "Languages"),
             new Translation("Languages", "Sprachen", null),
             new Translation("Language", "Sprache", null),
 
+            new Translation("PersonEditor", "Personen", "People"),
             new Translation("People", "Personen", null),
             new Translation("Person", "Person", null),
             new Translation("Name"),
@@ -61,6 +73,7 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("New password", "Neues Passwort", null),
             new Translation("Repetition", "Wiederholung", null),
 
+            new Translation("AddressEditor", "Adressen", "Addresses"),
             new Translation("Addresses", "Adressen", null),
             new Translation("Address", "Adresse", null),
             new Translation("Street", "Straße", null),
@@ -69,16 +82,19 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("City", "Ort", null),
             new Translation("Country", "Land", null),
 
+            new Translation("CountryEditor", "Länder", "Countries"),
             new Translation("Countries", "Länder", null),
             new Translation("Alpha2"),
             new Translation("Alpha3"),
             new Translation("Vorwahl", null, "Area code"),
 
+            new Translation("ContactTypeEditor", "Kontaktarten", "Contact types"),
             new Translation("Contact types", "Kontaktarten", null),
             new Translation("Contact type", "Kontaktart", null),
             new Translation("Abbreviation", "Abkürzung", null),
             new Translation("Format"),
 
+            new Translation("ContactInformationEditor", "Kontaktinformationen", "Contact information"),
             new Translation("Contact information", "Kontaktinformationen", null),
             new Translation("Information"),
     };
@@ -119,13 +135,21 @@ public class Translator extends RecordHandler<Translation> {
 
     @Override
     public void generateDefaults() {
-        if (!this.anyRecords()) {
-            Session session = DB.open();
-            session.beginTransaction();
-            for (Translation translation : TRANSLATIONS)
-                session.save(translation);
-            session.getTransaction().commit();
-            session.close();
+        if (this.countRecords() != TRANSLATIONS.length) {
+            try (Session session = DB.open()) {
+                session.beginTransaction();
+                for (Translation translation : TRANSLATIONS) {
+                    CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
+                    CriteriaQuery<Integer> query = builder.createQuery(Integer.class);
+                    Root<Translation> translationRoot = query.from(Translation.class);
+                    query.select(translationRoot.get(Translation_.id));
+                    query.where(builder.equal(translationRoot.get(Translation_.sys), translation.getSys()));
+                    if (session.getEntityManagerFactory().createEntityManager().createQuery(query).getResultList().size() > 0)
+                        session.delete(new Translation(session.getEntityManagerFactory().createEntityManager().createQuery(query).getResultList().get(0)));
+                    session.save(translation);
+                }
+                session.getTransaction().commit();
+            }
         }
     }
 }
