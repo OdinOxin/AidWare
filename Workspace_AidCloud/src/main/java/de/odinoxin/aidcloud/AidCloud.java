@@ -29,7 +29,7 @@ public class AidCloud extends Application {
     private static final String ADDRESS = ADDRESS_PREFIX + "%s:%s/AidCloud/";
     private static final int PORT = 15123;
 
-    private static final String[] knownArgs = {"AidCloudURL", "AidCloudPort", "DBType", "DBURL", "DBPort", "DBName", "DBUser", "DBPwd"};
+    private static final String[] knownArgs = {"AidCloudURL", "AidCloudPort", "DBType", "DBURL", "DBPort", "DBName", "DBUser", "DBPwd", "StartDirect"};
 
     TextField txfAidCloudURL;
     TextField txfAidCloudPort;
@@ -139,6 +139,10 @@ public class AidCloud extends Application {
 
         Button btnLaunch = (Button) root.lookup("#btnLaunch");
         btnLaunch.setOnAction(ev -> launchAidCloud(primaryStage));
+
+        if (inputArgs.containsKey(AidCloud.knownArgs[8]))
+            if(inputArgs.get(AidCloud.knownArgs[8]).equals("yes") || inputArgs.get(AidCloud.knownArgs[8]).equals("true"))
+                launchAidCloud(primaryStage);
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
