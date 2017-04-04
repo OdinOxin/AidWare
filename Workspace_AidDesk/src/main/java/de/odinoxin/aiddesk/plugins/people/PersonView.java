@@ -57,7 +57,7 @@ public class PersonView extends RecordView<Person> {
         this.txfForename.textProperty().bindBidirectional(record.forenameProperty());
         this.txfName.textProperty().bindBidirectional(record.nameProperty());
         this.txfCode.textProperty().bindBidirectional(record.codeProperty());
-        this.btnPwd.disableProperty().bind(record.idProperty().isEqualTo(0));
+        this.btnPwd.disableProperty().bind(((MergeablePane) this.btnPwd.getParent()).contentEditableProperty().not().or(record.idProperty().isEqualTo(0)));
         this.refBoxLanguage.recordProperty().bindBidirectional(record.languageProperty());
         this.refBoxAddress.recordProperty().bindBidirectional(record.addressProperty());
         this.refListContactInformation.bindBidirectional(record.contactInformationProperty());

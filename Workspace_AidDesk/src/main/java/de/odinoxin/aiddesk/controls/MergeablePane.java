@@ -49,9 +49,9 @@ public class MergeablePane extends HBox {
                 this.getChildren().get(i).disableProperty().bind(this.contentDisabled);
                 if (this.getChildren().get(i) instanceof TextInputControl)
                     ((TextInputControl) this.getChildren().get(i)).editableProperty().bind(this.contentEditable);
-                if (this.getChildren().get(i) instanceof RefBox<?>)
+                else if (this.getChildren().get(i) instanceof RefBox<?>)
                     ((RefBox<?>) this.getChildren().get(i)).changeableProperty().bind(this.contentEditable);
-                if (this.getChildren().get(i) instanceof ButtonBase)
+                else if (this.getChildren().get(i) instanceof ButtonBase)
                     this.getChildren().get(i).disableProperty().bind(this.contentEditable.not());
                 HBox.setHgrow(this.getChildren().get(i), Priority.ALWAYS);
                 double localMax = this.getChildren().get(i).maxWidth(-1);
@@ -97,6 +97,10 @@ public class MergeablePane extends HBox {
 
     public void setContentDisabled(boolean contentDisabled) {
         this.contentDisabled.set(contentDisabled);
+    }
+
+    public BooleanProperty contentEditableProperty() {
+        return contentEditable;
     }
 
     public boolean isContentEditable() {
