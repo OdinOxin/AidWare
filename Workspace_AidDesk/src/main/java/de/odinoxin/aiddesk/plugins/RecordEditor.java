@@ -5,7 +5,6 @@ import de.odinoxin.aidcloud.provider.TranslatorProvider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.controls.translateable.Button;
-import de.odinoxin.aiddesk.dialogs.Callback;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aiddesk.dialogs.MergeDialog;
@@ -78,6 +77,13 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             this.btnDelete = (Button) this.root.lookup("#btnDelete");
             this.btnDelete.setOnAction(ev -> deleteAction());
             setButtonEnter(this.btnDelete);
+            this.btnDiscard.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.btnDelete.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.btnSave.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.btnRefresh.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.refBoxKey.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.txfId.setOnKeyPressed(ev -> HotkeyEvent(ev));
+
             this.show();
             this.sizeToScene();
             this.centerOnScreen();
@@ -258,7 +264,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param ev The Event to add the keys.
      */
-    public void HotkeyEvent(KeyEvent ev) {
+    private void HotkeyEvent(KeyEvent ev) {
         if(ev.isControlDown() && ev.getCode() == KeyCode.S)
         {
             saveAction();
@@ -275,7 +281,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * An action that leaves the RecordEditor empty
      *
      */
-    public void refBoxNewAction()
+    private void refBoxNewAction()
     {
         this.attemptLoadRecord(null);
         this.refBoxKey.setRecord(this.getRecordItem());
@@ -286,21 +292,24 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * An action that starts to save the record
      *
      */
-    public void saveAction()
+    private void saveAction()
     {
-        try {
-            T newObj = this.onSave();
-            if (newObj != null) {
-                this.getRecordItem().setChanged(false);
-                this.attemptLoadRecord(newObj);
-                this.refBoxKey.setRecord(newObj);
-            }
-        } catch (ConcurrentFault_Exception ex) {
-            ex.printStackTrace();
-        } catch (Exception ex) {
-            MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
-            mergeDialog.show();
+        if(this.getRecordItem().isChanged())
+        {
+            try {
+                T newObj = this.onSave();
+                if (newObj != null) {
+                    this.getRecordItem().setChanged(false);
+                    this.attemptLoadRecord(newObj);
+                    this.refBoxKey.setRecord(newObj);
+                }
+            } catch (ConcurrentFault_Exception ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                MergeDialog mergeDialog = new MergeDialog<T>(this); //getOriginalItem(), newView(), newView(getRecordItem()), newView(resultRecord));
+                mergeDialog.show();
 //                    ex.printStackTrace();
+            }
         }
     }
 
@@ -308,7 +317,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * An action that delete the record
      *
      */
-    public void deleteAction()
+    private void deleteAction()
     {
         if (this.getRecordItem() != null && this.getRecordItem().getId() != 0) {
             DecisionDialog dialog = new DecisionDialog(this, "Delete data?", "Delete data irrevocably?");
@@ -330,7 +339,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param ev The Event to cancel the original closeRequest
      */
-    public void closeRequest(Event ev)
+    private void closeRequest(Event ev)
     {
         if (this.getRecordItem() != null && this.getRecordItem().isChanged()) {
             boolean discard = discardDialog();
@@ -349,7 +358,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * @param oldValue ?.
      * @param newValue ?.
      */
-    public void recordItemListener(ObservableValue observable, T oldValue, T newValue)
+    private void recordItemListener(ObservableValue observable, T oldValue, T newValue)
     {
         if (newValue == null) {
             this.original = null;
@@ -376,7 +385,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @return true if the user pressed OK and false if not
      */
-    public boolean discardDialog(){
+    private boolean discardDialog(){
         DecisionDialog dialog = new DecisionDialog(this, "Discard changes?", "Discard current changes?");
         Optional<ButtonType> dialogRes = dialog.showAndWait();
         if (ButtonType.OK.equals(dialogRes.get()))
@@ -389,7 +398,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param record  is the record wich should closed
      */
-    public void discardRecord(T record){
+    private void discardRecord(T record){
         this.setRecord(record);
         if (this.getRecordItem() != null) {
             view.bind(this.getRecordItem());

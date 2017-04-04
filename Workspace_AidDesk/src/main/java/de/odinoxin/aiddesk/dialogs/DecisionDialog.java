@@ -1,6 +1,7 @@
 package de.odinoxin.aiddesk.dialogs;
 
 import de.odinoxin.aidcloud.provider.TranslatorProvider;
+import de.odinoxin.aiddesk.plugins.Plugin;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,9 +21,10 @@ public class DecisionDialog extends Alert {
 
         Button btnOK = (Button) this.getDialogPane().lookupButton(ButtonType.OK);
         btnOK.setDefaultButton(false);
-
+        Plugin.setButtonEnter(btnOK);
         Button btnCancel = (Button) this.getDialogPane().lookupButton(ButtonType.CANCEL);
         btnCancel.setDefaultButton(true);
+        Plugin.setButtonEnter(btnCancel);
         Platform.runLater(() -> btnCancel.requestFocus());
 
         this.initModality(Modality.APPLICATION_MODAL);
