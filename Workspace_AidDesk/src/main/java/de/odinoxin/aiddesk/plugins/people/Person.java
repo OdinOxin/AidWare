@@ -9,7 +9,6 @@ import de.odinoxin.aiddesk.plugins.languages.Language;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -23,7 +22,7 @@ public class Person extends RecordItem<PersonEntity> {
     private StringProperty pwd = new SimpleStringProperty(null, "Pwd");
     private ObjectProperty<Language> language = new SimpleObjectProperty<>(null, "Language");
     private ObjectProperty<Address> address = new SimpleObjectProperty<>(null, "Address");
-    private ObservableList<ContactInformation> contactInformation = FXCollections.observableArrayList();
+    private ListProperty<ContactInformation> contactInformation = new SimpleListProperty<>(null, "ContactInformation", FXCollections.observableArrayList());
 
     public Person() {
         super();
@@ -95,7 +94,7 @@ public class Person extends RecordItem<PersonEntity> {
     }
 
     public List<ContactInformation> getContactInformation() {
-        return contactInformation;
+        return contactInformation.get();
     }
 
     public void setName(String name) {
@@ -123,12 +122,12 @@ public class Person extends RecordItem<PersonEntity> {
     }
 
     public void setContactInformation(List<ContactInformation> contactInformation) {
-        if (this.contactInformation != null) {
-            this.contactInformation.clear();
+        if (this.contactInformation.get() != null) {
+            this.contactInformation.get().clear();
             if (contactInformation != null)
-                this.contactInformation.addAll(contactInformation);
+                this.contactInformation.get().addAll(contactInformation);
         } else if (contactInformation != null)
-            this.contactInformation = FXCollections.observableArrayList(contactInformation);
+            this.contactInformation.set(FXCollections.observableArrayList(contactInformation));
     }
 
     public StringProperty nameProperty() {
@@ -155,7 +154,7 @@ public class Person extends RecordItem<PersonEntity> {
         return address;
     }
 
-    public ObservableList<ContactInformation> contactInformationProperty() {
+    public ListProperty<ContactInformation> contactInformationProperty() {
         return contactInformation;
     }
 
@@ -182,6 +181,7 @@ public class Person extends RecordItem<PersonEntity> {
         properties.put(this.pwd.getName(), this.pwd);
         properties.put(this.language.getName(), this.language);
         properties.put(this.address.getName(), this.address);
+        properties.put(this.contactInformation.getName(), this.contactInformationProperty());
         return properties;
     }
 }

@@ -2,11 +2,13 @@ package de.odinoxin.aiddesk.dialogs;
 
 import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
+import de.odinoxin.aiddesk.controls.reflist.RefList;
 import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.plugins.Plugin;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.RecordView;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
@@ -61,29 +63,53 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
         {
             panesServer.get(key).setContentEditable(false);
             panesLocal.get(key).setContentEditable(false);
-            Node content = panesResult.get(key).getChildren().get(1);
-            if (content instanceof TextInputControl)
-                ((TextInputControl) content).textProperty().addListener((observable, oldValue, newValue) -> {
+            Node contentServer = panesServer.get(key).getChildren().get(1);
+            Node contentLocal = panesLocal.get(key).getChildren().get(1);
+            Node contentResult = panesResult.get(key).getChildren().get(1);
+            if (contentResult instanceof TextInputControl)
+                ((TextInputControl) contentResult).textProperty().addListener((observable, oldValue, newValue) -> {
                     markGreen(key);
-                    panesServer.get(key).setSelected(((TextInputControl) panesServer.get(key).getChildren().get(1)).getText().equals(newValue));
-                    panesLocal.get(key).setSelected(((TextInputControl) panesLocal.get(key).getChildren().get(1)).getText().equals(newValue));
+                    panesServer.get(key).setSelected(((TextInputControl) contentServer).getText().equals(newValue));
+                    panesLocal.get(key).setSelected(((TextInputControl) contentLocal).getText().equals(newValue));
                 });
-            else if (content instanceof CheckBox)
-                ((CheckBox) content).selectedProperty().addListener((observable, oldValue, newValue) -> {
+            else if (contentResult instanceof CheckBox)
+                ((CheckBox) contentResult).selectedProperty().addListener((observable, oldValue, newValue) -> {
                     markGreen(key);
-                    panesServer.get(key).setSelected(((CheckBox) panesServer.get(key).getChildren().get(1)).isSelected() == newValue);
-                    panesLocal.get(key).setSelected(((CheckBox) panesLocal.get(key).getChildren().get(1)).isSelected() == newValue);
+                    panesServer.get(key).setSelected(((CheckBox) contentServer).isSelected() == newValue);
+                    panesLocal.get(key).setSelected(((CheckBox) contentLocal).isSelected() == newValue);
                 });
-            else if (content instanceof RefBox<?>)
-                ((RefBox<?>) content).recordProperty().addListener((observable, oldValue, newValue) -> {
+            else if (contentResult instanceof RefBox<?>)
+                ((RefBox<?>) contentResult).recordProperty().addListener((observable, oldValue, newValue) -> {
                     markGreen(key);
-                    panesServer.get(key).setSelected((((RefBox<?>) panesServer.get(key).getChildren().get(1)).getRecord() == null && newValue == null)
-                            || (((RefBox<?>) panesServer.get(key).getChildren().get(1)).getRecord() != null && newValue != null
-                            && ((RefBox<?>) panesServer.get(key).getChildren().get(1)).getRecord().getId() == newValue.getId()));
-                    panesLocal.get(key).setSelected((((RefBox<?>) panesLocal.get(key).getChildren().get(1)).getRecord() == null && newValue == null)
-                            || (((RefBox<?>) panesLocal.get(key).getChildren().get(1)).getRecord() != null && newValue != null
-                            && ((RefBox<?>) panesLocal.get(key).getChildren().get(1)).getRecord().getId() == newValue.getId()));
+                    panesServer.get(key).setSelected((((RefBox<?>) contentServer).getRecord() == null && newValue == null)
+                            || (((RefBox<?>) contentServer).getRecord() != null && newValue != null
+                            && ((RefBox<?>) contentServer).getRecord().getId() == newValue.getId()));
+                    panesLocal.get(key).setSelected((((RefBox<?>) contentLocal).getRecord() == null && newValue == null)
+                            || (((RefBox<?>) contentLocal).getRecord() != null && newValue != null
+                            && ((RefBox<?>) contentLocal).getRecord().getId() == newValue.getId()));
                 });
+            else if (contentResult instanceof RefList<?>) {
+                ((RefList<?>) contentResult).addListener((ListChangeListener<Object>) c -> {
+                    markGreen(key);
+                    RefList<? extends RecordItem<?>> listServer = ((RefList<? extends RecordItem<?>>) contentServer);
+                    RefList<? extends RecordItem<?>> listLocal = ((RefList<? extends RecordItem<?>>) contentLocal);
+                    RefList<? extends RecordItem<?>> listResult = ((RefList<? extends RecordItem<?>>) contentResult);
+                    boolean equals = listServer.size() == listResult.size();
+                    for (int i = 0; i < listResult.size() && equals; i++) {
+                        if ((listServer.get(i) == null && listResult.get(i) == null)
+                                || (listServer.get(i) != null && listResult.get(i) != null && listServer.get(i).getId() != listResult.get(i).getId()))
+                            equals = false;
+                    }
+                    panesServer.get(key).setSelected(equals);
+                    equals = listLocal.size() == listResult.size();
+                    for (int i = 0; i < listResult.size() && equals; i++) {
+                        if ((listLocal.get(i) == null && listResult.get(i) == null)
+                                || (listLocal.get(i) != null && listResult.get(i) != null && listLocal.get(i).getId() != listResult.get(i).getId()))
+                            equals = false;
+                    }
+                    panesLocal.get(key).setSelected(equals);
+                });
+            }
         });
         // Lookup not avaiable here
         ((ScrollPane) ((VBox) ((SplitPane) verticalSplitter.getItems().get(0)).getItems().get(0)).getChildren().get(1)).setContent(this.serverView);
@@ -119,13 +145,15 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
                 if (newValue) {
                     panesResult.get(s).set(panesServer.get(s).get());
                     panesLocal.get(s).setSelected(false);
+                    markGreen(s);
                 }
             });
             panesLocal.get(s).setSelectedListener((observable, oldValue, newValue) ->
             {
                 if (newValue) {
-                    panesResult.get(s).set(panesLocal.get(s).get());
                     panesServer.get(s).setSelected(false);
+                    panesResult.get(s).set(panesLocal.get(s).get());
+                    markGreen(s);
                 }
             });
 

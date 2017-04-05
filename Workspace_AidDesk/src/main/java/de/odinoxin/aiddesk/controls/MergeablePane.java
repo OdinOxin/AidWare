@@ -1,6 +1,7 @@
 package de.odinoxin.aiddesk.controls;
 
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
+import de.odinoxin.aiddesk.controls.reflist.RefList;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
+import java.util.Collection;
 
 public class MergeablePane extends HBox {
 
@@ -120,8 +122,10 @@ public class MergeablePane extends HBox {
                 return ((TextField) node).getText();
             if (node instanceof CheckBox)
                 return ((CheckBox) node).isSelected();
-            if (node instanceof RefBox)
-                return ((RefBox) node).getRecord();
+            if (node instanceof RefBox<?>)
+                return ((RefBox<?>) node).getRecord();
+            if (node instanceof RefList<?>)
+                return node;
         }
         return null;
     }
@@ -137,6 +141,11 @@ public class MergeablePane extends HBox {
                 ((CheckBox) node).setSelected((boolean) content);
             else if (node instanceof RefBox)
                 ((RefBox) node).setRecord((RecordItem<?>) content);
+            else if (node instanceof RefList<?>) {
+                RefList<?> refList = (RefList<?>) node;
+                refList.clear();
+                refList.addAll((Collection) content);
+            }
         }
     }
 }

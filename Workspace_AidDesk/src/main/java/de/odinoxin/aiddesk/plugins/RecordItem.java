@@ -79,6 +79,16 @@ public abstract class RecordItem<T> implements Cloneable {
             if (notNull) {
                 if (properties.get(key).getValue() instanceof RecordItem<?>)
                     return ((RecordItem<?>) properties.get(key).getValue()).getId() != ((RecordItem<?>) otherProperties.get(key).getValue()).getId();
+                else if (properties.get(key).getValue() instanceof List<?>) {
+                    List<? extends RecordItem<?>> thisList = (List<? extends RecordItem<?>>) properties.get(key).getValue();
+                    List<? extends RecordItem<?>> thatList = (List<? extends RecordItem<?>>) otherProperties.get(key).getValue();
+                    boolean diff = thisList.size() != thatList.size();
+                    for (int i = 0; i < thisList.size() && !diff; i++) {
+                        if (thisList.get(i).getId() != thatList.get(i).getId())
+                            diff = true;
+                    }
+                    return diff;
+                }
                 return !properties.get(key).getValue().equals(otherProperties.get(key).getValue());
             }
             return properties.get(key).getValue() != null || otherProperties.get(key).getValue() != null;
