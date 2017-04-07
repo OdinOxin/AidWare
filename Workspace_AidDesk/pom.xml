@@ -40,6 +40,28 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>1.12</version>
+                <configuration>
+                    <wsdlUrls>
+                        <wsdlUrl>http://localhost:15123/AidCloud/Login?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/LanguageProvider?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/Translator?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/PersonProvider?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/AddressProvider?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/CountryProvider?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/ContactTypeProvider?wsdl</wsdlUrl>
+                        <wsdlUrl>http://localhost:15123/AidCloud/ContactInformationProvider?wsdl</wsdlUrl>
+                    </wsdlUrls>
+
+                    <keep>true</keep>
+                    <packageName>de.odinoxin.aidcloud.service</packageName>
+                    <sourceDestDir>src/main/java</sourceDestDir>
+                    <wsdlDirectory>src/main/java/de/odinoxin/aidcloud/service</wsdlDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
