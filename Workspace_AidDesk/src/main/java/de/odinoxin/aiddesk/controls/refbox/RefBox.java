@@ -249,7 +249,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     }
 
     public void setText(String text) {
-        this.txfText.setText(text);
+        if (!this.keepText)
+            this.txfText.setText(text);
     }
 
     public boolean isShowNewButton() {
