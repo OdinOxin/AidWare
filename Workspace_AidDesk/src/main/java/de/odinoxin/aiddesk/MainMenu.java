@@ -13,6 +13,7 @@ import de.odinoxin.aiddesk.plugins.addresses.AddressEditor;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformationEditor;
 import de.odinoxin.aiddesk.plugins.contact.types.ContactTypeEditor;
 import de.odinoxin.aiddesk.plugins.countries.CountryEditor;
+import de.odinoxin.aiddesk.plugins.dietform.DietFormEditor;
 import de.odinoxin.aiddesk.plugins.languages.LanguageEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
 import javafx.beans.property.Property;
@@ -43,6 +44,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
             new PluginItem("LanguageEditor", LanguageEditor.class, PluginItem.MASTERDATA),
             new PluginItem("ContactTypeEditor", ContactTypeEditor.class, PluginItem.MASTERDATA),
             new PluginItem("ContactInformationEditor", ContactInformationEditor.class, PluginItem.MASTERDATA),
+            new PluginItem("DietFormEditor", DietFormEditor.class, PluginItem.MASTERDATA),
     };
 
     public MainMenu() {

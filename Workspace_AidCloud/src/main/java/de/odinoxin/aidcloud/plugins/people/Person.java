@@ -3,6 +3,7 @@ package de.odinoxin.aidcloud.plugins.people;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.addresses.Address;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformation;
+import de.odinoxin.aidcloud.plugins.dietform.DietForm;
 import de.odinoxin.aidcloud.plugins.languages.Language;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.FetchMode;
@@ -56,6 +57,10 @@ public class Person implements Recordable {
     @ManyToMany(cascade = CascadeType.PERSIST)
     @XmlElement(name = "contactInformation")
     private List<ContactInformation> contactInformation = new ArrayList<>();
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @XmlElement(name = "dietForm")
+    private DietForm dietForm;
 
     public Person() {
 
@@ -197,5 +202,15 @@ public class Person implements Recordable {
 
     public void setContactInformation(List<ContactInformation> contactInformation) {
         this.contactInformation = contactInformation;
+    }
+
+    public DietForm getDietForm() {
+        if (Hibernate.isInitialized(dietForm))
+            return dietForm;
+        return null;
+    }
+
+    public void setDietForm(DietForm dietForm) {
+        this.dietForm = dietForm;
     }
 }

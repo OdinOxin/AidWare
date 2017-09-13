@@ -8,6 +8,7 @@
 
         <!-- entity classes -->
         <mapping class="de.odinoxin.aidcloud.translation.Translation"/>
+        <mapping class="de.odinoxin.aidcloud.plugins.dietform.DietForm"/>
         <mapping class="de.odinoxin.aidcloud.plugins.addresses.Address"/>
         <mapping class="de.odinoxin.aidcloud.plugins.contact.information.ContactInformation"/>
         <mapping class="de.odinoxin.aidcloud.plugins.contact.types.ContactType"/>

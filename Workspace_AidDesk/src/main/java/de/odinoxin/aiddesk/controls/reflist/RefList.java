@@ -192,15 +192,14 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
         this.items = items;
         this.items.addListener((ListChangeListener.Change<? extends T> c) -> {
             while (c.next()) {
-                if (!c.wasReplaced() && c.wasRemoved()) {
+                if (c.wasReplaced())
+                    ((RefListCell<T>) this.getChildren().get(c.getFrom())).update(c.getFrom());
+                else if (c.wasRemoved())
                     this.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
-                } else if (!c.wasReplaced() && c.wasAdded()) {
-                    int i = c.getFrom();
-                    for (; i < c.getFrom() + c.getAddedSize(); i++)
+                else if (c.wasAdded())
+                    for (int i = c.getFrom(); i < c.getFrom() + c.getAddedSize(); i++)
                         this.getChildren().add(i, new RefListCell<T>(RefList.this.provider, this, i));
-                }
-                for (int i = 0; i < this.getChildren().size(); i++)
-                    ((RefListCell<T>) this.getChildren().get(i)).update(i);
+
             }
         });
         this.getChildren().clear();
