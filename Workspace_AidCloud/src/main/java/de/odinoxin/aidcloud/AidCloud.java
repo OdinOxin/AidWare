@@ -7,6 +7,8 @@ import de.odinoxin.aidcloud.plugins.countries.CountryProvider;
 import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionTypeProvider;
 import de.odinoxin.aidcloud.plugins.languages.LanguageProvider;
 import de.odinoxin.aidcloud.plugins.people.PersonProvider;
+import de.odinoxin.aidcloud.plugins.rota.RotaProvider;
+import de.odinoxin.aidcloud.plugins.rota.category.RotaCategoryProvider;
 import de.odinoxin.aidcloud.translation.Translator;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -178,14 +180,20 @@ public class AidCloud extends Application {
                     port = String.valueOf(AidCloud.PORT);
                 String adr = String.format(AidCloud.ADDRESS, url, port);
                 Endpoint.publish(adr + "Login", new Login());
-                Endpoint.publish(adr + "LanguageProvider", new LanguageProvider());
+
                 Endpoint.publish(adr + "Translator", Translator.get());
-                Endpoint.publish(adr + "NutritionTypeProvider", new NutritionTypeProvider());
+
                 Endpoint.publish(adr + "PersonProvider", new PersonProvider());
                 Endpoint.publish(adr + "AddressProvider", new AddressProvider());
                 Endpoint.publish(adr + "CountryProvider", new CountryProvider());
+                Endpoint.publish(adr + "LanguageProvider", new LanguageProvider());
+                Endpoint.publish(adr + "NutritionTypeProvider", new NutritionTypeProvider());
                 Endpoint.publish(adr + "ContactTypeProvider", new ContactTypeProvider());
                 Endpoint.publish(adr + "ContactInformationProvider", new ContactInformationProvider());
+
+                Endpoint.publish(adr + "RotaProvider", new RotaProvider());
+                Endpoint.publish(adr + "RotaCategoryProvider", new RotaCategoryProvider());
+
                 Platform.runLater(() -> {
                     Button btnExit = new Button("Exit");
                     btnExit.setDefaultButton(true);

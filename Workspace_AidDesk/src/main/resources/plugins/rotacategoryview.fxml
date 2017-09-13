@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.odinoxin.aiddesk.controls.MergeablePane?>
+<?import de.odinoxin.aiddesk.controls.translateable.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          vgap="5"
+          hgap="5">
+
+    <padding>
+        <Insets left="5" top="5" right="5" bottom="5"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <Label id="lblName"
+           text="Name"
+           minWidth="125"
+           maxWidth="125"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="0"/>
+    <MergeablePane GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+        <TextField id="txfName"
+                   maxWidth="400"/>
+    </MergeablePane>
+</GridPane>

@@ -8,13 +8,17 @@
 
         <!-- entity classes -->
         <mapping class="de.odinoxin.aidcloud.translation.Translation"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType"/>
+
         <mapping class="de.odinoxin.aidcloud.plugins.addresses.Address"/>
         <mapping class="de.odinoxin.aidcloud.plugins.contact.information.ContactInformation"/>
         <mapping class="de.odinoxin.aidcloud.plugins.contact.types.ContactType"/>
         <mapping class="de.odinoxin.aidcloud.plugins.countries.Country"/>
         <mapping class="de.odinoxin.aidcloud.plugins.languages.Language"/>
+        <mapping class="de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType"/>
         <mapping class="de.odinoxin.aidcloud.plugins.people.Person"/>
+
+        <mapping class="de.odinoxin.aidcloud.plugins.rota.Rota"/>
+        <mapping class="de.odinoxin.aidcloud.plugins.rota.category.RotaCategory"/>
 
     </session-factory>
 </hibernate-configuration>

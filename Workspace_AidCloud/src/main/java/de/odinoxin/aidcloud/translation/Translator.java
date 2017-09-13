@@ -30,7 +30,8 @@ public class Translator extends RecordHandler<Translation> {
 
             new Translation("MainMenu", "Hauptmenü", "Main menu"),
             new Translation("Main Menu", "Hauptmenü", "Main menu"),
-            new Translation("MasterData", "Stammdaten Editor", "Masterdata editor"),
+            new Translation("MasterData", "Stammdaten Editor", "Master data editor"),
+            new Translation("TransactionData", "Bewegungsdaten Editor", "Transaction data editor"),
             new Translation("Log out", "Ausloggen", null),
             new Translation("Log out?", "Ausloggen?", null),
             new Translation("Log out and close all related windows?", "Ausloggen und alle zugehörigen Fenster schließen?", null),
@@ -66,6 +67,7 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("People", "Personen", null),
             new Translation("Person", "Person", null),
             new Translation("Name"),
+            new Translation("Title", "Titel", null),
             new Translation("Forename", "Vorname", null),
             new Translation("Kürzel", null, "Code"),
             new Translation("Password", "Passwort", null),
@@ -98,7 +100,14 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("Contact information", "Kontaktinformationen", null),
             new Translation("Information"),
 
+            new Translation("NutritionTypeEditor", "Ernährungsarten", "Types of nutrition"),
             new Translation("NutritionType", "Ernährungsart", "Type of nutrition"),
+
+            new Translation("RotaEditor", "Dienstplan", "Roster"),
+            new Translation("Rota", "Dienst", "Rota"),
+
+            new Translation("RotaCategoryEditor", "Dienstarten", "Rota categories"),
+            new Translation("RotaCategory", "Dienstart", "Rota category"),
     };
     private static Translator instance;
 

@@ -16,6 +16,8 @@ import de.odinoxin.aiddesk.plugins.countries.CountryEditor;
 import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionTypeEditor;
 import de.odinoxin.aiddesk.plugins.languages.LanguageEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
+import de.odinoxin.aiddesk.plugins.rota.RotaEditor;
+import de.odinoxin.aiddesk.plugins.rota.category.RotaCategoryEditor;
 import javafx.beans.property.Property;
 import javafx.scene.control.ButtonType;
 import javafx.stage.WindowEvent;
@@ -45,6 +47,9 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
             new PluginItem("ContactTypeEditor", ContactTypeEditor.class, PluginItem.MASTERDATA),
             new PluginItem("ContactInformationEditor", ContactInformationEditor.class, PluginItem.MASTERDATA),
             new PluginItem("NutritionTypeEditor", NutritionTypeEditor.class, PluginItem.MASTERDATA),
+
+            new PluginItem("RotaEditor", RotaEditor.class, PluginItem.TRANSACTIONDATA),
+            new PluginItem("RotaCategoryEditor", RotaCategoryEditor.class, PluginItem.MASTERDATA),
     };
 
     public MainMenu() {
@@ -140,7 +145,9 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         private String name;
         private String subText;
         private Class<? extends Plugin> pluginClass;
+
         static final String MASTERDATA = TranslatorProvider.getTranslation("MasterData");
+        static final String TRANSACTIONDATA = TranslatorProvider.getTranslation("TransactionData");
 
         public PluginItem(String name, Class<? extends Plugin> pluginClass, String subText) {
             this.setId(nextID++);

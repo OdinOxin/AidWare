@@ -1,24 +1,24 @@
-package de.odinoxin.aiddesk.plugins.nutritiontype;
+package de.odinoxin.aiddesk.plugins.rota.category;
 
 import de.odinoxin.aiddesk.plugins.RecordView;
 import javafx.scene.control.TextField;
 
-public class NutritionTypeView extends RecordView<NutritionType> {
+public class RotaCategoryView extends RecordView<RotaCategory> {
 
     TextField txfName;
 
-    NutritionTypeView() {
+    RotaCategoryView() {
         this(null);
     }
 
-    NutritionTypeView(NutritionType nutritionType) {
-        super(nutritionType, "/plugins/nutitiontypeview.fxml");
+    RotaCategoryView(RotaCategory category) {
+        super(category, "/plugins/rotacategoryview.fxml");
         this.txfName = (TextField) this.root.lookup("#txfName");
-        this.bind(nutritionType);
+        this.bind(category);
     }
 
     @Override
-    public void bind(NutritionType record) {
+    public void bind(RotaCategory record) {
         super.bind(record);
         if (record == null)
             return;

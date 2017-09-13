@@ -41,13 +41,13 @@ public class NutritionTypeProvider extends RecordHandler<NutritionType> {
 
     @Override
     protected Expression<Integer> getIdExpression(Root<NutritionType> root) {
-        return null; //root.get(NutritionType_.id);
+        return root.get(NutritionType_.id);
     }
 
     @Override
     protected List<Expression<String>> getSearchExpressions(Root<NutritionType> root) {
         List<Expression<String>> expressions = new ArrayList<>();
-        //expressions.add(root.get(NutritionType_.name));
+        expressions.add(root.get(NutritionType_.name));
         return expressions;
     }
 
