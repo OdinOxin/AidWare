@@ -98,7 +98,7 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("Contact information", "Kontaktinformationen", null),
             new Translation("Information"),
 
-            new Translation("DietForm", "Ernährungsart", "Diet form"),
+            new Translation("NutritionType", "Ernährungsart", "Type of nutrition"),
     };
     private static Translator instance;
 

@@ -1,4 +1,4 @@
-package de.odinoxin.aidcloud.plugins.dietform;
+package de.odinoxin.aidcloud.plugins.nutritiontype;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.plugins.RecordHandler;
@@ -14,50 +14,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 @WebService
-public class DietFormProvider extends RecordHandler<DietForm> {
+public class NutritionTypeProvider extends RecordHandler<NutritionType> {
 
     @Resource
     WebServiceContext wsCtx;
 
     @WebMethod
-    public DietForm getDietForm(@WebParam(name = "id") int id) {
+    public NutritionType getNutritionType(@WebParam(name = "id") int id) {
         return super.get(id, this.wsCtx);
     }
 
     @WebMethod
-    public DietForm saveDietForm(@WebParam(name = "entity") DietForm entity, @WebParam(name = "original") DietForm original) throws ConcurrentFault {
-        return this.getDietForm(super.save(entity, original, this.wsCtx));
+    public NutritionType saveNutritionType(@WebParam(name = "entity") NutritionType entity, @WebParam(name = "original") NutritionType original) throws ConcurrentFault {
+        return this.getNutritionType(super.save(entity, original, this.wsCtx));
     }
 
     @WebMethod
-    public boolean deleteDietForm(@WebParam(name = "id") int id) {
+    public boolean deleteNutritionType(@WebParam(name = "id") int id) {
         return super.delete(id, this.wsCtx);
     }
 
     @WebMethod
-    public List<DietForm> searchDietForm(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
+    public List<NutritionType> searchNutritionType(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
         return super.search(expr, max, this.wsCtx);
     }
 
     @Override
-    protected Expression<Integer> getIdExpression(Root<DietForm> root) {
-        return root.get(DietForm_.id);
+    protected Expression<Integer> getIdExpression(Root<NutritionType> root) {
+        return null; //root.get(NutritionType_.id);
     }
 
     @Override
-    protected List<Expression<String>> getSearchExpressions(Root<DietForm> root) {
+    protected List<Expression<String>> getSearchExpressions(Root<NutritionType> root) {
         List<Expression<String>> expressions = new ArrayList<>();
-        expressions.add(root.get(DietForm_.name));
+        //expressions.add(root.get(NutritionType_.name));
         return expressions;
     }
 
     @Override
     public void generateDefaults() {
         if (this.countRecords() <= 0) {
-            DietForm vegan = new DietForm();
+            NutritionType vegan = new NutritionType();
             vegan.setName("Vegan");
             this.generate(vegan);
-            DietForm vegetarian = new DietForm();
+            NutritionType vegetarian = new NutritionType();
             vegetarian.setName("Vegetarian");
             this.generate(vegetarian);
         }

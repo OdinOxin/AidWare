@@ -2,7 +2,7 @@ package de.odinoxin.aiddesk.plugins.people;
 
 import de.odinoxin.aidcloud.provider.AddressProvider;
 import de.odinoxin.aidcloud.provider.ContactInformationProvider;
-import de.odinoxin.aidcloud.provider.DietFormProvider;
+import de.odinoxin.aidcloud.provider.NutritionTypeProvider;
 import de.odinoxin.aidcloud.provider.LanguageProvider;
 import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
@@ -12,7 +12,7 @@ import de.odinoxin.aiddesk.plugins.Plugin;
 import de.odinoxin.aiddesk.plugins.RecordView;
 import de.odinoxin.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
-import de.odinoxin.aiddesk.plugins.dietform.DietForm;
+import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionType;
 import de.odinoxin.aiddesk.plugins.languages.Language;
 import javafx.scene.control.TextField;
 
@@ -23,7 +23,7 @@ public class PersonView extends RecordView<Person> {
     private TextField txfCode;
     private Button btnPwd;
     private RefBox<Language> refBoxLanguage;
-    private RefBox<DietForm> refBoxDietForm;
+    private RefBox<NutritionType> refBoxDietForm;
     private RefBox<Address> refBoxAddress;
     private RefList<ContactInformation> refListContactInformation;
 
@@ -45,8 +45,8 @@ public class PersonView extends RecordView<Person> {
         Plugin.setButtonEnter(this.btnPwd);
         this.refBoxLanguage = (RefBox<Language>) this.root.lookup("#refBoxLanguage");
         this.refBoxLanguage.setProvider(new LanguageProvider());
-        this.refBoxDietForm = (RefBox<DietForm>) this.root.lookup("#refBoxDietForm");
-        this.refBoxDietForm.setProvider(new DietFormProvider());
+        this.refBoxDietForm = (RefBox<NutritionType>) this.root.lookup("#refBoxDietForm");
+        this.refBoxDietForm.setProvider(new NutritionTypeProvider());
         this.refBoxAddress = (RefBox<Address>) this.root.lookup("#refBoxAddress");
         this.refBoxAddress.setProvider(new AddressProvider());
         this.refListContactInformation = (RefList<ContactInformation>) this.root.lookup("#refListContactInformation");
@@ -64,7 +64,7 @@ public class PersonView extends RecordView<Person> {
         this.txfCode.textProperty().bindBidirectional(record.codeProperty());
         this.btnPwd.disableProperty().bind(((MergeablePane) this.btnPwd.getParent()).contentEditableProperty().not().or(record.idProperty().isEqualTo(0)));
         this.refBoxLanguage.recordProperty().bindBidirectional(record.languageProperty());
-        this.refBoxDietForm.recordProperty().bindBidirectional(record.dietFormProperty());
+        this.refBoxDietForm.recordProperty().bindBidirectional(record.nutritionTypeProperty());
         this.refBoxAddress.recordProperty().bindBidirectional(record.addressProperty());
         this.refListContactInformation.bindBidirectional(record.contactInformationProperty());
     }

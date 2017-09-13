@@ -1,6 +1,6 @@
-package de.odinoxin.aiddesk.plugins.dietform;
+package de.odinoxin.aiddesk.plugins.nutritiontype;
 
-import de.odinoxin.aidcloud.service.DietFormEntity;
+import de.odinoxin.aidcloud.service.NutritionTypeEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,35 +8,35 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class DietForm extends RecordItem<DietFormEntity> {
+public class NutritionType extends RecordItem<NutritionTypeEntity> {
 
     private StringProperty name = new SimpleStringProperty(null, "Name");
 
-    public DietForm() {
+    public NutritionType() {
         super();
         this.name.addListener((observable, oldValue, newValue) -> this.setChanged(true));
         this.setChanged(false);
     }
 
-    public DietForm(int id) {
+    public NutritionType(int id) {
         this();
         this.setId(id);
         this.setChanged(false);
     }
 
-    public DietForm(int id, String name) {
+    public NutritionType(int id, String name) {
         this(id);
         this.setName(name);
         this.setChanged(false);
     }
 
-    public DietForm(DietFormEntity entity) {
+    public NutritionType(NutritionTypeEntity entity) {
         this(entity.getId(), entity.getName());
     }
 
     @Override
     protected Object clone() {
-        return new DietForm(this.getId(), this.getName());
+        return new NutritionType(this.getId(), this.getName());
     }
 
     public String getName() {
@@ -52,8 +52,8 @@ public class DietForm extends RecordItem<DietFormEntity> {
     }
 
     @Override
-    public DietFormEntity toEntity() {
-        DietFormEntity entity = new DietFormEntity();
+    public NutritionTypeEntity toEntity() {
+        NutritionTypeEntity entity = new NutritionTypeEntity();
         entity.setId(this.getId());
         entity.setName(this.getName());
         return entity;

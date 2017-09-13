@@ -5,7 +5,7 @@ import de.odinoxin.aidcloud.service.PersonEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
-import de.odinoxin.aiddesk.plugins.dietform.DietForm;
+import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionType;
 import de.odinoxin.aiddesk.plugins.languages.Language;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -22,7 +22,7 @@ public class Person extends RecordItem<PersonEntity> {
     private StringProperty code = new SimpleStringProperty(null, "Code");
     private StringProperty pwd = new SimpleStringProperty(null, "Pwd");
     private ObjectProperty<Language> language = new SimpleObjectProperty<>(null, "Language");
-    private ObjectProperty<DietForm> dietForm = new SimpleObjectProperty<>(null, "DietForm");
+    private ObjectProperty<NutritionType> nutritionType = new SimpleObjectProperty<>(null, "NutritionType");
     private ObjectProperty<Address> address = new SimpleObjectProperty<>(null, "Address");
     private ListProperty<ContactInformation> contactInformation = new SimpleListProperty<>(null, "ContactInformation", FXCollections.observableArrayList());
 
@@ -33,7 +33,7 @@ public class Person extends RecordItem<PersonEntity> {
         this.code.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.pwd.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.language.addListener((observable, oldValue, newValue) -> setChanged(true));
-        this.dietForm.addListener((observable, oldValue, newValue) -> setChanged(true));
+        this.nutritionType.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.address.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.contactInformation.addListener((ListChangeListener.Change<? extends ContactInformation> c) -> setChanged(true));
         this.setChanged(false);
@@ -45,20 +45,20 @@ public class Person extends RecordItem<PersonEntity> {
         this.setChanged(false);
     }
 
-    public Person(int id, String name, String forename, String code, Language language, DietForm dietForm, Address address, List<ContactInformation> contactInformation) {
+    public Person(int id, String name, String forename, String code, Language language, NutritionType nutritionType, Address address, List<ContactInformation> contactInformation) {
         this(id);
         this.setName(name);
         this.setForename(forename);
         this.setCode(code);
         this.setLanguage(language);
-        this.setDietForm(dietForm);
+        this.setNutritionType(nutritionType);
         this.setAddress(address);
         this.setContactInformation(contactInformation);
         this.setChanged(false);
     }
 
     public Person(PersonEntity entity) {
-        this(entity.getId(), entity.getName(), entity.getForename(), entity.getCode(), entity.getLanguage() == null ? null : new Language(entity.getLanguage()), entity.getDietForm() == null ? null : new DietForm(entity.getDietForm()), entity.getAddress() == null ? null : new Address(entity.getAddress()), null);
+        this(entity.getId(), entity.getName(), entity.getForename(), entity.getCode(), entity.getLanguage() == null ? null : new Language(entity.getLanguage()), entity.getNutritionType() == null ? null : new NutritionType(entity.getNutritionType()), entity.getAddress() == null ? null : new Address(entity.getAddress()), null);
         if (entity.getContactInformation() != null) {
             List<ContactInformation> list = new ArrayList<>();
             for (ContactInformationEntity contactInformationEntity : entity.getContactInformation())
@@ -70,7 +70,7 @@ public class Person extends RecordItem<PersonEntity> {
 
     @Override
     protected Object clone() {
-        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getDietForm(), this.getAddress(), this.getContactInformation());
+        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getNutritionType(), this.getAddress(), this.getContactInformation());
     }
 
     public String getName() {
@@ -93,8 +93,8 @@ public class Person extends RecordItem<PersonEntity> {
         return language.get();
     }
 
-    public DietForm getDietForm() {
-        return dietForm.get();
+    public NutritionType getNutritionType() {
+        return nutritionType.get();
     }
 
     public Address getAddress() {
@@ -125,8 +125,8 @@ public class Person extends RecordItem<PersonEntity> {
         this.language.set(language);
     }
 
-    public void setDietForm(DietForm dietForm) {
-        this.dietForm.set(dietForm);
+    public void setNutritionType(NutritionType nutritionType) {
+        this.nutritionType.set(nutritionType);
     }
 
     public void setAddress(Address address) {
@@ -162,8 +162,8 @@ public class Person extends RecordItem<PersonEntity> {
         return language;
     }
 
-    public ObjectProperty<DietForm> dietFormProperty() {
-        return dietForm;
+    public ObjectProperty<NutritionType> nutritionTypeProperty() {
+        return nutritionType;
     }
 
     public ObjectProperty<Address> addressProperty() {
@@ -181,7 +181,7 @@ public class Person extends RecordItem<PersonEntity> {
         entity.setForename(this.getForename());
         entity.setCode(this.getCode());
         entity.setLanguage(this.getLanguage() == null ? null : this.getLanguage().toEntity());
-        entity.setDietForm(this.getDietForm() == null ? null : this.getDietForm().toEntity());
+        entity.setNutritionType(this.getNutritionType() == null ? null : this.getNutritionType().toEntity());
         entity.setAddress(this.getAddress() == null ? null : this.getAddress().toEntity());
         for (ContactInformation info : this.getContactInformation())
             if (info != null)
@@ -197,7 +197,7 @@ public class Person extends RecordItem<PersonEntity> {
         properties.put(this.code.getName(), this.code);
         properties.put(this.pwd.getName(), this.pwd);
         properties.put(this.language.getName(), this.language);
-        properties.put(this.dietForm.getName(), this.dietForm);
+        properties.put(this.nutritionType.getName(), this.nutritionType);
         properties.put(this.address.getName(), this.address);
         properties.put(this.contactInformation.getName(), this.contactInformationProperty());
         return properties;

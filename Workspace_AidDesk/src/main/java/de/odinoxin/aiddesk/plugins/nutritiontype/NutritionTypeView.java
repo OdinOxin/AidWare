@@ -1,24 +1,24 @@
-package de.odinoxin.aiddesk.plugins.dietform;
+package de.odinoxin.aiddesk.plugins.nutritiontype;
 
 import de.odinoxin.aiddesk.plugins.RecordView;
 import javafx.scene.control.TextField;
 
-public class DietFormView extends RecordView<DietForm> {
+public class NutritionTypeView extends RecordView<NutritionType> {
 
     TextField txfName;
 
-    DietFormView() {
+    NutritionTypeView() {
         this(null);
     }
 
-    DietFormView(DietForm dietForm) {
-        super(dietForm, "/plugins/dietformview.fxml");
+    NutritionTypeView(NutritionType nutritionType) {
+        super(nutritionType, "/plugins/dietformview.fxml");
         this.txfName = (TextField) this.root.lookup("#txfName");
-        this.bind(dietForm);
+        this.bind(nutritionType);
     }
 
     @Override
-    public void bind(DietForm record) {
+    public void bind(NutritionType record) {
         super.bind(record);
         if (record == null)
             return;
