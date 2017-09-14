@@ -106,6 +106,12 @@ public class Translator extends RecordHandler<Translation> {
             new Translation("RotaEditor", "Dienstplan", "Roster"),
             new Translation("Rota", "Dienst", "Rota"),
 
+            new Translation("RotaShiftEditor", "Schichten", "Shift"),
+            new Translation("RotaShift", "Schicht", "Shift"),
+            new Translation("Beginn"),
+            new Translation("End", "Ende", null),
+            new Translation("TimestampInterpretation", "Interpretation", "Interpretation"),
+
             new Translation("RotaCategoryEditor", "Dienstarten", "Rota categories"),
             new Translation("RotaCategory", "Dienstart", "Rota category"),
     };
