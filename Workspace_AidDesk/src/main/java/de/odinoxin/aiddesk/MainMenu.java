@@ -18,6 +18,7 @@ import de.odinoxin.aiddesk.plugins.languages.LanguageEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
 import de.odinoxin.aiddesk.plugins.rota.RotaEditor;
 import de.odinoxin.aiddesk.plugins.rota.category.RotaCategoryEditor;
+import de.odinoxin.aiddesk.plugins.rota.shift.RotaShiftEditor;
 import javafx.beans.property.Property;
 import javafx.scene.control.ButtonType;
 import javafx.stage.WindowEvent;
@@ -49,6 +50,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
             new PluginItem("NutritionTypeEditor", NutritionTypeEditor.class, PluginItem.MASTERDATA),
 
             new PluginItem("RotaEditor", RotaEditor.class, PluginItem.TRANSACTIONDATA),
+            new PluginItem("RotaShiftEditor", RotaShiftEditor.class, PluginItem.TRANSACTIONDATA),
             new PluginItem("RotaCategoryEditor", RotaCategoryEditor.class, PluginItem.MASTERDATA),
     };
 

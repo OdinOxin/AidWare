@@ -23,7 +23,6 @@
 
     <rowConstraints>
         <RowConstraints vgrow="NEVER"/>
-        <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
     <GridPane GridPane.rowIndex="0"

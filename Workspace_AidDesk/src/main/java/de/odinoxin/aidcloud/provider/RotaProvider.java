@@ -64,7 +64,7 @@ public class RotaProvider implements Provider<Rota> {
             return null;
         return new RefBoxListItem<>(item,
                 (item.getTitle() == null ? "" : item.getTitle()),
-                "");
+                (item.getCategory() == null ? "" : item.getCategory().getName()));
     }
 
     @Override

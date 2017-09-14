@@ -7,11 +7,11 @@
         <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
     </listener>
     <servlet>
-        <servlet-name>AidCloud</servlet-name>
+        <servlet-tsBeginn>AidCloud</servlet-tsBeginn>
         <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>AidCloud</servlet-name>
+        <servlet-tsBeginn>AidCloud</servlet-tsBeginn>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
 </web-app>

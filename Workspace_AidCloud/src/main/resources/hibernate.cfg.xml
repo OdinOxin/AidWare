@@ -18,6 +18,8 @@
         <mapping class="de.odinoxin.aidcloud.plugins.people.Person"/>
 
         <mapping class="de.odinoxin.aidcloud.plugins.rota.Rota"/>
+        <mapping class="de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation"/>
+        <mapping class="de.odinoxin.aidcloud.plugins.rota.shift.RotaShift"/>
         <mapping class="de.odinoxin.aidcloud.plugins.rota.category.RotaCategory"/>
 
     </session-factory>

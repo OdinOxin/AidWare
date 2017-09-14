@@ -28,6 +28,7 @@ public class Rota extends RecordItem<RotaEntity> {
     public Rota(int id, String title, RotaCategory category) {
         this(id);
         this.setTitle(title);
+        this.setCategory(category);
         this.setChanged(false);
     }
 

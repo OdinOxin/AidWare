@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.odinoxin.aiddesk.controls.MergeablePane?>
-<?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aiddesk.controls.translateable.Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TextField?>
@@ -23,29 +22,15 @@
         <RowConstraints vgrow="NEVER"/>
     </rowConstraints>
 
-    <Label id="lblTitle"
-           text="Title"
+    <Label id="lblName"
+           text="Name"
            minWidth="125"
            maxWidth="125"
            GridPane.rowIndex="0"
            GridPane.columnIndex="0"/>
     <MergeablePane GridPane.rowIndex="0"
                    GridPane.columnIndex="1">
-        <TextField id="txfTitle"
+        <TextField id="txfName"
                    maxWidth="400"/>
-    </MergeablePane>
-
-    <Label id="lblCategory"
-           text="RotaCategory"
-           minWidth="125"
-           maxWidth="125"
-           GridPane.rowIndex="1"
-           GridPane.columnIndex="0"/>
-    <MergeablePane GridPane.rowIndex="1"
-                   GridPane.columnIndex="1">
-        <RefBox id="refBoxCategory"
-                showNewButton="true"
-                showEditButton="true"
-                maxWidth="400"/>
     </MergeablePane>
 </GridPane>

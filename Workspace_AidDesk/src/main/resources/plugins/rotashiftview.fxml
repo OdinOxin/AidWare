@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.odinoxin.aiddesk.controls.Header?>
+<?import de.odinoxin.aiddesk.controls.MergeablePane?>
+<?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
+<?import de.odinoxin.aiddesk.controls.translateable.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.layout.*?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          vgap="5"
+          hgap="5">
+
+    <padding>
+        <Insets left="5" top="5" right="5" bottom="5"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+    </columnConstraints>
+
+    <rowConstraints>
+        <RowConstraints vgrow="NEVER"/>
+    </rowConstraints>
+
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="0"
+              hgap="5"
+              vgap="5">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <Header text="Beginn"
+                GridPane.rowIndex="0"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2"/>
+
+        <Label id="lblTsBeginn"
+               text="Beginn"
+               minWidth="125"
+               maxWidth="125"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0"/>
+        <MergeablePane GridPane.rowIndex="1"
+                       GridPane.columnIndex="1">
+            <DatePicker id="dtpTsBeginn"
+                        maxWidth="400"/>
+        </MergeablePane>
+
+        <Label id="lblBeginnInterpretation"
+               text="TimestampInterpretation"
+               minWidth="125"
+               maxWidth="125"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="0"/>
+        <MergeablePane GridPane.rowIndex="2"
+                       GridPane.columnIndex="1">
+            <RefBox id="refBoxBeginnInterpretation"
+                    showNewButton="true"
+                    showEditButton="true"
+                    maxWidth="400"/>
+        </MergeablePane>
+
+    </GridPane>
+
+    <GridPane GridPane.rowIndex="0"
+              GridPane.columnIndex="1"
+              hgap="5"
+              vgap="5">
+
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <rowConstraints>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+            <RowConstraints vgrow="NEVER"/>
+        </rowConstraints>
+
+        <Header text="End"
+                GridPane.rowIndex="0"
+                GridPane.columnIndex="0"
+                GridPane.columnSpan="2"/>
+
+        <Label id="lblTsEnd"
+               text="End"
+               minWidth="125"
+               maxWidth="125"
+               GridPane.rowIndex="1"
+               GridPane.columnIndex="0"/>
+        <MergeablePane GridPane.rowIndex="1"
+                       GridPane.columnIndex="1">
+            <DatePicker id="dtpTsEnd"
+                        maxWidth="400"/>
+        </MergeablePane>
+
+        <Label id="lblEndInterpretation"
+               text="TimestampInterpretation"
+               minWidth="125"
+               maxWidth="125"
+               GridPane.rowIndex="2"
+               GridPane.columnIndex="0"/>
+        <MergeablePane GridPane.rowIndex="2"
+                       GridPane.columnIndex="1">
+            <RefBox id="refBoxEndInterpretation"
+                    showNewButton="true"
+                    showEditButton="true"
+                    maxWidth="400"/>
+        </MergeablePane>
+
+    </GridPane>
+</GridPane>

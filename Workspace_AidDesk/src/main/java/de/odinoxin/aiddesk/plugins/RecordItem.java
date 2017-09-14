@@ -2,9 +2,12 @@ package de.odinoxin.aiddesk.plugins;
 
 import javafx.beans.property.*;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -93,5 +96,31 @@ public abstract class RecordItem<T> implements Cloneable {
             }
             return properties.get(key).getValue() != null || otherProperties.get(key).getValue() != null;
         }).collect(Collectors.toList());
+    }
+
+    /*
+     * Converts XMLGregorianCalendar to java.util.Date in Java
+     */
+    public static Date toDate(XMLGregorianCalendar calendar) {
+        if (calendar == null)
+            return null;
+        return calendar.toGregorianCalendar().getTime();
+    }
+
+    /*
+     * Converts java.util.Date to javax.xml.datatype.XMLGregorianCalendar
+     */
+    public static XMLGregorianCalendar toXMLGregorianCalendar(Date date) {
+        if (date == null)
+            return null;
+        GregorianCalendar gCalendar = new GregorianCalendar();
+        gCalendar.setTime(date);
+        XMLGregorianCalendar xmlCalendar = null;
+        try {
+            xmlCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(gCalendar);
+        } catch (DatatypeConfigurationException ex) {
+            Logger.getLogger(RecordItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return xmlCalendar;
     }
 }

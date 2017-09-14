@@ -8,7 +8,10 @@ import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionTypeProvider;
 import de.odinoxin.aidcloud.plugins.languages.LanguageProvider;
 import de.odinoxin.aidcloud.plugins.people.PersonProvider;
 import de.odinoxin.aidcloud.plugins.rota.RotaProvider;
+import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation;
+import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretationProvider;
 import de.odinoxin.aidcloud.plugins.rota.category.RotaCategoryProvider;
+import de.odinoxin.aidcloud.plugins.rota.shift.RotaShiftProvider;
 import de.odinoxin.aidcloud.translation.Translator;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -191,7 +194,9 @@ public class AidCloud extends Application {
                 Endpoint.publish(adr + "ContactTypeProvider", new ContactTypeProvider());
                 Endpoint.publish(adr + "ContactInformationProvider", new ContactInformationProvider());
 
+                Endpoint.publish(adr + "TimestampInterpretationProvider", new TimestampInterpretationProvider());
                 Endpoint.publish(adr + "RotaProvider", new RotaProvider());
+                Endpoint.publish(adr + "RotaShiftProvider", new RotaShiftProvider());
                 Endpoint.publish(adr + "RotaCategoryProvider", new RotaCategoryProvider());
 
                 Platform.runLater(() -> {

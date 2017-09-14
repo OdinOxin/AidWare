@@ -1,26 +1,26 @@
-package de.odinoxin.aiddesk.plugins.rota;
+package de.odinoxin.aiddesk.plugins.rota.shift;
 
 import de.odinoxin.aidcloud.provider.Provider;
-import de.odinoxin.aidcloud.provider.RotaProvider;
+import de.odinoxin.aidcloud.provider.RotaShiftProvider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordView;
 
-public class RotaEditor extends RecordEditor<Rota> {
+public class RotaShiftEditor extends RecordEditor<RotaShift> {
 
-    public RotaEditor() {
+    public RotaShiftEditor() {
         this(null);
     }
 
-    public RotaEditor(Rota rota) {
-        super("Rota");
+    public RotaShiftEditor(RotaShift rota) {
+        super("RotaShift");
         this.attemptLoadRecord(rota);
         if (rota == null)
             this.onNew();
     }
 
     @Override
-    protected Rota onSave() throws ConcurrentFault_Exception {
+    protected RotaShift onSave() throws ConcurrentFault_Exception {
         return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
@@ -30,20 +30,20 @@ public class RotaEditor extends RecordEditor<Rota> {
     }
 
     @Override
-    protected void setRecord(Rota rota) {
+    protected void setRecord(RotaShift rota) {
         if (rota == null)
-            super.setRecord(new Rota());
+            super.setRecord(new RotaShift());
         else
             super.setRecord(rota);
     }
 
     @Override
-    protected Provider<Rota> initProvider() {
-        return new RotaProvider();
+    protected Provider<RotaShift> initProvider() {
+        return new RotaShiftProvider();
     }
 
     @Override
-    public RecordView<Rota> newView(Rota record) {
-        return new RotaView(record);
+    public RecordView<RotaShift> newView(RotaShift record) {
+        return new RotaShiftView(record);
     }
 }

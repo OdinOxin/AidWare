@@ -14,6 +14,7 @@ public abstract class RecordView<T extends RecordItem<?>> extends GridPane {
     private static final String[] PREFIXES = {
             "txf",
             "btn",
+            "dtp",
             "refBox",
             "refList",
     };
