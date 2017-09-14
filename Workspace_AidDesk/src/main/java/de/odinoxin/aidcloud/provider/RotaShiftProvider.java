@@ -10,8 +10,10 @@ import de.odinoxin.aiddesk.plugins.rota.shift.RotaShiftEditor;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class RotaShiftProvider implements Provider<RotaShift> {
     private static de.odinoxin.aidcloud.service.RotaShiftProvider svc;
@@ -62,8 +64,10 @@ public class RotaShiftProvider implements Provider<RotaShift> {
     public RefBoxListItem<RotaShift> getRefBoxItem(RotaShift item) {
         if (item == null)
             return null;
+        String format = item.getTsBeginn() == null || item.getTsEnd() == null ? "%s%s" : "%s - %s";
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, Locale.getDefault());
         return new RefBoxListItem<>(item,
-                (item.getTsBeginn() == null ? "" : item.getTsBeginn().toString()) + " - " + (item.getTsEnd() == null ? "" : item.getTsEnd().toString()),
+                String.format(format, item.getTsBeginn() == null ? "" : dateFormatter.format(item.getTsBeginn()), item.getTsEnd() == null ? "" : dateFormatter.format(item.getTsEnd())),
                 "");
     }
 

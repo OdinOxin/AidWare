@@ -7,6 +7,7 @@ import de.odinoxin.aiddesk.Login;
 import de.odinoxin.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformationEditor;
+import de.odinoxin.aiddesk.plugins.contact.types.ContactType;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -62,10 +63,12 @@ public class ContactInformationProvider implements Provider<ContactInformation> 
     public RefBoxListItem<ContactInformation> getRefBoxItem(ContactInformation item) {
         if (item == null)
             return null;
+        ContactType type = item.getContactType();
+        String format = type == null || item.getInformation() == null ? "%s%s" : "%s: %s";
+
         return new RefBoxListItem<>(item,
-                (item.getContactType() == null ? "" : item.getContactType().getCode() == null ? "" : item.getContactType().getCode()) + ": " +
-                        (item.getInformation() == null ? "" : item.getInformation()),
-                (item.getContactType() == null ? "" : item.getContactType().getName() == null ? "" : item.getContactType().getName()));
+                String.format(format, type == null ? "" : type.getCode() == null ? "" : type.getCode(), item.getInformation() == null ? "" : item.getInformation()),
+                (type == null ? "" : type.getName() == null ? "" : type.getName()));
     }
 
     @Override
