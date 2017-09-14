@@ -65,7 +65,7 @@ public class RotaShiftView extends RecordView<RotaShift> {
             record.setTsEnd(Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         };
         this.dtpTsEnd.valueProperty().addListener(this.tsEndListener);
-        this.refBoxEndInterpretation.recordProperty().bindBidirectional(record.beginnInterpretationProperty());
+        this.refBoxEndInterpretation.recordProperty().bindBidirectional(record.endInterpretationProperty());
     }
 
     @Override

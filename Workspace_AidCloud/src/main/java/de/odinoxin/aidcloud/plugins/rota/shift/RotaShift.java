@@ -1,6 +1,7 @@
 package de.odinoxin.aidcloud.plugins.rota.shift;
 
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation;
 import org.hibernate.Hibernate;
 
@@ -68,11 +69,11 @@ public class RotaShift implements Recordable {
             return false;
         RotaShift rotaShift = (RotaShift) obj;
         return rotaShift.getId() == this.getId()
-                && ((rotaShift.getText() == null && this.getText() == null) || (rotaShift.getText() != null && rotaShift.getText().equals(this.getText())))
-                && ((rotaShift.getTsBeginn() == null && this.getTsBeginn() == null) || (rotaShift.getTsBeginn() != null && rotaShift.getTsBeginn().equals(this.getTsBeginn())))
-                && ((rotaShift.getBeginnInterpretation() == null && this.getBeginnInterpretation() == null) || (rotaShift.getBeginnInterpretation() != null && rotaShift.getBeginnInterpretation().equals(this.getBeginnInterpretation())))
-                && ((rotaShift.getTsEnd() == null && this.getTsEnd() == null) || (rotaShift.getTsEnd() != null && rotaShift.getTsEnd().equals(this.getTsEnd())))
-                && ((rotaShift.getEndInterpretation() == null && this.getEndInterpretation() == null) || (rotaShift.getEndInterpretation() != null && rotaShift.getEndInterpretation().equals(this.getEndInterpretation())));
+                && RecordableComparer.Equals(this.getText(), rotaShift.getText())
+                && RecordableComparer.Equals(this.getTsBeginn(), rotaShift.getTsBeginn())
+                && RecordableComparer.Equals(this.getBeginnInterpretation(), rotaShift.getBeginnInterpretation())
+                && RecordableComparer.Equals(this.getTsEnd(), rotaShift.getTsEnd())
+                && RecordableComparer.Equals(this.getEndInterpretation(), rotaShift.getEndInterpretation());
     }
 
     @Override
