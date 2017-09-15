@@ -57,7 +57,7 @@ public class RotaShiftView extends RecordView<RotaShift> {
         this.dtpTsBeginn.setValue(record.getTsBeginn() == null ? null : record.getTsBeginn().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         this.tsBeginnListener = (observable, oldValue, newValue) ->
         {
-            record.setTsBeginn(Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            record.setTsBeginn(newValue == null ? null : Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         };
         this.dtpTsBeginn.valueProperty().addListener(this.tsBeginnListener);
         this.refBoxBeginnInterpretation.recordProperty().bindBidirectional(record.beginnInterpretationProperty());
@@ -65,7 +65,7 @@ public class RotaShiftView extends RecordView<RotaShift> {
         this.dtpTsEnd.setValue(record.getTsEnd() == null ? null : record.getTsEnd().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         this.tsEndListener = (observable, oldValue, newValue) ->
         {
-            record.setTsEnd(Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            record.setTsEnd(newValue == null ? null : Date.from(newValue.atStartOfDay(ZoneId.systemDefault()).toInstant()));
         };
         this.dtpTsEnd.valueProperty().addListener(this.tsEndListener);
         this.refBoxEndInterpretation.recordProperty().bindBidirectional(record.endInterpretationProperty());

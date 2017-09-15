@@ -70,6 +70,10 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             });
             super.setOnCloseRequest(ev -> closeRequest(ev));
             this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
+            this.btnRefresh.minHeightProperty().bind(this.refBoxKey.heightProperty());
+            this.btnRefresh.maxHeightProperty().bind(this.refBoxKey.heightProperty());
+            this.btnRefresh.minWidthProperty().bind(this.refBoxKey.heightProperty());
+            this.btnRefresh.maxWidthProperty().bind(this.refBoxKey.heightProperty());
             this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.getServerRecord()));
             this.txfId = (TextField) this.root.lookup("#txfId");
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);

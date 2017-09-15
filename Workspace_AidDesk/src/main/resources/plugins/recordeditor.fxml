@@ -32,11 +32,7 @@
             <RefBox id="refBoxKey"
                     prefWidth="300"
                     showNewButton="true"/>
-            <Button id="btnRefresh"
-                    minWidth="35"
-                    maxWidth="35"
-                    minHeight="31"
-                    maxHeight="31">
+            <Button id="btnRefresh">
                 <graphic>
                     <SVGPath scaleX="0.04" scaleY="0.04"
                              content="M125.938,208.901l-39.102-39.408c-25.01,32.209-40.502,69.32-45.251,107.941h56.06

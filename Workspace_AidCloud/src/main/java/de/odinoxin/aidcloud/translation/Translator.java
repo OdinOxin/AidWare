@@ -137,6 +137,7 @@ public class Translator extends RecordHandler<Translation> {
         translations.addAll(getTranslations("TimestampInterpretation", "Interpretation", "Interpretation"));
         translations.addAll(getTranslations("RotaCategoryEditor", "Dienstarten", "Rota categories"));
         translations.addAll(getTranslations("RotaCategory", "Dienstart", "Rota category"));
+        translations.addAll(getTranslations("AdditionalInformation", "Zusatzinformationen", "Additional information"));
         //translations.addAll(getTranslations("", "", ""));
 
         if (this.countRecords() != translations.size()) {
