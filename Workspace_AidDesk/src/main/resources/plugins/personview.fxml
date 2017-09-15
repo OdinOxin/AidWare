@@ -112,15 +112,15 @@
                     showNewButton="true"/>
         </MergeablePane>
 
-        <Label id="lblDietForm"
-               text="DietForm"
+        <Label id="lblNutritionType"
+               text="NutritionType"
                minWidth="125"
                maxWidth="125"
                GridPane.rowIndex="6"
                GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="6"
                        GridPane.columnIndex="1">
-            <RefBox id="refBoxDietForm"
+            <RefBox id="refBoxNutritionType"
                     showEditButton="true"
                     showNewButton="true"/>
         </MergeablePane>

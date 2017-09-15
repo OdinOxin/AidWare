@@ -23,7 +23,7 @@ public class PersonView extends RecordView<Person> {
     private TextField txfCode;
     private Button btnPwd;
     private RefBox<Language> refBoxLanguage;
-    private RefBox<NutritionType> refBoxDietForm;
+    private RefBox<NutritionType> refBoxNutritionType;
     private RefBox<Address> refBoxAddress;
     private RefList<ContactInformation> refListContactInformation;
 
@@ -45,8 +45,8 @@ public class PersonView extends RecordView<Person> {
         Plugin.setButtonEnter(this.btnPwd);
         this.refBoxLanguage = (RefBox<Language>) this.root.lookup("#refBoxLanguage");
         this.refBoxLanguage.setProvider(new LanguageProvider());
-        this.refBoxDietForm = (RefBox<NutritionType>) this.root.lookup("#refBoxDietForm");
-        this.refBoxDietForm.setProvider(new NutritionTypeProvider());
+        this.refBoxNutritionType = (RefBox<NutritionType>) this.root.lookup("#refBoxNutritionType");
+        this.refBoxNutritionType.setProvider(new NutritionTypeProvider());
         this.refBoxAddress = (RefBox<Address>) this.root.lookup("#refBoxAddress");
         this.refBoxAddress.setProvider(new AddressProvider());
         this.refListContactInformation = (RefList<ContactInformation>) this.root.lookup("#refListContactInformation");
@@ -64,7 +64,7 @@ public class PersonView extends RecordView<Person> {
         this.txfCode.textProperty().bindBidirectional(record.codeProperty());
         this.btnPwd.disableProperty().bind(((MergeablePane) this.btnPwd.getParent()).contentEditableProperty().not().or(record.idProperty().isEqualTo(0)));
         this.refBoxLanguage.recordProperty().bindBidirectional(record.languageProperty());
-        this.refBoxDietForm.recordProperty().bindBidirectional(record.nutritionTypeProperty());
+        this.refBoxNutritionType.recordProperty().bindBidirectional(record.nutritionTypeProperty());
         this.refBoxAddress.recordProperty().bindBidirectional(record.addressProperty());
         this.refListContactInformation.bindBidirectional(record.contactInformationProperty());
     }
