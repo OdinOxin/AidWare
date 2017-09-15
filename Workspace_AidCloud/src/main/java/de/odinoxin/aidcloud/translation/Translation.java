@@ -1,11 +1,9 @@
 package de.odinoxin.aidcloud.translation;
 
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.languages.Language;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "Translation")
@@ -15,8 +13,9 @@ public class Translation implements Recordable {
     @GeneratedValue
     private int id;
     private String sys;
-    private String deu;
-    private String usa;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private Language lng;
+    private String lngText;
 
     public Translation() {
 
@@ -27,27 +26,21 @@ public class Translation implements Recordable {
         this.id = id;
     }
 
-    public Translation(String sys) {
-        this(0, sys, null, null);
-    }
-
-    public Translation(String sys, String deu, String usa) {
-        this(0, sys, deu, usa);
-    }
-
-    public Translation(int id, String sys, String deu, String usa) {
+    public Translation(int id, String sys, Language lng, String lngTxt) {
         this(id);
         this.sys = sys;
-        this.deu = deu == null ? sys : deu;
-        this.usa = usa == null ? sys : usa;
+        this.lng = lng;
+        this.lngText = lngTxt;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
     @Override
     public void setId(int id) {
+        this.id = id;
     }
 
     public String getSys() {
@@ -58,20 +51,20 @@ public class Translation implements Recordable {
         this.sys = sys;
     }
 
-    public String getDeu() {
-        return deu;
+    public Language getLng() {
+        return lng;
     }
 
-    public void setDeu(String deu) {
-        this.deu = deu;
+    public void setLng(Language lng) {
+        this.lng = lng;
     }
 
-    public String getUsa() {
-        return usa;
+    public String getLngText() {
+        return lngText;
     }
 
-    public void setUsa(String usa) {
-        this.usa = usa;
+    public void setLngText(String lngText) {
+        this.lngText = lngText;
     }
 
     @Override

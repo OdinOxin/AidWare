@@ -16,6 +16,9 @@ import java.util.List;
 @WebService
 public class LanguageProvider extends RecordHandler<Language> {
 
+    public static Language german = new Language(0, "Deutsch", "DEU");
+    public static Language english = new Language(0, "English", "USA");
+
     @Resource
     WebServiceContext wsCtx;
 
@@ -55,14 +58,8 @@ public class LanguageProvider extends RecordHandler<Language> {
     @Override
     public void generateDefaults() {
         if (this.countRecords() <= 0) {
-            Language german = new Language();
-            german.setName("Deutsch");
-            german.setCode("DEU");
-            this.generate(german);
-            Language english = new Language();
-            english.setName("English");
-            english.setCode("USA");
-            this.generate(english);
+            LanguageProvider.german.setId(this.generate(LanguageProvider.german));
+            LanguageProvider.english.setId(this.generate(LanguageProvider.english));
         }
     }
 }

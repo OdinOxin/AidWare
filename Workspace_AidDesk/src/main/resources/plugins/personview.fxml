@@ -5,6 +5,7 @@
 <?import de.odinoxin.aiddesk.controls.reflist.RefList?>
 <?import de.odinoxin.aiddesk.controls.translateable.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
@@ -17,8 +18,9 @@
     </padding>
 
     <columnConstraints>
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
-        <ColumnConstraints hgrow="ALWAYS" percentWidth="50"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+        <ColumnConstraints hgrow="SOMETIMES"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
     </columnConstraints>
 
     <rowConstraints>
@@ -124,8 +126,12 @@
         </MergeablePane>
     </GridPane>
 
+    <Separator orientation="VERTICAL"
+               GridPane.rowIndex="0"
+               GridPane.columnIndex="1"/>
+
     <GridPane GridPane.rowIndex="0"
-              GridPane.columnIndex="1"
+              GridPane.columnIndex="2"
               hgap="5"
               vgap="5">
 

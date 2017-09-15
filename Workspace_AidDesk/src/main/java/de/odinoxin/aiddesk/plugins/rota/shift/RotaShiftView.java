@@ -6,6 +6,7 @@ import de.odinoxin.aiddesk.plugins.RecordView;
 import de.odinoxin.aiddesk.plugins.rota.TimestampInterpretation;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextArea;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -17,6 +18,7 @@ public class RotaShiftView extends RecordView<RotaShift> {
     RefBox<TimestampInterpretation> refBoxBeginnInterpretation;
     DatePicker dtpTsEnd;
     RefBox<TimestampInterpretation> refBoxEndInterpretation;
+    TextArea txfAdditionalInformation;
 
     private ChangeListener<LocalDate> tsBeginnListener;
     private ChangeListener<LocalDate> tsEndListener;
@@ -33,6 +35,7 @@ public class RotaShiftView extends RecordView<RotaShift> {
         this.dtpTsEnd = (DatePicker) this.root.lookup("#dtpTsEnd");
         this.refBoxEndInterpretation = (RefBox<TimestampInterpretation>) this.root.lookup("#refBoxEndInterpretation");
         this.refBoxEndInterpretation.setProvider(new TimestampInterpretationProvider());
+        this.txfAdditionalInformation = (TextArea) this.root.lookup("#txfAdditionalInformation");
         this.bind(rotaShift);
     }
 
@@ -66,6 +69,8 @@ public class RotaShiftView extends RecordView<RotaShift> {
         };
         this.dtpTsEnd.valueProperty().addListener(this.tsEndListener);
         this.refBoxEndInterpretation.recordProperty().bindBidirectional(record.endInterpretationProperty());
+
+        this.txfAdditionalInformation.textProperty().bindBidirectional(record.textProperty());
     }
 
     @Override

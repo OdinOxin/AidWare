@@ -28,12 +28,13 @@ public abstract class TranslatorProvider {
 
     /**
      * Returns translation for the given text, by users selected language.
+     *
      * @param text The text to translate.
      * @return The translated text.
      */
     public static String getTranslation(String text) {
         if (TranslatorProvider.getSvc() != null)
-            return TranslatorProvider.getSvc().getTranslation(text, Login.getPerson() != null ? Login.getPerson().getLanguage() != null ? Login.getPerson().getLanguage().getCode() : null : null);
+            return TranslatorProvider.getSvc().getTranslation(text, Login.getPerson() != null ? Login.getPerson().getLanguage() != null ? Login.getPerson().getLanguage().toEntity() : null : null);
         return text;
     }
 }
