@@ -12,11 +12,8 @@ public class CountryEditor extends RecordEditor<Country> {
         this(null);
     }
 
-    public CountryEditor(Country country) {
-        super("Countries");
-        this.attemptLoadRecord(country);
-        if (country == null)
-            this.onNew();
+    public CountryEditor(Country record) {
+        super("Countries", record);
     }
 
     @Override

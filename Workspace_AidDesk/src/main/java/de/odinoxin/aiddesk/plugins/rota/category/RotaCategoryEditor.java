@@ -1,7 +1,7 @@
 package de.odinoxin.aiddesk.plugins.rota.category;
 
-import de.odinoxin.aidcloud.provider.RotaCategoryProvider;
 import de.odinoxin.aidcloud.provider.Provider;
+import de.odinoxin.aidcloud.provider.RotaCategoryProvider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordView;
@@ -12,11 +12,8 @@ public class RotaCategoryEditor extends RecordEditor<RotaCategory> {
         this(null);
     }
 
-    public RotaCategoryEditor(RotaCategory category) {
-        super("RotaCategory");
-        this.attemptLoadRecord(category);
-        if (category == null)
-            this.onNew();
+    public RotaCategoryEditor(RotaCategory record) {
+        super("RotaCategory", record);
     }
 
     @Override

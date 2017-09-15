@@ -12,11 +12,8 @@ public class NutritionTypeEditor extends RecordEditor<NutritionType> {
         this(null);
     }
 
-    public NutritionTypeEditor(NutritionType nutritionType) {
-        super("NutritionType");
-        this.attemptLoadRecord(nutritionType);
-        if (nutritionType == null)
-            this.onNew();
+    public NutritionTypeEditor(NutritionType record) {
+        super("NutritionType", record);
     }
 
     @Override

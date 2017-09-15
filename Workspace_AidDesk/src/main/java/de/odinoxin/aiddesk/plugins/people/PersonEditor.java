@@ -17,11 +17,8 @@ public class PersonEditor extends RecordEditor<Person> {
         this(null);
     }
 
-    public PersonEditor(Person person) {
-        super("People");
-        this.attemptLoadRecord(person);
-        if (person == null)
-            this.onNew();
+    public PersonEditor(Person record) {
+        super("People", record);
     }
 
     @Override

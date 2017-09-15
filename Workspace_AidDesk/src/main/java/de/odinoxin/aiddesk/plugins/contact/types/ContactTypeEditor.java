@@ -12,11 +12,8 @@ public class ContactTypeEditor extends RecordEditor<ContactType> {
         this(null);
     }
 
-    public ContactTypeEditor(ContactType contactType) {
-        super("Contact type");
-        this.attemptLoadRecord(contactType);
-        if (contactType == null)
-            this.onNew();
+    public ContactTypeEditor(ContactType record) {
+        super("Contact type", record);
     }
 
     @Override

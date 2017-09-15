@@ -12,11 +12,8 @@ public class TimestampInterpretationEditor extends RecordEditor<TimestampInterpr
         this(null);
     }
 
-    public TimestampInterpretationEditor(TimestampInterpretation rota) {
-        super("TimestampInterpretation");
-        this.attemptLoadRecord(rota);
-        if (rota == null)
-            this.onNew();
+    public TimestampInterpretationEditor(TimestampInterpretation record) {
+        super("TimestampInterpretation", record);
     }
 
     @Override

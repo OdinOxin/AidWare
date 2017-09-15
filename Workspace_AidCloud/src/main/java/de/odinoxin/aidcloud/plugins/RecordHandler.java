@@ -67,6 +67,8 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
             session.beginTransaction();
             session.delete(entity);
             session.getTransaction().commit();
+        } catch (Exception ex) {
+            return false;
         }
         return true;
     }

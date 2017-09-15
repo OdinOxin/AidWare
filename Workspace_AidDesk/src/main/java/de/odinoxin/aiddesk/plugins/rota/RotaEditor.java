@@ -12,11 +12,8 @@ public class RotaEditor extends RecordEditor<Rota> {
         this(null);
     }
 
-    public RotaEditor(Rota rota) {
-        super("Rota");
-        this.attemptLoadRecord(rota);
-        if (rota == null)
-            this.onNew();
+    public RotaEditor(Rota record) {
+        super("Rota", record);
     }
 
     @Override

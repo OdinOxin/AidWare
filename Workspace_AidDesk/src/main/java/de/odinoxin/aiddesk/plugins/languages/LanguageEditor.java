@@ -12,11 +12,8 @@ public class LanguageEditor extends RecordEditor<Language> {
         this(null);
     }
 
-    public LanguageEditor(Language language) {
-        super("Languages");
-        this.attemptLoadRecord(language);
-        if (language == null)
-            this.onNew();
+    public LanguageEditor(Language record) {
+        super("Languages", record);
     }
 
     @Override

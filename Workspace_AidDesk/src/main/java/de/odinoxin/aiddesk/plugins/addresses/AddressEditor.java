@@ -12,11 +12,8 @@ public class AddressEditor extends RecordEditor<Address> {
         this(null);
     }
 
-    public AddressEditor(Address address) {
-        super("Addresses");
-        this.attemptLoadRecord(address);
-        if (address == null)
-            this.onNew();
+    public AddressEditor(Address record) {
+        super("Addresses", record);
     }
 
     @Override

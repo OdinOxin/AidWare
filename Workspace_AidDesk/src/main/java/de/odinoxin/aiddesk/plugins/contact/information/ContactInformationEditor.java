@@ -12,11 +12,8 @@ public class ContactInformationEditor extends RecordEditor<ContactInformation> {
         this(null);
     }
 
-    public ContactInformationEditor(ContactInformation contactInformation) {
-        super("Contact information");
-        this.attemptLoadRecord(contactInformation);
-        if (contactInformation == null)
-            this.onNew();
+    public ContactInformationEditor(ContactInformation record) {
+        super("Contact information", record);
     }
 
     @Override

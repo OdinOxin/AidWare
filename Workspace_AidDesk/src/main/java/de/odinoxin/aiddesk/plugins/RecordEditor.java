@@ -50,7 +50,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     /**
      * Initializes the RecordEditor.
      *
-     * @param title The (translated) title of the editor.
+     * @param title The title of the editor.
      */
     public RecordEditor(String title) {
         super("/plugins/recordeditor.fxml", title);
@@ -97,6 +97,17 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    /**
+     * Initializes the RecordEditor and attempts to load the given Record.
+     *
+     * @param title  the title of the editor.
+     * @param record the record to load.
+     */
+    public RecordEditor(String title, T record) {
+        this(title);
+        this.attemptLoadRecord(record);
     }
 
     /**
@@ -292,21 +303,21 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      * An action that starts to save the record
      */
     private void saveAction() {
-		if(this.getRecord().isChanged()) {
-			try {
-				T newObj = this.onSave();
-				if (newObj != null) {
-					this.getRecord().setChanged(false);
-					this.attemptLoadRecord(newObj);
-					this.refBoxKey.setRecord(newObj);
-				}
-			} catch (ConcurrentFault_Exception ex) {
-				ex.printStackTrace();
-			} catch (Exception ex) {
-				MergeDialog mergeDialog = new MergeDialog<T>(this);
-				mergeDialog.show();
+        if (this.getRecord().isChanged()) {
+            try {
+                T newObj = this.onSave();
+                if (newObj != null) {
+                    this.getRecord().setChanged(false);
+                    this.attemptLoadRecord(newObj);
+                    this.refBoxKey.setRecord(newObj);
+                }
+            } catch (ConcurrentFault_Exception ex) {
+                ex.printStackTrace();
+            } catch (Exception ex) {
+                MergeDialog mergeDialog = new MergeDialog<T>(this);
+                mergeDialog.show();
 //                ex.printStackTrace();
-			}
+            }
         }
     }
 

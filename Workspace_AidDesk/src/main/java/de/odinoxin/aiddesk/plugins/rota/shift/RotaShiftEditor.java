@@ -12,11 +12,8 @@ public class RotaShiftEditor extends RecordEditor<RotaShift> {
         this(null);
     }
 
-    public RotaShiftEditor(RotaShift rota) {
-        super("RotaShift");
-        this.attemptLoadRecord(rota);
-        if (rota == null)
-            this.onNew();
+    public RotaShiftEditor(RotaShift record) {
+        super("RotaShift", record);
     }
 
     @Override
