@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
 import javax.xml.ws.WebServiceException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -71,7 +72,13 @@ public class Login extends Plugin {
         });
         Plugin.setButtonEnter(this.btnLogin);
 
-        this.txfServer.setText("http://localhost:15123/AidCloud");
+        String hostName = "localhost";
+        try {
+            hostName = InetAddress.getLocalHost().getHostName();
+        } catch (Exception ex) {
+
+        }
+        this.txfServer.setText(String.format("http://%s:15123/AidCloud", hostName));
         this.show();
     }
 
