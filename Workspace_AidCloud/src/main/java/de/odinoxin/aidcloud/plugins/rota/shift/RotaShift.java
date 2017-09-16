@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.rota.shift;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation;
@@ -21,23 +22,29 @@ public class RotaShift implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
 
     @XmlElement(name = "text")
+    @EntityProperty
     private String text;
 
     @XmlElement(name = "tsBeginn")
+    @EntityProperty
     private Date tsBeginn;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "beginnInterpretation")
+    @EntityProperty
     private TimestampInterpretation beginnInterpretation;
 
     @XmlElement(name = "tsEnd")
+    @EntityProperty
     private Date tsEnd;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "endInterpretation")
+    @EntityProperty
     private TimestampInterpretation endInterpretation;
 
     public RotaShift() {

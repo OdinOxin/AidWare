@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.contact.information;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.contact.types.ContactType;
 import org.hibernate.Hibernate;
@@ -19,11 +20,14 @@ public class ContactInformation implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
     @XmlElement(name = "contactType")
     @OneToOne
+    @EntityProperty
     private ContactType contactType;
     @XmlElement(name = "information")
+    @EntityProperty
     private String information;
 
     public ContactInformation() {

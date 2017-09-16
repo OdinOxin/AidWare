@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.rota;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.rota.category.RotaCategory;
 import org.hibernate.Hibernate;
@@ -19,13 +20,16 @@ public class Rota implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
 
     @XmlElement(name = "title")
+    @EntityProperty
     private String title;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "category")
+    @EntityProperty
     private RotaCategory category;
 
     public Rota() {

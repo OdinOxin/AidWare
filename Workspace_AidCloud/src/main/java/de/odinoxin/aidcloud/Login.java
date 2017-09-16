@@ -23,18 +23,25 @@ public class Login {
     private static final int SESSION_DURATION = 10000;
     private static Map<Integer, String> sessions = new Hashtable<>();
 
-    public static boolean checkSession(WebServiceContext wsCtx) {
+    public static int getUserIdFromContext(WebServiceContext wsCtx) {
         MessageContext msgCtx = wsCtx.getMessageContext();
         Map<String, List<String>> httpHeaders = (Map<String, List<String>>) msgCtx.get(MessageContext.HTTP_REQUEST_HEADERS);
         List<String> users = httpHeaders.get("Username");
-        List<String> pwds = httpHeaders.get("Password");
-        int id = 0;
-        String pwd = "";
+        int userId = 0;
         if (users != null && users.size() > 0 && users.get(0).matches("-?\\d+"))
-            id = Integer.parseInt(users.get(0));
+            userId = Integer.parseInt(users.get(0));
+        return userId;
+    }
+
+    public static boolean checkSession(WebServiceContext wsCtx) {
+        MessageContext msgCtx = wsCtx.getMessageContext();
+        Map<String, List<String>> httpHeaders = (Map<String, List<String>>) msgCtx.get(MessageContext.HTTP_REQUEST_HEADERS);
+        List<String> pwds = httpHeaders.get("Password");
+        int userId = getUserIdFromContext(wsCtx);
+        String pwd = "";
         if (pwds != null && pwds.size() > 0)
             pwd = pwds.get(0);
-        return Login.sessions.containsKey(id) && Login.sessions.get(id).equals(pwd);
+        return Login.sessions.containsKey(userId) && Login.sessions.get(userId).equals(pwd);
     }
 
     @WebMethod

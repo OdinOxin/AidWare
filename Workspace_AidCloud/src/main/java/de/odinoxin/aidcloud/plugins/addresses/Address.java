@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.addresses;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.countries.Country;
 import org.hibernate.Hibernate;
@@ -19,17 +20,23 @@ public class Address implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
     @XmlElement(name = "street")
+    @EntityProperty
     private String street;
     @XmlElement(name = "hsNo")
+    @EntityProperty
     private String hsNo;
     @XmlElement(name = "zip")
+    @EntityProperty
     private String zip;
     @XmlElement(name = "city")
+    @EntityProperty
     private String city;
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "country")
+    @EntityProperty
     private Country country;
 
     public Address() {

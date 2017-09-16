@@ -7,8 +7,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.ws.rs.NotAuthorizedException;
 import javax.xml.ws.WebServiceContext;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public abstract class RecordHandler<T extends Recordable> extends Provider {
@@ -17,46 +20,98 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         generateDefaults();
     }
 
-    protected T get(int id, WebServiceContext wsCtx) {
-        if (!Login.checkSession(wsCtx))
-            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-        T entity = null;
+    protected T get(int id) {
+        T entity;
         try (Session session = DB.open()) {
             this.setFetchMode(session);
-            entity = session.get((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0], id);
+            entity = session.get(getParameterizedTypeClass(), id);
         }
         return entity;
     }
 
-    protected int save(T entity, T original, WebServiceContext wsCtx) throws ConcurrentFault {
+    protected T get(int id, WebServiceContext wsCtx) {
         if (!Login.checkSession(wsCtx))
             throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
+        return get(id);
+    }
 
+    protected int save(T entity, T original, int userId) throws ConcurrentFault {
         if (entity != null && entity.getId() != 0) {
             if (original == null)
                 throw new IllegalArgumentException("Original entity cannot be null on update!");
             if (entity.getId() != original.getId())
                 throw new IllegalArgumentException("Entity is different from original entity!");
-            T current = this.get(original.getId(), wsCtx);
+            T current = this.get(original.getId());
             if (!original.equals(current))
                 throw new ConcurrentFault("Entity was edited in the meantime!");
         }
-        return this.generate(entity);
-    }
-
-    protected int generate(T entity) {
         if (entity == null)
             throw new IllegalArgumentException("Entity cannot be null!");
         int id = entity.getId();
+        boolean isNew = entity.getId() == 0;
         try (Session session = DB.open()) {
             session.beginTransaction();
-            if (id == 0)
+            if (isNew)
                 id = (int) session.save(entity);
             else
                 session.update(entity);
             session.getTransaction().commit();
         }
+
+        if (!(entity.getClass() == TrackedChange.class)) {
+            Field[] fields = entity.getClass().getDeclaredFields();
+            Method[] methods = entity.getClass().getMethods();
+            for (Field f : fields) {
+                if (f.isAnnotationPresent(EntityProperty.class)) {
+                    Method getter = null;
+                    for (Method m : methods)
+                        if (m.getName().equalsIgnoreCase(String.format("get%s", f.getName()))) {
+                            getter = m;
+                            break;
+                        }
+                    if (getter != null)
+                        try {
+                            String valueBefore = null;
+                            if (!isNew)
+                                valueBefore = makeString(getter.invoke(original));
+                            String valueAfter = makeString(getter.invoke(entity));
+                            if (!(valueAfter == null && valueBefore == null) && (valueAfter != null && !valueAfter.equals(valueBefore)))
+                                TrackedChangeProvider.getInstance().save(new TrackedChange(0, getParameterizedTypeClass().getName(), entity.getId(), f.getName(), new Date(), userId, valueBefore, valueAfter), null);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                }
+            }
+        }
+
         return id;
+    }
+
+    private String makeString(Object obj) {
+        if (obj == null)
+            return null;
+        if (obj instanceof Recordable)
+            return String.valueOf(((Recordable) obj).getId());
+        else
+            return obj.toString();
+    }
+
+    protected int save(T entity, T original) throws ConcurrentFault {
+        return save(entity, original, 0);
+    }
+
+    protected int save(T entity, T original, WebServiceContext wsCtx) throws ConcurrentFault {
+        if (!Login.checkSession(wsCtx))
+            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
+        return save(entity, original, Login.getUserIdFromContext(wsCtx));
+    }
+
+    protected void generate(T entity) {
+        try {
+            save(entity, null);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     protected boolean delete(int id, WebServiceContext wsCtx) {
@@ -76,9 +131,9 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
     protected List<T> search(String[] expressions, int max) {
         Session session = DB.open();
         CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
-        CriteriaQuery<T> criteria = builder.createQuery((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
+        CriteriaQuery<T> criteria = builder.createQuery(getParameterizedTypeClass());
         Predicate predicates = builder.conjunction();
-        Root<T> root = criteria.from((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
+        Root<T> root = criteria.from(getParameterizedTypeClass());
         if (expressions != null && expressions.length > 0) {
             predicates = builder.disjunction();
             Expression<Integer> dbIdExpression = getIdExpression(root);
@@ -125,8 +180,12 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
             CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-            criteria.select(builder.count(criteria.from((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0])));
+            criteria.select(builder.count(criteria.from(getParameterizedTypeClass())));
             return session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList().get(0);
         }
+    }
+
+    private Class<T> getParameterizedTypeClass() {
+        return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.rota;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 
 import javax.persistence.Entity;
@@ -20,9 +21,11 @@ public class TimestampInterpretation implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
 
     @XmlElement(name = "name")
+    @EntityProperty
     private String name;
 
     public TimestampInterpretation() {

@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.people;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.addresses.Address;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformation;
@@ -32,34 +33,43 @@ public class Person implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
 
     @XmlElement(name = "name")
+    @EntityProperty
     private String name;
 
     @XmlElement(name = "forename")
+    @EntityProperty
     private String forename;
 
     @XmlElement(name = "code")
+    @EntityProperty
     private String code;
 
     @XmlElement(name = "pwd")
+    @EntityProperty
     private String pwd;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "language")
+    @EntityProperty
     private Language language;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "address")
+
     private Address address;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @XmlElement(name = "contactInformation")
+    @EntityProperty
     private List<ContactInformation> contactInformation = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @XmlElement(name = "nutritionType")
+    @EntityProperty
     private NutritionType nutritionType;
 
     public Person() {

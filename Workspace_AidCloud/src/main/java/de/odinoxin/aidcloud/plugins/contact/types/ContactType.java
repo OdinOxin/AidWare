@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.contact.types;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 
 import javax.persistence.Entity;
@@ -20,12 +21,16 @@ public class ContactType implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
     @XmlElement(name = "name")
+    @EntityProperty
     private String name;
     @XmlElement(name = "code")
+    @EntityProperty
     private String code;
     @XmlElement(name = "regex")
+    @EntityProperty
     private String regex;
 
     public ContactType() {

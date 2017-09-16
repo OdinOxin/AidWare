@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.countries;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 
 import javax.persistence.Entity;
@@ -20,14 +21,19 @@ public class Country implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
     @XmlElement(name = "alpha2")
+    @EntityProperty
     private String alpha2;
     @XmlElement(name = "alpha3")
+    @EntityProperty
     private String alpha3;
     @XmlElement(name = "name")
+    @EntityProperty
     private String name;
     @XmlElement(name = "areaCode")
+    @EntityProperty
     private String areaCode;
 
     public Country() {

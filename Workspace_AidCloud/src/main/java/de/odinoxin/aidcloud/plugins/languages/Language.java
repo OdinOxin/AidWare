@@ -1,5 +1,6 @@
 package de.odinoxin.aidcloud.plugins.languages;
 
+import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 
 import javax.persistence.Entity;
@@ -20,10 +21,13 @@ public class Language implements Recordable {
     @Id
     @GeneratedValue
     @XmlElement(name = "id")
+    @EntityProperty
     private int id;
     @XmlElement(name = "name")
+    @EntityProperty
     private String name;
     @XmlElement(name = "code")
+    @EntityProperty
     private String code;
 
     public Language() {
