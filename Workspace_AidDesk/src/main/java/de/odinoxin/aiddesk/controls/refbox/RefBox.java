@@ -3,6 +3,7 @@ package de.odinoxin.aiddesk.controls.refbox;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordItem;
+import de.odinoxin.aiddesk.utils.Command;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -12,9 +13,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -22,6 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Shape;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -47,6 +48,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     private Button btnEdit;
     @FXML
     private Button btnSearch;
+    @FXML
+    private Separator sepCommands;
+    @FXML
+    private HBox hbxCommands;
     @FXML
     private TextArea txfDetails;
     private RefBoxList<T> refBoxList;
@@ -148,67 +153,22 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
             Platform.runLater(this::requestLayout);
         });
         this.showNewButton.addListener((observable, oldValue, newValue) -> this.update());
-        this.btnNew.minHeightProperty().bind(this.txfText.heightProperty());
-        this.btnNew.maxHeightProperty().bind(this.txfText.heightProperty());
-        this.btnNew.setOnAction(ev -> {
+        this.initBtn(this.btnNew, ev -> {
             if (this.getProvider() != null) {
                 RecordEditor<T> editor = this.getProvider().openEditor(null);
                 if (editor != null)
                     editor.recordItem().addListener((observable, oldValue, newValue) -> this.setRecord(newValue));
             }
         });
-        this.btnNew.setOnKeyPressed(ev ->
-        {
-            switch (ev.getCode()) {
-                case ENTER:
-                    this.btnNew.fire();
-                    ev.consume();
-                    break;
-                case DOWN:
-                    this.search();
-                    ev.consume();
-                    break;
-            }
-        });
-        this.btnNew.focusedProperty().addListener(this.getBtnHighlighter(this.btnNew));
         this.showEditButton.addListener((observable, oldValue, newValue) -> this.update());
-        this.btnEdit.minHeightProperty().bind(this.txfText.heightProperty());
-        this.btnEdit.maxHeightProperty().bind(this.txfText.heightProperty());
-        this.btnEdit.setOnAction(ev -> {
+        this.initBtn(this.btnEdit, ev -> {
             if (this.getProvider() != null) {
                 RecordEditor<T> editor = this.getProvider().openEditor(this.getRecord());
                 if (editor != null)
                     editor.recordItem().addListener((observable, oldValue, newValue) -> this.setRecord(newValue));
             }
         });
-        this.btnEdit.setOnKeyPressed(ev ->
-        {
-            switch (ev.getCode()) {
-                case ENTER:
-                    this.btnNew.fire();
-                    ev.consume();
-                    break;
-                case DOWN:
-                    this.search();
-                    ev.consume();
-                    break;
-            }
-        });
-        this.btnEdit.focusedProperty().addListener(this.getBtnHighlighter(this.btnEdit));
-        this.btnSearch.minHeightProperty().bind(this.txfText.heightProperty());
-        this.btnSearch.maxHeightProperty().bind(this.txfText.heightProperty());
-        this.btnSearch.setOnKeyPressed(ev ->
-        {
-            switch (ev.getCode()) {
-                case ENTER:
-                case DOWN:
-                    this.search();
-                    ev.consume();
-                    break;
-            }
-        });
-        this.btnSearch.setOnAction(ev -> this.search());
-        this.btnSearch.focusedProperty().addListener(this.getBtnHighlighter(this.btnSearch));
+        this.initBtn(this.btnSearch, ev -> this.search());
 
         this.showDetails.addListener((observable, oldValue, newValue) ->
         {
@@ -362,6 +322,37 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.txfText.onActionProperty().set(value);
     }
 
+    public void addCommand(Command cmd) {
+        Button btn = new de.odinoxin.aiddesk.controls.translateable.Button("");
+        if (cmd.getNode() != null)
+            btn.setGraphic(cmd.getNode());
+        else {
+            SVGPath svgBug = new SVGPath();
+            svgBug.setContent("M20 8h-2.81c-.45-.78-1.07-1.45-1.82-1.96L17 4.41 15.59 3l-2.17 2.17C12.96 5.06 12.49 5 12 5c-.49 0-.96.06-1.41.17L8.41 3 7 4.41l1.62 1.63C7.88 6.55 7.26 7.22 6.81 8H4v2h2.09c-.05.33-.09.66-.09 1v1H4v2h2v1c0 .34.04.67.09 1H4v2h2.81c1.04 1.79 2.97 3 5.19 3s4.15-1.21 5.19-3H20v-2h-2.09c.05-.33.09-.66.09-1v-1h2v-2h-2v-1c0-.34-.04-.67-.09-1H20V8zm-6 8h-4v-2h4v2zm0-4h-4v-2h4v2z");
+            btn.setGraphic(svgBug);
+        }
+        btn.setId(cmd.getId().toString());
+        this.initBtn(btn, ev -> cmd.execute());
+        btn.disableProperty().bind(cmd.canExecuteProperty().not());
+        this.hbxCommands.getChildren().add(btn);
+        this.sepCommands.setVisible(true);
+        this.sepCommands.setManaged(true);
+    }
+
+    public void removeCommand(Command cmd) {
+        Button btn = null;
+        for (Node n : this.hbxCommands.getChildren()) {
+            if (n instanceof Button && n.getId().equals(cmd.getId().toString())) {
+                btn = (Button) n;
+                break;
+            }
+        }
+        if (btn != null)
+            this.hbxCommands.getChildren().remove(btn);
+        this.sepCommands.setVisible(!this.hbxCommands.getChildren().isEmpty());
+        this.sepCommands.setManaged(!this.hbxCommands.getChildren().isEmpty());
+    }
+
     /**
      * Updates the state and style, based on the current record.
      */
@@ -497,22 +488,57 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      */
     private ChangeListener<Boolean> getBtnHighlighter(Button btn) {
         return (ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            Shape shape = null;
+            if (btn.getGraphic() instanceof Shape)
+                shape = (Shape) btn.getGraphic();
             if (newValue) {
                 Glow glow = new Glow();
                 glow.setLevel(1d / 3d);
-                SVGPath svg = (SVGPath) btn.getGraphic();
-                if (svg != null)
-                    svg.setFill(Color.web("#039ED3"));
+                if (shape != null)
+                    shape.setFill(Color.web("#039ED3"));
                 btn.setTextFill(Color.web("#039ED3"));
                 btn.setEffect(glow);
             } else {
                 btn.setTextFill(Color.BLACK);
-                SVGPath svg = (SVGPath) btn.getGraphic();
-                if (svg != null)
-                    svg.setFill(Color.BLACK);
+                if (shape != null)
+                    shape.setFill(Color.BLACK);
                 btn.setEffect(null);
             }
         };
+    }
+
+    private void initBtn(Button btn, EventHandler<ActionEvent> onAction) {
+        btn.setStyle("-fx-background-color: transparent");
+        btn.setPickOnBounds(false);
+        btn.minHeightProperty().bind(this.txfText.heightProperty().subtract(2));
+        btn.maxHeightProperty().bind(this.txfText.heightProperty().subtract(2));
+        btn.minWidthProperty().bind(this.txfText.heightProperty());
+        btn.maxWidthProperty().bind(this.txfText.heightProperty());
+        if (btn.getGraphic() instanceof Shape) {
+            Shape shape = (Shape) btn.getGraphic();
+            double divisor = Math.max(shape.boundsInLocalProperty().get().getWidth(), shape.boundsInLocalProperty().get().getHeight());
+            double factor = 0.70;
+            double customScaleX = shape.getScaleX();
+            double customScaleY = shape.getScaleY();
+            shape.scaleXProperty().bind(btn.widthProperty().divide(divisor).multiply(factor).multiply(customScaleX));
+            shape.scaleYProperty().bind(btn.heightProperty().divide(divisor).multiply(factor).multiply(customScaleY));
+        }
+        btn.setOnKeyPressed(ev ->
+        {
+            switch (ev.getCode()) {
+                case ENTER:
+                    btn.fire();
+                    ev.consume();
+                    break;
+                case DOWN:
+                    this.search();
+                    ev.consume();
+                    break;
+            }
+        });
+        btn.setOnAction(onAction);
+        btn.focusedProperty().addListener(this.getBtnHighlighter(btn));
+        btn.hoverProperty().addListener(this.getBtnHighlighter(btn));
     }
 
     /**

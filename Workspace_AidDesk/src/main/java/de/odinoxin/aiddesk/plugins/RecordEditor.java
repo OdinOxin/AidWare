@@ -8,13 +8,16 @@ import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MergeDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
+import de.odinoxin.aiddesk.utils.Command;
 import javafx.beans.property.*;
 import javafx.event.Event;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.shape.SVGPath;
 
 import java.util.Optional;
 
@@ -27,7 +30,6 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
 
     private TextField txfId;
     private RefBox<T> refBoxKey;
-    private Button btnRefresh;
     private RecordView<T> view = newView(null);
     private Button btnSave;
     private Button btnDiscard;
@@ -59,7 +61,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             this.provider = this.initProvider();
             this.view = newView(null);
             this.view.setViewMode(RecordView.ViewMode.EDITING);
-            this.view.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.view.setOnKeyPressed(ev -> checkHotKeys(ev));
             this.refBoxKey = (RefBox<T>) this.root.lookup("#refBoxKey");
             this.refBoxKey.setProvider(this.provider);
             this.refBoxKey.setOnNewAction(ev -> refBoxNewAction());
@@ -68,13 +70,19 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
                         || (newValue != null && newValue != this.getRecord()))
                     this.attemptLoadRecord(newValue == null || this.provider == null ? null : this.provider.get(newValue.getId()));
             });
+            SVGPath svgRefresh = new SVGPath();
+            svgRefresh.setContent("M125.938,208.901l-39.102-39.408c-25.01,32.209-40.502,69.32-45.251,107.941h56.06" +
+                    "C101.54,253.299,111.234,229.71,125.938,208.901z M97.646,332.881h-56.06c4.748,38.621,19.978,75.775,44.988,107.941l39.08-39.365" +
+                    "C111.234,380.626,101.54,357.301,97.646,332.881z M125.654,480.515c32.209,24.967,69.67,39.955,108.181,44.638V468.83" +
+                    "c-24.135-4.157-47.439-13.61-68.248-28.555L125.654,480.515z M289.304,85.162V0l-126.19,126.212l126.212,123.476V141.222" +
+                    "c78.839,13.304,138.706,81.552,138.706,163.935s-59.889,150.653-138.706,164.001v55.994" +
+                    "c109.626-13.61,194.241-106.759,194.241-219.995C483.545,191.987,398.93,98.751,289.304,85.162z");
+            this.refBoxKey.addCommand(new Command(
+                    () -> this.attemptLoadRecord(this.getServerRecord()),
+                    new SimpleBooleanProperty(true),
+                    new SimpleObjectProperty<>(svgRefresh)
+            ));
             super.setOnCloseRequest(ev -> closeRequest(ev));
-            this.btnRefresh = (Button) this.root.lookup("#btnRefresh");
-            this.btnRefresh.minHeightProperty().bind(this.refBoxKey.heightProperty());
-            this.btnRefresh.maxHeightProperty().bind(this.refBoxKey.heightProperty());
-            this.btnRefresh.minWidthProperty().bind(this.refBoxKey.heightProperty());
-            this.btnRefresh.maxWidthProperty().bind(this.refBoxKey.heightProperty());
-            this.btnRefresh.setOnAction(ev -> this.attemptLoadRecord(this.getServerRecord()));
             this.txfId = (TextField) this.root.lookup("#txfId");
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
 
@@ -88,12 +96,11 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             this.btnDelete = (Button) this.root.lookup("#btnDelete");
             this.btnDelete.setOnAction(ev -> deleteAction());
             setButtonEnter(this.btnDelete);
-            this.btnDiscard.setOnKeyPressed(ev -> HotkeyEvent(ev));
-            this.btnDelete.setOnKeyPressed(ev -> HotkeyEvent(ev));
-            this.btnSave.setOnKeyPressed(ev -> HotkeyEvent(ev));
-            this.btnRefresh.setOnKeyPressed(ev -> HotkeyEvent(ev));
-            this.refBoxKey.setOnKeyPressed(ev -> HotkeyEvent(ev));
-            this.txfId.setOnKeyPressed(ev -> HotkeyEvent(ev));
+            this.btnDiscard.setOnKeyPressed(ev -> checkHotKeys(ev));
+            this.btnDelete.setOnKeyPressed(ev -> checkHotKeys(ev));
+            this.btnSave.setOnKeyPressed(ev -> checkHotKeys(ev));
+            this.refBoxKey.setOnKeyPressed(ev -> checkHotKeys(ev));
+            this.txfId.setOnKeyPressed(ev -> checkHotKeys(ev));
 
             this.show();
             this.sizeToScene();
@@ -279,7 +286,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @param ev The Event to add the keys.
      */
-    private void HotkeyEvent(KeyEvent ev) {
+    private void checkHotKeys(KeyEvent ev) {
         if (ev.isControlDown()) {
             switch (ev.getCode()) {
                 case S:
@@ -291,6 +298,10 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
                     ev.consume();
                     break;
             }
+        }
+        if (ev.getCode() == KeyCode.F5) {
+            this.attemptLoadRecord(this.getServerRecord());
+            ev.consume();
         }
     }
 
