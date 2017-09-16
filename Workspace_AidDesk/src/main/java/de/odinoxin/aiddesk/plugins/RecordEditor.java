@@ -1,6 +1,8 @@
 package de.odinoxin.aiddesk.plugins;
 
+import de.odinoxin.aidcloud.provider.PersonProvider;
 import de.odinoxin.aidcloud.provider.Provider;
+import de.odinoxin.aidcloud.provider.TrackedChangeProvider;
 import de.odinoxin.aidcloud.provider.TranslatorProvider;
 import de.odinoxin.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
@@ -8,6 +10,7 @@ import de.odinoxin.aiddesk.controls.translateable.Button;
 import de.odinoxin.aiddesk.dialogs.DecisionDialog;
 import de.odinoxin.aiddesk.dialogs.MergeDialog;
 import de.odinoxin.aiddesk.dialogs.MsgDialog;
+import de.odinoxin.aiddesk.plugins.people.Person;
 import de.odinoxin.aiddesk.utils.Command;
 import javafx.beans.property.*;
 import javafx.event.Event;
@@ -19,6 +22,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.shape.SVGPath;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 /**
@@ -31,11 +36,17 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
     private TextField txfId;
     private RefBox<T> refBoxKey;
     private RecordView<T> view = newView(null);
+    private TextField txfTrackedChangeDate;
+    private RefBox<Person> refBoxTrackedChangeUser;
     private Button btnSave;
     private Button btnDiscard;
     private Button btnDelete;
 
     private Provider<T> provider;
+    private static TrackedChangeProvider trackedChangeProvider = new TrackedChangeProvider();
+    private static PersonProvider personProvider = new PersonProvider();
+    private static DateFormat timestampFormatter = new SimpleDateFormat("dd. MMM. yyyy, HH:mm:ss");
+
     /**
      * The current record.
      */
@@ -85,6 +96,10 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             super.setOnCloseRequest(ev -> closeRequest(ev));
             this.txfId = (TextField) this.root.lookup("#txfId");
             ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
+
+            this.txfTrackedChangeDate = (TextField) this.root.lookup("#txfTrackedChangeDate");
+            this.refBoxTrackedChangeUser = (RefBox<Person>) this.root.lookup("#refBoxTrackedChangeUser");
+            this.refBoxTrackedChangeUser.setProvider(new PersonProvider());
 
             this.btnSave = (Button) this.root.lookup("#btnSave");
             this.btnSave.setOnAction(ev -> saveAction());
@@ -206,6 +221,14 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
         this.changedWrapper.bind(record.changedProperty());
         if (this.getRecord() != null) {
             view.bind(this.getRecord());
+            TrackedChange change = trackedChangeProvider.getLastChangeEntry(record.getClass().getSimpleName(), record.getId());
+            if (change != null) {
+                this.txfTrackedChangeDate.setText(timestampFormatter.format(change.getTimestamp()));
+                this.refBoxTrackedChangeUser.setRecord(personProvider.get(change.getUserId()));
+            } else {
+                this.txfTrackedChangeDate.setText(null);
+                this.refBoxTrackedChangeUser.setRecord(null);
+            }
             this.getRecord().setChanged(false);
         }
     }

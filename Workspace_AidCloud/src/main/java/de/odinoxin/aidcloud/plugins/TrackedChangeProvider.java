@@ -1,13 +1,15 @@
 package de.odinoxin.aidcloud.plugins;
 
+import de.odinoxin.aidcloud.DB;
+import org.hibernate.Session;
+
 import javax.annotation.Resource;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Root;
+import javax.persistence.Query;
 import javax.xml.ws.WebServiceContext;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @WebService
@@ -23,24 +25,46 @@ public class TrackedChangeProvider extends RecordHandler<TrackedChange> {
     }
 
     @WebMethod
-    public TrackedChange getTrackedChange(@WebParam(name = "id") int id) {
-        return super.get(id, this.wsCtx);
+    public List<TrackedChange> getEntityChanges(@WebParam(name = "entityName") String entityName, @WebParam(name = "entityId") int entityId, @WebParam(name = "since") Date since) {
+        if (entityName == null || entityId <= 0 || since == null)
+            return null;
+        try (Session session = DB.open()) {
+            Query q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId AND timestamp >= :since");
+            q.setParameter("entityName", entityName);
+            q.setParameter("entityId", entityId);
+            q.setParameter("since", since);
+            return q.getResultList();
+        }
     }
 
     @WebMethod
-    public List<TrackedChange> searchTrackedChange(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
-        return super.search(expr, max, this.wsCtx);
+    public TrackedChange getCreationEntry(@WebParam(name = "entityName") String entityName, @WebParam(name = "entityId") int entityId) {
+        if (entityName == null || entityId <= 0)
+            return null;
+        try (Session session = DB.open()) {
+            Query q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId AND propertyName = :propertyName AND valueBefore IS NULL");
+            q.setParameter("entityName", entityName);
+            q.setParameter("entityId", entityId);
+            q.setParameter("propertyName", "id");
+            List<TrackedChange> result = q.getResultList();
+            if (result != null && result.size() == 1)
+                return result.get(0);
+        }
+        return null;
     }
 
-    @Override
-    protected Expression<Integer> getIdExpression(Root<TrackedChange> root) {
-        return root.get(TrackedChange_.id);
-    }
-
-    @Override
-    protected List<Expression<String>> getSearchExpressions(Root<TrackedChange> root) {
-        List<Expression<String>> expressions = new ArrayList<>();
-        expressions.add(root.get(TrackedChange_.entityName));
-        return expressions;
+    @WebMethod
+    public TrackedChange getLastChangeEntry(@WebParam(name = "entityName") String entityName, @WebParam(name = "entityId") int entityId) {
+        if (entityName == null || entityId <= 0)
+            return null;
+        try (Session session = DB.open()) {
+            Query q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId ORDER BY timestamp DESC, id DESC");
+            q.setParameter("entityName", entityName);
+            q.setParameter("entityId", entityId);
+            List<TrackedChange> result = q.setMaxResults(1).getResultList();
+            if (result != null && !result.isEmpty())
+                return result.get(0);
+        }
+        return null;
     }
 }

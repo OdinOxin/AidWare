@@ -3,10 +3,9 @@
 <?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aiddesk.controls.translateable.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.SVGPath?>
 <VBox xmlns="http://javafx.com/javafx/8"
       id="humansGrid"
       style="-fx-background-color: lightgray">
@@ -67,17 +66,59 @@
         </padding>
     </Separator>
 
-    <HBox alignment="CENTER_RIGHT"
-          spacing="5">
-        <Button id="btnSave"
-                prefWidth="125"
-                text="Save"/>
-        <Button id="btnDiscard"
-                prefWidth="125"
-                text="Discard"/>
-        <Button id="btnDelete"
-                prefWidth="125"
-                text="Delete"/>
-    </HBox>
+    <GridPane hgap="5">
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="SOMETIMES"/>
+        </columnConstraints>
+
+        <HBox alignment="CENTER_LEFT"
+              GridPane.columnIndex="0">
+            <GridPane hgap="5"
+                      vgap="5">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Button id="btnHistory"
+                        GridPane.rowIndex="0"
+                        GridPane.columnIndex="0"
+                        GridPane.rowSpan="2">
+                    <graphic>
+                        <SVGPath
+                                content="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                    </graphic>
+                </Button>
+
+                <TextField id="txfTrackedChangeDate"
+                           editable="false"
+                           alignment="CENTER_RIGHT"
+                           GridPane.rowIndex="0"
+                           GridPane.columnIndex="1"/>
+
+                <RefBox id="refBoxTrackedChangeUser"
+                        disable="true"
+                        showEditButton="true"
+                        GridPane.rowIndex="1"
+                        GridPane.columnIndex="1"/>
+            </GridPane>
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT"
+              spacing="5"
+              GridPane.columnIndex="1">
+            <Button id="btnSave"
+                    prefWidth="125"
+                    text="Save"/>
+            <Button id="btnDiscard"
+                    prefWidth="125"
+                    text="Discard"/>
+            <Button id="btnDelete"
+                    prefWidth="125"
+                    text="Delete"/>
+        </HBox>
+
+    </GridPane>
 
 </VBox>

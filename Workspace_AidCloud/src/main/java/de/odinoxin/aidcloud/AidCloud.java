@@ -1,14 +1,14 @@
 package de.odinoxin.aidcloud;
 
+import de.odinoxin.aidcloud.plugins.TrackedChangeProvider;
 import de.odinoxin.aidcloud.plugins.addresses.AddressProvider;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformationProvider;
 import de.odinoxin.aidcloud.plugins.contact.types.ContactTypeProvider;
 import de.odinoxin.aidcloud.plugins.countries.CountryProvider;
-import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionTypeProvider;
 import de.odinoxin.aidcloud.plugins.languages.LanguageProvider;
+import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionTypeProvider;
 import de.odinoxin.aidcloud.plugins.people.PersonProvider;
 import de.odinoxin.aidcloud.plugins.rota.RotaProvider;
-import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation;
 import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretationProvider;
 import de.odinoxin.aidcloud.plugins.rota.category.RotaCategoryProvider;
 import de.odinoxin.aidcloud.plugins.rota.shift.RotaShiftProvider;
@@ -147,7 +147,7 @@ public class AidCloud extends Application {
         btnLaunch.setOnAction(ev -> launchAidCloud(primaryStage));
 
         if (inputArgs.containsKey(AidCloud.knownArgs[8]))
-            if(inputArgs.get(AidCloud.knownArgs[8]).equals("yes") || inputArgs.get(AidCloud.knownArgs[8]).equals("true"))
+            if (inputArgs.get(AidCloud.knownArgs[8]).equals("yes") || inputArgs.get(AidCloud.knownArgs[8]).equals("true"))
                 launchAidCloud(primaryStage);
 
         primaryStage.setScene(new Scene(root));
@@ -185,6 +185,7 @@ public class AidCloud extends Application {
                 Endpoint.publish(adr + "Login", new Login());
 
                 Endpoint.publish(adr + "Translator", Translator.get());
+                Endpoint.publish(adr + "TrackedChangeProvider", new TrackedChangeProvider());
 
                 Endpoint.publish(adr + "PersonProvider", new PersonProvider());
                 Endpoint.publish(adr + "AddressProvider", new AddressProvider());

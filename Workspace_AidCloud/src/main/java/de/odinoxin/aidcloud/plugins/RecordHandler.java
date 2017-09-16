@@ -76,7 +76,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
                                 valueBefore = makeString(getter.invoke(original));
                             String valueAfter = makeString(getter.invoke(entity));
                             if (!(valueAfter == null && valueBefore == null) && (valueAfter != null && !valueAfter.equals(valueBefore)))
-                                TrackedChangeProvider.getInstance().save(new TrackedChange(0, getParameterizedTypeClass().getName(), entity.getId(), f.getName(), new Date(), userId, valueBefore, valueAfter), null);
+                                TrackedChangeProvider.getInstance().save(new TrackedChange(0, getParameterizedTypeClass().getSimpleName(), entity.getId(), f.getName(), new Date(), userId, valueBefore, valueAfter), null);
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
