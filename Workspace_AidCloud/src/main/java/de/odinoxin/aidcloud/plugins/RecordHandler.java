@@ -73,9 +73,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         return true;
     }
 
-    protected List<T> search(String[] expressions, int max, WebServiceContext wsCtx) {
-        if (!Login.checkSession(wsCtx))
-            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
+    protected List<T> search(String[] expressions, int max) {
         Session session = DB.open();
         CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery((Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0]);
@@ -103,6 +101,12 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         em.close();
         session.close();
         return result;
+    }
+
+    protected List<T> search(String[] expressions, int max, WebServiceContext wsCtx) {
+        if (!Login.checkSession(wsCtx))
+            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
+        return search(expressions, max);
     }
 
     protected Expression<Integer> getIdExpression(Root<T> root) {
