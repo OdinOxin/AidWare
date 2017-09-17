@@ -23,8 +23,6 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
     private ObservableList<T> items;
     private Provider<T> provider;
 
-    private ListChangeListener<? super T> listener;
-
     public RefList() {
         this.setSpacing(5);
         this.bindBidirectional(FXCollections.observableArrayList());
@@ -193,19 +191,20 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
         this.items.addListener((ListChangeListener.Change<? extends T> c) -> {
             while (c.next()) {
                 if (c.wasReplaced())
-                    ((RefListCell<T>) this.getChildren().get(c.getFrom())).update(c.getFrom());
+                    ((RefListCell<?>) this.getChildren().get(c.getFrom())).update(c.getFrom());
                 else if (c.wasRemoved())
                     this.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
                 else if (c.wasAdded())
-                    for (int i = c.getFrom(); i < c.getFrom() + c.getAddedSize(); i++)
-                        this.getChildren().add(i, new RefListCell<T>(RefList.this.provider, this, i));
-
+                    for (int i = c.getFrom(); i < c.getFrom() + c.getAddedSize() && this.getChildren().size() <= items.size(); i++)
+                        this.getChildren().add(i, new RefListCell<>(RefList.this.provider, this, i));
             }
+            for (int i = 0; i < this.getChildren().size(); i++)
+                ((RefListCell<?>) this.getChildren().get(i)).update(i);
         });
         this.getChildren().clear();
         for (int i = 0; i < this.items.size(); i++)
-            this.getChildren().add(new RefListCell<T>(RefList.this.provider, this, i));
-        this.getChildren().add(new RefListCell<T>(RefList.this.provider, this, this.items.size()));
+            this.getChildren().add(new RefListCell<>(RefList.this.provider, this, i));
+        this.getChildren().add(new RefListCell<>(RefList.this.provider, this, this.items.size()));
     }
 
     @Override
@@ -224,7 +223,7 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] a) {
+    public <T> T[] toArray(T[] a) {
         return this.items.toArray(a);
     }
 }

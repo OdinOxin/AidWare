@@ -54,9 +54,10 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
         this.update(this.index);
 
         this.refBox.recordProperty().addListener((observable, oldValue, newValue) -> {
-            if (this.index < this.source.size())
-                this.source.set(this.index, newValue);
-            else if (newValue != null)
+            if (this.index < this.source.size()) {
+                if (newValue != null)
+                    this.source.set(this.index, newValue);
+            } else if (newValue != null)
                 this.source.add(newValue);
         });
     }
