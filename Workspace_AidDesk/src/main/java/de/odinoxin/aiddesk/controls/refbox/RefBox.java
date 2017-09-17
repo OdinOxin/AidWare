@@ -167,6 +167,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.hbxButtons.widthProperty().addListener((observable, oldValue, newValue) -> {
             this.txfText.setPadding(new Insets(5, (double) newValue, 5, 5));
             this.setMinWidth((double) newValue + 50);
+            this.showSepButtons();
             Platform.runLater(this::requestLayout);
         });
         this.showNewButton.addListener((observable, oldValue, newValue) -> this.update());
@@ -185,6 +186,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
                     editor.recordItem().addListener((observable, oldValue, newValue) -> this.setRecord(newValue));
             }
         });
+        this.showSearchButton.addListener((observable, oldValue, newValue) -> this.update());
         this.initBtn(this.btnSearch, ev -> this.search());
 
         this.sepCommands.visibleProperty().bind(this.hasCmds.and(showEditButton().or(showNewButton().and(changeableProperty())).or(showSearchButton().and(changeableProperty()))));
@@ -355,6 +357,15 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     }
 
     public void addCommand(Command cmd) {
+        if (cmd == null)
+            return;
+
+        for (Node n : this.hbxCommands.getChildren()) {
+            if (n instanceof Button && n.getId().equals(cmd.getId().toString())) {
+                return; // Already known
+            }
+        }
+
         Button btn = new de.odinoxin.aiddesk.controls.translateable.Button("");
         if (cmd.getNode() != null)
             btn.setGraphic(cmd.getNode());
@@ -371,6 +382,9 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     }
 
     public void removeCommand(Command cmd) {
+        if (cmd == null)
+            return;
+
         Button btn = null;
         for (Node n : this.hbxCommands.getChildren()) {
             if (n instanceof Button && n.getId().equals(cmd.getId().toString())) {
@@ -378,9 +392,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
                 break;
             }
         }
-        if (btn != null)
+        if (btn != null) {
             this.hbxCommands.getChildren().remove(btn);
-        this.hasCmds.set(!this.hbxCommands.getChildren().isEmpty());
+            this.hasCmds.set(!this.hbxCommands.getChildren().isEmpty());
+        }
     }
 
     /**
@@ -419,6 +434,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.btnEdit.setManaged(showEditBtn);
         this.btnSearch.setVisible(showSearchBtn);
         this.btnSearch.setManaged(showSearchBtn);
+        this.showSepButtons();
         this.ignoreTextChange = false;
     }
 
@@ -548,14 +564,17 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         btn.maxHeightProperty().bind(this.txfText.heightProperty().subtract(2));
         btn.minWidthProperty().bind(this.txfText.heightProperty());
         btn.maxWidthProperty().bind(this.txfText.heightProperty());
-        if (btn.getGraphic() instanceof Shape) {
-            Shape shape = (Shape) btn.getGraphic();
-            double divisor = Math.max(shape.boundsInLocalProperty().get().getWidth(), shape.boundsInLocalProperty().get().getHeight());
+        if (btn.getGraphic() instanceof SVGPath) {
+            SVGPath original = (SVGPath) btn.getGraphic();
+            SVGPath svgPath = new SVGPath();
+            svgPath.setContent(original.getContent());
+            btn.setGraphic(svgPath);
+            double divisor = Math.max(original.boundsInLocalProperty().get().getWidth(), original.boundsInLocalProperty().get().getHeight());
             double factor = 0.70;
-            double customScaleX = shape.getScaleX();
-            double customScaleY = shape.getScaleY();
-            shape.scaleXProperty().bind(btn.widthProperty().divide(divisor).multiply(factor).multiply(customScaleX));
-            shape.scaleYProperty().bind(btn.heightProperty().divide(divisor).multiply(factor).multiply(customScaleY));
+            double customScaleX = original.getScaleX();
+            double customScaleY = original.getScaleY();
+            svgPath.scaleXProperty().bind(btn.widthProperty().divide(divisor).multiply(factor).multiply(customScaleX));
+            svgPath.scaleYProperty().bind(btn.heightProperty().divide(divisor).multiply(factor).multiply(customScaleY));
         }
         btn.setOnKeyPressed(ev ->
         {

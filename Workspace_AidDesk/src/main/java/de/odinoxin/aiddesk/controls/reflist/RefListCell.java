@@ -3,11 +3,14 @@ package de.odinoxin.aiddesk.controls.reflist;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.plugins.RecordItem;
+import de.odinoxin.aiddesk.utils.Command;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.SVGPath;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,8 +26,8 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
     private int index;
     @FXML
     private RefBox<T> refBox;
-    @FXML
-    private Button btnRemove;
+
+    private Command removeCmd;
 
     /**
      * Initializes the {@link RefListCell} and its behavior.
@@ -47,9 +50,13 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
             ex.printStackTrace();
         }
 
-        this.btnRemove.setOnAction(e -> this.source.remove(this.index));
         this.refBox.setProvider(provider);
         this.refBox.setShowEditButton(true);
+        SVGPath svgRemove = new SVGPath();
+        svgRemove.setContent("M 0 0 h 1 l 2 2 l 2 -2 h 1 v 1 l -2 2 l 2 2 v 1 h -1 l -2 -2 l -2 2 h -1 v -1 l 2 -2 l -2 -2 z");
+        svgRemove.setScaleX(0.5);
+        svgRemove.setScaleY(0.5);
+        this.removeCmd = new Command(() -> this.source.remove(this.index), new SimpleBooleanProperty(true), new SimpleObjectProperty<>(svgRemove));
 
         this.update(this.index);
 
@@ -70,12 +77,14 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
     void update(int index) {
         this.index = index;
         boolean pseudo = this.index == this.source.size();
-        this.btnRemove.setVisible(!pseudo);
-        this.btnRemove.setDisable(pseudo);
-        if (!pseudo)
-            this.refBox.setRecord(this.source.get(this.index));
-        else
+        if (pseudo) {
+            this.refBox.removeCommand(removeCmd);
             this.refBox.setRecord(null);
+        } else {
+            this.refBox.setRecord(this.source.get(this.index));
+            this.refBox.addCommand(removeCmd);
+        }
+        this.refBox.setShowSearchButton(pseudo);
         this.refBox.setShowNewButton(pseudo);
     }
 
