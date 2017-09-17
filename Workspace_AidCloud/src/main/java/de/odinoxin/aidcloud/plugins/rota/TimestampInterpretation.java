@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.rota;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class TimestampInterpretation implements Recordable {
 
     @Override
     public Object clone() {
-        return new TimestampInterpretation(this.id, this.name);
+        return new TimestampInterpretation(this.getId(), this.getName());
     }
 
     @Override
@@ -54,9 +55,9 @@ public class TimestampInterpretation implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        TimestampInterpretation nutritionType = (TimestampInterpretation) obj;
-        return nutritionType.getId() == this.getId()
-                && ((nutritionType.getName() == null && this.getName() == null) || (nutritionType.getName() != null && nutritionType.getName().equals(this.getName())));
+        TimestampInterpretation other = (TimestampInterpretation) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getName(), other.getName());
     }
 
     @Override

@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.rota.category;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class RotaCategory implements Recordable {
 
     @Override
     public Object clone() {
-        return new RotaCategory(this.id, this.name);
+        return new RotaCategory(this.getId(), this.getName());
     }
 
     @Override
@@ -54,9 +55,9 @@ public class RotaCategory implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        RotaCategory RotaCategory = (RotaCategory) obj;
-        return RotaCategory.getId() == this.getId()
-                && ((RotaCategory.getName() == null && this.getName() == null) || (RotaCategory.getName() != null && RotaCategory.getName().equals(this.getName())));
+        RotaCategory other = (RotaCategory) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getName(), other.getName());
     }
 
     @Override

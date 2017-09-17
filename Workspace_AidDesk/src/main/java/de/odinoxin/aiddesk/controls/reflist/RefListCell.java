@@ -4,6 +4,8 @@ import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.utils.Command;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
@@ -36,7 +38,7 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
      * @param source   The source to display an item from.
      * @param index    The index of the item to display.
      */
-    RefListCell(Provider<T> provider, List<T> source, int index) {
+    RefListCell(ObjectProperty<Provider<T>> provider, BooleanProperty showDetails, List<T> source, int index) {
         this.source = source;
         this.index = index;
 
@@ -50,8 +52,9 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
             ex.printStackTrace();
         }
 
-        this.refBox.setProvider(provider);
+        this.refBox.providerProperty().bind(provider);
         this.refBox.setShowEditButton(true);
+        this.refBox.showDetails().bind(showDetails);
         SVGPath svgRemove = new SVGPath();
         svgRemove.setContent("M 0 0 h 1 l 2 2 l 2 -2 h 1 v 1 l -2 2 l 2 2 v 1 h -1 l -2 -2 l -2 2 h -1 v -1 l 2 -2 l -2 -2 z");
         svgRemove.setScaleX(0.5);
@@ -86,14 +89,5 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
         }
         this.refBox.setShowSearchButton(pseudo);
         this.refBox.setShowNewButton(pseudo);
-    }
-
-    /**
-     * Sets the provider to use.
-     *
-     * @param provider The provider to use.
-     */
-    public void setProvider(Provider<T> provider) {
-        this.refBox.setProvider(provider);
     }
 }

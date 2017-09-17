@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.people;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.addresses.Address;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformation;
 import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType;
@@ -81,7 +82,7 @@ public class Person implements Recordable {
         this.id = id;
     }
 
-    public Person(int id, String name, String forename, String code, Language language, Address address, List<ContactInformation> contactInformation) {
+    public Person(int id, String name, String forename, String code, Language language, Address address, List<ContactInformation> contactInformation, NutritionType nutritionType) {
         this(id);
         this.name = name;
         this.forename = forename;
@@ -89,57 +90,29 @@ public class Person implements Recordable {
         this.language = language;
         this.address = address;
         this.contactInformation = contactInformation;
+        this.nutritionType = nutritionType;
     }
 
     @Override
     public Object clone() {
-        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getAddress(), this.getContactInformation());
-//        try {
-//            Person clone = (Person) super.clone();
-//            if (clone.getLanguage() != null)
-//                clone.setLanguage((Language) clone.getLanguage().clone());
-//            if (clone.getAddress() != null)
-//                clone.setAddress((Address) clone.getAddress().clone());
-//            if (clone.getContactInformation() != null) {
-//                List<ContactInformation> newList = new ArrayList<>();
-//                for (ContactInformation ci : clone.getContactInformation())
-//                    newList.add((ContactInformation) ci.clone());
-//                clone.setContactInformation(newList);
-//            }
-//            return clone;
-//        } catch (CloneNotSupportedException ex) {
-//            ex.printStackTrace();
-//        }
-//        return null;
+        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getAddress(), this.getContactInformation(), this.getNutritionType());
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
-        if (obj == null
-                || obj.getClass() != this.getClass())
+        if (obj == null || obj.getClass() != this.getClass())
             return false;
-        Person person = (Person) obj;
-        if (person.getId() == this.getId()
-                && ((person.getName() == null && this.getName() == null) || (person.getName() != null && person.getName().equals(this.getName())))
-                && ((person.getForename() == null && this.getForename() == null) || (person.getForename() != null && person.getForename().equals(this.getForename())))
-                && ((person.getCode() == null && this.getCode() == null) || (person.getCode() != null && person.getCode().equals(this.getCode())))
-                && ((person.getLanguage() == null && this.getLanguage() == null) || (person.getLanguage() != null && this.getLanguage() != null && person.getLanguage().getId() == this.getLanguage().getId()))
-                && ((person.getAddress() == null && this.getAddress() == null) || (person.getAddress() != null && this.getAddress() != null && person.getAddress().getId() == this.getAddress().getId()))) {
-            if (person.getContactInformation() != null
-                    && this.getContactInformation() != null
-                    && person.getContactInformation().size() == this.getContactInformation().size()) {
-                for (int i = 0; i < this.getContactInformation().size(); i++)
-                    if (person.getContactInformation().get(i) == null || this.getContactInformation().get(i) == null
-                            || person.getContactInformation().get(i).getId() != this.getContactInformation().get(i).getId())
-                        return false;
-                return true;
-            } else if (person.getContactInformation() == null
-                    && this.getContactInformation() == null)
-                return true;
-        }
-        return false;
+        Person other = (Person) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getName(), other.getName())
+                && RecordableComparer.Equals(this.getForename(), other.getForename())
+                && RecordableComparer.Equals(this.getCode(), other.getCode())
+                && RecordableComparer.Equals(this.getLanguage(), other.getLanguage())
+                && RecordableComparer.Equals(this.getAddress(), other.getAddress())
+                && RecordableComparer.Equals(this.getNutritionType(), other.getNutritionType())
+                && RecordableComparer.Equals(this.getContactInformation(), other.getContactInformation());
     }
 
     @Override

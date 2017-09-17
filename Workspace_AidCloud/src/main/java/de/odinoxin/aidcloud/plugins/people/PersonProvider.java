@@ -91,12 +91,6 @@ public class PersonProvider extends RecordHandler<Person> {
     }
 
     @Override
-    protected void setFetchMode(Session session) {
-        if (session != null)
-            session.enableFetchProfile("JOIN_ContactInformation");
-    }
-
-    @Override
     public void generateDefaults() {
         if (this.countRecords() <= 0) {
             Person admin = new Person();

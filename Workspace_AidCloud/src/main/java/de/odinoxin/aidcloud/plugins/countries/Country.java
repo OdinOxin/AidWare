@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.countries;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -55,12 +56,7 @@ public class Country implements Recordable {
 
     @Override
     public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return new Country(this.getId(), this.getAlpha2(), this.getAlpha3(), this.getName(), this.getAreaCode());
     }
 
     @Override
@@ -70,12 +66,12 @@ public class Country implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        Country country = (Country) obj;
-        return country.getId() == this.getId()
-                && ((country.getAlpha2() == null && this.getAlpha2() == null) || (country.getAlpha2() != null && country.getAlpha2().equals(this.getAlpha2())))
-                && ((country.getAlpha3() == null && this.getAlpha3() == null) || (country.getAlpha3() != null && country.getAlpha3().equals(this.getAlpha3())))
-                && ((country.getName() == null && this.getName() == null) || (country.getName() != null && country.getName().equals(this.getName())))
-                && ((country.getAreaCode() == null && this.getAreaCode() == null) || (country.getAreaCode() != null && country.getAreaCode().equals(this.getAreaCode())));
+        Country other = (Country) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getAlpha2(), other.getAlpha2())
+                && RecordableComparer.Equals(this.getAlpha3(), other.getAlpha3())
+                && RecordableComparer.Equals(this.getName(), other.getName())
+                && RecordableComparer.Equals(this.getAreaCode(), other.getAreaCode());
     }
 
     @Override

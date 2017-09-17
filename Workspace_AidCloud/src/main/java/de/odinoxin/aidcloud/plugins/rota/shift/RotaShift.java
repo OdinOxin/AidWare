@@ -55,16 +55,18 @@ public class RotaShift implements Recordable {
         this.id = id;
     }
 
-    public RotaShift(int id, Date tsBeginn, Date tsEnd) {
+    public RotaShift(int id, Date tsBeginn, TimestampInterpretation beginnInterpretation, Date tsEnd, TimestampInterpretation endInterpretation) {
         super();
         this.id = id;
         this.tsBeginn = tsBeginn;
+        this.beginnInterpretation = beginnInterpretation;
         this.tsEnd = tsEnd;
+        this.endInterpretation = endInterpretation;
     }
 
     @Override
     public Object clone() {
-        return new RotaShift(this.id, this.tsBeginn, this.tsEnd);
+        return new RotaShift(this.getId(), this.getTsBeginn(), this.getBeginnInterpretation(), this.getTsEnd(), this.getEndInterpretation());
     }
 
     @Override
@@ -74,13 +76,13 @@ public class RotaShift implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        RotaShift rotaShift = (RotaShift) obj;
-        return rotaShift.getId() == this.getId()
-                && RecordableComparer.Equals(this.getText(), rotaShift.getText())
-                && RecordableComparer.Equals(this.getTsBeginn(), rotaShift.getTsBeginn())
-                && RecordableComparer.Equals(this.getBeginnInterpretation(), rotaShift.getBeginnInterpretation())
-                && RecordableComparer.Equals(this.getTsEnd(), rotaShift.getTsEnd())
-                && RecordableComparer.Equals(this.getEndInterpretation(), rotaShift.getEndInterpretation());
+        RotaShift other = (RotaShift) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getText(), other.getText())
+                && RecordableComparer.Equals(this.getTsBeginn(), other.getTsBeginn())
+                && RecordableComparer.Equals(this.getBeginnInterpretation(), other.getBeginnInterpretation())
+                && RecordableComparer.Equals(this.getTsEnd(), other.getTsEnd())
+                && RecordableComparer.Equals(this.getEndInterpretation(), other.getEndInterpretation());
     }
 
     @Override

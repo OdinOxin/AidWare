@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.contact.information;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.contact.types.ContactType;
 import org.hibernate.Hibernate;
 
@@ -47,15 +48,7 @@ public class ContactInformation implements Recordable {
 
     @Override
     public Object clone() {
-        try {
-            ContactInformation clone = (ContactInformation) super.clone();
-            if (clone.getContactType() != null)
-                clone.setContactType((ContactType) clone.getContactType().clone());
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return new ContactInformation(this.getId(), this.getContactType(), this.getInformation());
     }
 
     @Override
@@ -65,10 +58,10 @@ public class ContactInformation implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        ContactInformation contactInformation = (ContactInformation) obj;
-        return contactInformation.getId() == this.getId()
-                && ((contactInformation.getContactType() == null && this.getContactType() == null) || (contactInformation.getContactType() != null && this.getContactType() != null && contactInformation.getContactType().getId() == this.getContactType().getId()))
-                && ((contactInformation.getInformation() == null && this.getInformation() == null) || (contactInformation.getInformation() != null && contactInformation.getInformation().equals(this.getInformation())));
+        ContactInformation other = (ContactInformation) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getContactType(), other.getContactType())
+                && RecordableComparer.Equals(this.getInformation(), other.getInformation());
     }
 
     @Override

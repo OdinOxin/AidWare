@@ -3,6 +3,10 @@ package de.odinoxin.aiddesk.controls.reflist;
 import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -21,22 +25,37 @@ import java.util.ListIterator;
 public class RefList<T extends RecordItem<?>> extends VBox implements ObservableList<T> {
 
     private ObservableList<T> items;
-    private Provider<T> provider;
+    private ObjectProperty<Provider<T>> provider = new SimpleObjectProperty<>(this, "provider", null);
+
+    private BooleanProperty showDetails = new SimpleBooleanProperty(this, "showDetails", false);
 
     public RefList() {
         this.setSpacing(5);
         this.bindBidirectional(FXCollections.observableArrayList());
     }
 
-    /**
-     * Sets the provider.
-     *
-     * @param provider The provider to set.
-     */
-    public void setProvider(Provider<T> provider) {
-        this.provider = provider;
-        for (int i = 0; i < this.getChildren().size(); i++)
-            ((RefListCell<T>) this.getChildren().get(i)).setProvider(provider);
+    public void setProvider(Provider provider) {
+        this.provider.set(provider);
+    }
+
+    public Provider getProvider() {
+        return provider.get();
+    }
+
+    public ObjectProperty<Provider<T>> providerProperty() {
+        return provider;
+    }
+
+    public boolean isShowDetails() {
+        return showDetails.get();
+    }
+
+    public void setShowDetails(boolean showDetails) {
+        this.showDetails.set(showDetails);
+    }
+
+    public BooleanProperty showDetailsProperty() {
+        return showDetails;
     }
 
     @Override
@@ -196,15 +215,15 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
                     this.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
                 else if (c.wasAdded())
                     for (int i = c.getFrom(); i < c.getFrom() + c.getAddedSize() && this.getChildren().size() <= items.size(); i++)
-                        this.getChildren().add(i, new RefListCell<>(RefList.this.provider, this, i));
+                        this.getChildren().add(i, new RefListCell<>(this.provider, this.showDetails, this, i));
             }
             for (int i = 0; i < this.getChildren().size(); i++)
                 ((RefListCell<?>) this.getChildren().get(i)).update(i);
         });
         this.getChildren().clear();
         for (int i = 0; i < this.items.size(); i++)
-            this.getChildren().add(new RefListCell<>(RefList.this.provider, this, i));
-        this.getChildren().add(new RefListCell<>(RefList.this.provider, this, this.items.size()));
+            this.getChildren().add(new RefListCell<>(this.provider, this.showDetails, this, i));
+        this.getChildren().add(new RefListCell<>(this.provider, this.showDetails, this, this.items.size()));
     }
 
     @Override

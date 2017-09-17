@@ -2,17 +2,29 @@ package de.odinoxin.aidcloud.plugins.rota;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.rota.category.RotaCategory;
+import de.odinoxin.aidcloud.plugins.rota.shift.RotaShift;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.FetchProfile;
+import org.hibernate.annotations.FetchProfiles;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RotaEntity")
+@FetchProfiles(
+        @FetchProfile(fetchOverrides = {
+                @FetchProfile.FetchOverride(association = "rotaShifts", entity = Rota.class, mode = FetchMode.JOIN),
+        }, name = "JOIN_RotaShift")
+)
 @Entity
 @Table(name = "Rota")
 public class Rota implements Recordable {
@@ -28,9 +40,14 @@ public class Rota implements Recordable {
     private String title;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @XmlElement(name = "category")
+    @XmlElement(name = "rotaCategory")
     @EntityProperty
-    private RotaCategory category;
+    private RotaCategory rotaCategory;
+
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @XmlElement(name = "rotaShifts")
+    @EntityProperty
+    private List<RotaShift> rotaShifts = new ArrayList<>();
 
     public Rota() {
 
@@ -40,29 +57,30 @@ public class Rota implements Recordable {
         this.id = id;
     }
 
-    public Rota(int id, String title, RotaCategory category) {
+    public Rota(int id, String title, RotaCategory rotaCategory, List<RotaShift> rotaShifts) {
         super();
         this.id = id;
         this.title = title;
-        this.category = category;
+        this.rotaCategory = rotaCategory;
+        this.rotaShifts = rotaShifts;
     }
 
     @Override
     public Object clone() {
-        return new Rota(this.id, this.title, this.category);
+        return new Rota(this.getId(), this.getTitle(), this.getRotaCategory(), this.getRotaShifts());
     }
 
     @Override
     public boolean equals(Object obj) {
         if (obj == this)
             return true;
-        if (obj == null
-                || obj.getClass() != this.getClass())
+        if (obj == null || obj.getClass() != this.getClass())
             return false;
-        Rota rota = (Rota) obj;
-        return rota.getId() == this.getId()
-                && ((rota.getTitle() == null && this.getTitle() == null) || (rota.getTitle() != null && rota.getTitle().equals(this.getTitle())))
-                && ((rota.getCategory() == null && this.getCategory() == null) || (rota.getCategory() != null && rota.getCategory().equals(this.getCategory())));
+        Rota other = (Rota) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getTitle(), other.getTitle())
+                && RecordableComparer.Equals(this.getRotaCategory(), other.getRotaCategory())
+                && RecordableComparer.Equals(this.getRotaShifts(), other.getRotaShifts());
     }
 
     @Override
@@ -83,13 +101,23 @@ public class Rota implements Recordable {
         this.title = title;
     }
 
-    public RotaCategory getCategory() {
-        if (Hibernate.isInitialized(category))
-            return category;
+    public RotaCategory getRotaCategory() {
+        if (Hibernate.isInitialized(rotaCategory))
+            return rotaCategory;
         return null;
     }
 
-    public void setCategory(RotaCategory category) {
-        this.category = category;
+    public void setRotaCategory(RotaCategory rotaCategory) {
+        this.rotaCategory = rotaCategory;
+    }
+
+    public List<RotaShift> getRotaShifts() {
+        if (Hibernate.isInitialized(rotaShifts))
+            return rotaShifts;
+        return null;
+    }
+
+    public void setRotaShifts(List<RotaShift> rotaShifts) {
+        this.rotaShifts = rotaShifts;
     }
 }

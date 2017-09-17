@@ -114,7 +114,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     /**
      * The related provider.
      */
-    private Provider<T> provider;
+    private ObjectProperty<Provider<T>> provider = new SimpleObjectProperty<>(this, "provider", null);
 
     /**
      * Initializes the {@link RefBox} and its behavior.
@@ -201,6 +201,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.txfDetails.setManaged(this.isShowDetails());
         this.detailsRows.addListener((observable, oldValue, newValue) -> this.txfDetails.setPrefHeight((int) newValue * 20 + 15));
         this.txfDetails.setPrefHeight(this.getDetailsRows() * 20 + 15);
+
+        this.provider.addListener((observable, oldValue, newValue) -> this.update());
 
         this.setRecord(null);
         this.update();
@@ -292,12 +294,15 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
     }
 
     public Provider<T> getProvider() {
-        return provider;
+        return provider.get();
     }
 
-    public void setProvider(Provider<T> provider) {
-        this.provider = provider;
-        this.update();
+    public void setProvider(Provider provider) {
+        this.provider.set(provider);
+    }
+
+    public ObjectProperty<Provider<T>> providerProperty() {
+        return provider;
     }
 
     public StringProperty textProperty() {
@@ -407,9 +412,9 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         boolean showNewBtn = false;
         boolean showEditBtn = false;
         boolean showSearchBtn = false;
-        if (this.provider != null) {
+        if (this.getProvider() != null) {
             if (this.getRecord() != null) {
-                item = this.provider.getRefBoxItem(this.getRecord());
+                item = this.getProvider().getRefBoxItem(this.getRecord());
                 this.setText(item.getText());
                 this.txfDetails.setText(item.getSubText());
                 this.state.set(State.LOGGED_IN);
@@ -457,8 +462,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.refBoxList.setPrefWidth(this.getWidth());
         this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max, showID.get()));
         String[] highlight = this.txfText.getText() == null || this.txfText.getText().isEmpty() ? null : this.txfText.getText().split(" ");
-        if (this.provider != null) {
-            List<RefBoxListItem<T>> result = this.provider.search(highlight == null ? null : Arrays.asList(highlight), max);
+        if (this.getProvider() != null) {
+            List<RefBoxListItem<T>> result = this.getProvider().search(highlight == null ? null : Arrays.asList(highlight), max);
             if (result != null) {
                 for (RefBoxListItem<T> item : result)
                     item.setHighlight(highlight);

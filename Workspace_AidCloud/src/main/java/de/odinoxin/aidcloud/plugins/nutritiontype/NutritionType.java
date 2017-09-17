@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.nutritiontype;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +45,7 @@ public class NutritionType implements Recordable {
 
     @Override
     public Object clone() {
-        return new NutritionType(this.id, this.name);
+        return new NutritionType(this.getId(), this.getName());
     }
 
     @Override
@@ -54,9 +55,9 @@ public class NutritionType implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        NutritionType nutritionType = (NutritionType) obj;
-        return nutritionType.getId() == this.getId()
-                && ((nutritionType.getName() == null && this.getName() == null) || (nutritionType.getName() != null && nutritionType.getName().equals(this.getName())));
+        NutritionType other = (NutritionType) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getName(), other.getName());
     }
 
     @Override

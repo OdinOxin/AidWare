@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.languages;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,12 +48,7 @@ public class Language implements Recordable {
 
     @Override
     public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return new Language(this.getId(), this.getName(), this.getCode());
     }
 
     @Override
@@ -62,10 +58,10 @@ public class Language implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        Language language = (Language) obj;
-        return language.getId() == this.getId()
-                && ((language.getName() == null && this.getName() == null) || (language.getName() != null && language.getName().equals(this.getName())))
-                && ((language.getCode() == null && this.getCode() == null) || (language.getCode() != null && language.getCode().equals(this.getCode())));
+        Language other = (Language) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getName(), other.getName())
+                && RecordableComparer.Equals(this.getCode(), other.getCode());
     }
 
     @Override

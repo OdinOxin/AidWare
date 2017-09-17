@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.contact.types;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -51,12 +52,7 @@ public class ContactType implements Recordable {
 
     @Override
     public Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return new ContactType(this.getId(), this.getName(), this.getCode(), this.getRegex());
     }
 
     @Override
@@ -66,11 +62,11 @@ public class ContactType implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        ContactType contactType = (ContactType) obj;
-        return contactType.getId() == this.getId()
-                && ((contactType.getName() == null && this.getName() == null) || (contactType.getName() != null && contactType.getName().equals(this.getName())))
-                && ((contactType.getCode() == null && this.getCode() == null) || (contactType.getCode() != null && contactType.getCode().equals(this.getCode())))
-                && ((contactType.getRegex() == null && this.getRegex() == null) || (contactType.getRegex() != null && contactType.getRegex().equals(this.getRegex())));
+        ContactType other = (ContactType) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getName(), other.getName())
+                && RecordableComparer.Equals(this.getCode(), other.getCode())
+                && RecordableComparer.Equals(this.getRegex(), other.getRegex());
     }
 
     @Override

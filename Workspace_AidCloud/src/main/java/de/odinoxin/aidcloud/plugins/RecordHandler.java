@@ -2,6 +2,8 @@ package de.odinoxin.aidcloud.plugins;
 
 import de.odinoxin.aidcloud.*;
 import org.hibernate.Session;
+import org.hibernate.annotations.FetchProfile;
+import org.hibernate.annotations.FetchProfiles;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
@@ -23,7 +25,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
     protected T get(int id) {
         T entity;
         try (Session session = DB.open()) {
-            this.setFetchMode(session);
+            this.setFetchMode(session, getParameterizedTypeClass());
             entity = session.get(getParameterizedTypeClass(), id);
         }
         return entity;
@@ -172,8 +174,15 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         return null;
     }
 
-    protected void setFetchMode(Session session) {
-
+    private void setFetchMode(Session session, Class<T> clazz) {
+        if (session == null || clazz == null)
+            return;
+        FetchProfiles annotation = (FetchProfiles) clazz.getAnnotation(FetchProfiles.class);
+        if (annotation != null) {
+            for (FetchProfile profile : annotation.value()) {
+                session.enableFetchProfile(profile.name());
+            }
+        }
     }
 
     protected long countRecords() {

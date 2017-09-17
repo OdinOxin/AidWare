@@ -2,6 +2,7 @@ package de.odinoxin.aidcloud.plugins.addresses;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
+import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.countries.Country;
 import org.hibernate.Hibernate;
 
@@ -59,15 +60,7 @@ public class Address implements Recordable {
 
     @Override
     public Object clone() {
-        try {
-            Address clone = (Address) super.clone();
-            if (clone.getCountry() != null)
-                clone.setCountry((Country) clone.getCountry().clone());
-            return clone;
-        } catch (CloneNotSupportedException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        return new Address(this.getId(), this.getStreet(), this.getHsNo(), this.getZip(), this.getCity(), this.getCountry());
     }
 
     @Override
@@ -77,13 +70,13 @@ public class Address implements Recordable {
         if (obj == null
                 || obj.getClass() != this.getClass())
             return false;
-        Address address = (Address) obj;
-        return address.getId() == this.getId()
-                && ((address.getStreet() == null && this.getStreet() == null) || (address.getStreet() != null && address.getStreet().equals(this.getStreet())))
-                && ((address.getHsNo() == null && this.getHsNo() == null) || (address.getHsNo() != null && address.getHsNo().equals(this.getHsNo())))
-                && ((address.getZip() == null && this.getZip() == null) || (address.getZip() != null && address.getZip().equals(this.getZip())))
-                && ((address.getCity() == null && this.getCity() == null) || (address.getCity() != null && address.getCity().equals(this.getCity())))
-                && ((address.getCountry() == null && this.getCountry() == null) || (address.getCountry() != null && this.getCountry() != null && address.getCountry().getId() == this.getCountry().getId()));
+        Address other = (Address) obj;
+        return RecordableComparer.Equals(this.getId(), other.getId())
+                && RecordableComparer.Equals(this.getStreet(), other.getStreet())
+                && RecordableComparer.Equals(this.getHsNo(), other.getHsNo())
+                && RecordableComparer.Equals(this.getZip(), other.getZip())
+                && RecordableComparer.Equals(this.getCity(), other.getCity())
+                && RecordableComparer.Equals(this.getCountry(), other.getCountry());
     }
 
     @Override

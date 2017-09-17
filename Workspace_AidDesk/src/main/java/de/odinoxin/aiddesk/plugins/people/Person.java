@@ -183,9 +183,9 @@ public class Person extends RecordItem<PersonEntity> {
         entity.setLanguage(this.getLanguage() == null ? null : this.getLanguage().toEntity());
         entity.setNutritionType(this.getNutritionType() == null ? null : this.getNutritionType().toEntity());
         entity.setAddress(this.getAddress() == null ? null : this.getAddress().toEntity());
-        for (ContactInformation info : this.getContactInformation())
-            if (info != null)
-                entity.getContactInformation().add(info.toEntity());
+        for (ContactInformation item : this.getContactInformation())
+            if (item != null)
+                entity.getContactInformation().add(item.toEntity());
         return entity;
     }
 
@@ -199,7 +199,7 @@ public class Person extends RecordItem<PersonEntity> {
         properties.put(this.language.getName(), this.language);
         properties.put(this.nutritionType.getName(), this.nutritionType);
         properties.put(this.address.getName(), this.address);
-        properties.put(this.contactInformation.getName(), this.contactInformationProperty());
+        properties.put(this.contactInformation.getName(), this.contactInformation);
         return properties;
     }
 }

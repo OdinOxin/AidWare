@@ -131,6 +131,7 @@ public class Translator extends RecordHandler<Translation> {
         translations.addAll(getTranslations("RotaEditor", new String[]{"Dienstplan", "Roster"}));
         translations.addAll(getTranslations("Rota", new String[]{"Dienst", "Rota"}));
         translations.addAll(getTranslations("RotaShiftEditor", new String[]{"Schichten", "Shift"}));
+        translations.addAll(getTranslations("RotaShifts", new String[]{"Schichten", "Shift"}));
         translations.addAll(getTranslations("RotaShift", new String[]{"Schicht", "Shift"}));
         translations.addAll(getTranslations("Beginn", new String[]{"Beginn", "Beginn"}));
         translations.addAll(getTranslations("End", new String[]{"Ende", "End"}));
