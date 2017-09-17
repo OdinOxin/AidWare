@@ -79,6 +79,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      */
     private BooleanProperty showEditButton = new SimpleBooleanProperty(this, "showEditButton", false);
     /**
+     * Whether the search button is displayed.
+     */
+    private BooleanProperty showSearchButton = new SimpleBooleanProperty(this, "showSearchButton", true);
+    /**
      * Whether the detail area is displayed.
      */
     private BooleanProperty showDetails = new SimpleBooleanProperty(this, "showDetails", false);
@@ -99,6 +103,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      * The current state.
      */
     private ObjectProperty<State> state = new SimpleObjectProperty<>();
+    /**
+     * Whether this RefBox has custom commands.
+     */
+    private BooleanProperty hasCmds = new SimpleBooleanProperty(this, "hasCmds", false);
 
     private boolean ignoreTextChange;
     private boolean keepText;
@@ -179,6 +187,9 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         });
         this.initBtn(this.btnSearch, ev -> this.search());
 
+        this.sepCommands.visibleProperty().bind(this.hasCmds.and(showEditButton().or(showNewButton().and(changeableProperty())).or(showSearchButton().and(changeableProperty()))));
+        this.sepCommands.managedProperty().bind(this.hasCmds.and(showEditButton().or(showNewButton().and(changeableProperty())).or(showSearchButton().and(changeableProperty()))));
+
         this.showDetails.addListener((observable, oldValue, newValue) ->
         {
             this.txfDetails.setVisible(newValue);
@@ -236,6 +247,14 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
 
     public void setShowEditButton(boolean showEditButton) {
         this.showEditButton.set(showEditButton);
+    }
+
+    public boolean isShowSearchButton() {
+        return showSearchButton.get();
+    }
+
+    public void setShowSearchButton(boolean showSearchButton) {
+        this.showSearchButton.set(showSearchButton);
     }
 
     public boolean isShowDetails() {
@@ -307,6 +326,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         return showEditButton;
     }
 
+    public BooleanProperty showSearchButton() {
+        return showSearchButton;
+    }
+
     public BooleanProperty showDetails() {
         return this.showDetails;
     }
@@ -344,8 +367,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.initBtn(btn, ev -> cmd.execute());
         btn.disableProperty().bind(cmd.canExecuteProperty().not());
         this.hbxCommands.getChildren().add(btn);
-        this.sepCommands.setVisible(true);
-        this.sepCommands.setManaged(true);
+        this.hasCmds.set(true);
     }
 
     public void removeCommand(Command cmd) {
@@ -358,8 +380,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         }
         if (btn != null)
             this.hbxCommands.getChildren().remove(btn);
-        this.sepCommands.setVisible(!this.hbxCommands.getChildren().isEmpty());
-        this.sepCommands.setManaged(!this.hbxCommands.getChildren().isEmpty());
+        this.hasCmds.set(!this.hbxCommands.getChildren().isEmpty());
     }
 
     /**
@@ -370,6 +391,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         RefBoxListItem<T> item;
         boolean showNewBtn = false;
         boolean showEditBtn = false;
+        boolean showSearchBtn = false;
         if (this.provider != null) {
             if (this.getRecord() != null) {
                 item = this.provider.getRefBoxItem(this.getRecord());
@@ -383,7 +405,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
                 this.txfDetails.setText("");
             }
             showNewBtn = this.isShowNewButton() && isChangeable();
-            showEditBtn = this.getRecord() != null && this.isShowEditButton() && isChangeable();
+            showEditBtn = this.getRecord() != null && this.isShowEditButton();
+            showSearchBtn = this.isShowSearchButton() && isChangeable();
         } else if (!this.isDisabled()) {
             item = new RefBoxListItem<T>(null, "Provider not set!", "", new String[]{"Provider", "not", "set!"});
             this.setText(item.getText());
@@ -394,6 +417,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.btnNew.setManaged(showNewBtn);
         this.btnEdit.setVisible(showEditBtn);
         this.btnEdit.setManaged(showEditBtn);
+        this.btnSearch.setVisible(showSearchBtn);
+        this.btnSearch.setManaged(showSearchBtn);
         this.ignoreTextChange = false;
     }
 
