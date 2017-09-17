@@ -4,6 +4,7 @@ import de.odinoxin.aidcloud.provider.Provider;
 import de.odinoxin.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.utils.Command;
+import de.odinoxin.aiddesk.utils.TextUtils;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -14,7 +15,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
@@ -40,6 +44,8 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
 
     @FXML
     private TextField txfText;
+    @FXML
+    private Separator sepButtons;
     @FXML
     private HBox hbxButtons;
     @FXML
@@ -146,6 +152,9 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
                     break;
             }
         });
+
+        this.txfText.textProperty().addListener((observable, oldValue, newValue) -> this.showSepButtons());
+        this.txfText.widthProperty().addListener((observable, oldValue, newValue) -> this.showSepButtons());
 
         this.hbxButtons.widthProperty().addListener((observable, oldValue, newValue) -> {
             this.txfText.setPadding(new Insets(5, (double) newValue, 5, 5));
@@ -539,6 +548,11 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         btn.setOnAction(onAction);
         btn.focusedProperty().addListener(this.getBtnHighlighter(btn));
         btn.hoverProperty().addListener(this.getBtnHighlighter(btn));
+    }
+
+    private void showSepButtons() {
+        boolean show = this.txfText.getWidth() - (this.txfText.getPadding().getRight() + this.txfText.getPadding().getLeft()) <= TextUtils.computeTextWidth(this.txfText.getFont(), this.txfText.getText(), 0d);
+        this.sepButtons.setVisible(show);
     }
 
     /**
