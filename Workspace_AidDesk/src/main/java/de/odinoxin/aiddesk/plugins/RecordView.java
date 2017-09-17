@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 
 import java.io.IOException;
 import java.util.Hashtable;
@@ -27,8 +28,15 @@ public abstract class RecordView<T extends RecordItem<?>> extends GridPane {
     public RecordView(T record, String res) {
         this.record = record;
         try {
-            root = FXMLLoader.load(RecordView.class.getResource(res));
-            this.getChildren().add(root);
+            this.root = FXMLLoader.load(RecordView.class.getResource(res));
+            if (this.root instanceof Region) {
+                Region region = (Region) this.root;
+                region.setMaxWidth(Double.MAX_VALUE);
+                region.setMaxHeight(Double.MAX_VALUE);
+                region.prefWidthProperty().bind(this.widthProperty());
+                region.prefHeightProperty().bind(this.heightProperty());
+            }
+            this.getChildren().add(this.root);
             this.focusedProperty().addListener((observable, oldValue, newValue) ->
             {
                 if (newValue) this.setFocused(false);

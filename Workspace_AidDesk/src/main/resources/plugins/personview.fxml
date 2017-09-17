@@ -9,7 +9,6 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
-          id="humansGrid"
           vgap="5"
           hgap="5">
 
@@ -29,6 +28,7 @@
 
     <GridPane GridPane.rowIndex="0"
               GridPane.columnIndex="0"
+              maxWidth="Infinity"
               hgap="5"
               vgap="5">
 
@@ -109,7 +109,8 @@
                        GridPane.columnIndex="1">
             <RefBox id="refBoxLanguage"
                     showEditButton="true"
-                    showNewButton="true"/>
+                    showNewButton="true"
+                    maxWidth="400"/>
         </MergeablePane>
 
         <Label id="lblNutritionType"
@@ -122,7 +123,8 @@
                        GridPane.columnIndex="1">
             <RefBox id="refBoxNutritionType"
                     showEditButton="true"
-                    showNewButton="true"/>
+                    showNewButton="true"
+                    maxWidth="400"/>
         </MergeablePane>
     </GridPane>
 
@@ -132,6 +134,7 @@
 
     <GridPane GridPane.rowIndex="0"
               GridPane.columnIndex="2"
+              maxWidth="Infinity"
               hgap="5"
               vgap="5">
 
@@ -154,7 +157,8 @@
             <RefBox id="refBoxAddress"
                     showNewButton="true"
                     showEditButton="true"
-                    showDetails="true"/>
+                    showDetails="true"
+                    maxWidth="400"/>
         </MergeablePane>
 
         <Header text="Contact information"
@@ -162,7 +166,8 @@
                 GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="3"
                        GridPane.columnIndex="0">
-            <RefList id="refListContactInformation"/>
+            <RefList id="refListContactInformation"
+                     maxWidth="400"/>
         </MergeablePane>
     </GridPane>
 </GridPane>

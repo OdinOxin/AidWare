@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.SVGPath?>
 <VBox xmlns="http://javafx.com/javafx/8"
-      id="humansGrid"
       style="-fx-background-color: lightgray">
 
     <padding>

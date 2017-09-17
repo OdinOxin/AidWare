@@ -95,7 +95,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
             ));
             super.setOnCloseRequest(ev -> closeRequest(ev));
             this.txfId = (TextField) this.root.lookup("#txfId");
-            ((ScrollPane) this.root.lookup("#boxDetails")).setContent(view);
+            ((ScrollPane) this.root.lookup("#boxDetails")).setContent(this.view);
 
             this.txfTrackedChangeDate = (TextField) this.root.lookup("#txfTrackedChangeDate");
             this.refBoxTrackedChangeUser = (RefBox<Person>) this.root.lookup("#refBoxTrackedChangeUser");
