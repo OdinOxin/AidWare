@@ -10,20 +10,26 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
 public class Rota extends RecordItem<RotaEntity> {
 
-    private StringProperty title = new SimpleStringProperty(null, "Title");
-    private ObjectProperty<RotaCategory> rotaCategory = new SimpleObjectProperty<>(null, "Category");
-    private ListProperty<RotaShift> rotaShifts = new SimpleListProperty<>(null, "RotaShifts", FXCollections.observableArrayList());
+    private StringProperty title = new SimpleStringProperty(null, "title");
+    private ObjectProperty<RotaCategory> rotaCategory = new SimpleObjectProperty<>(null, "rotaCategory");
+    private ListProperty<RotaShift> rotaShifts = new SimpleListProperty<>(null, "rotaShifts", FXCollections.observableArrayList());
+    private ObjectProperty<Date> firstBeginn = new SimpleObjectProperty<>(null, "firstBeginn");
+    private ObjectProperty<Date> lastEnd = new SimpleObjectProperty<>(null, "lastEnd");
 
     public Rota() {
         super();
         this.title.addListener((observable, oldValue, newValue) -> this.setChanged(true));
         this.rotaCategory.addListener((observable, oldValue, newValue) -> this.setChanged(true));
-        this.rotaShifts.addListener((ListChangeListener.Change<? extends RotaShift> c) -> this.setChanged(true));
+        this.rotaShifts.addListener((ListChangeListener.Change<? extends RotaShift> c) -> {
+            this.setChanged(true);
+            this.calcRotaShiftBounds();
+        });
         this.setChanged(false);
     }
 
@@ -96,6 +102,44 @@ public class Rota extends RecordItem<RotaEntity> {
 
     public ListProperty<RotaShift> rotaShiftsProperty() {
         return rotaShifts;
+    }
+
+    public Date getFirstBeginn() {
+        return firstBeginn.get();
+    }
+
+    public void setFirstBeginn(Date firstBeginn) {
+        this.firstBeginn.set(firstBeginn);
+    }
+
+    public ObjectProperty<Date> firstBeginnProperty() {
+        return firstBeginn;
+    }
+
+    public Date getLastEnd() {
+        return lastEnd.get();
+    }
+
+    public void setLastEnd(Date lastEnd) {
+        this.lastEnd.set(lastEnd);
+    }
+
+    public ObjectProperty<Date> lastEndProperty() {
+        return lastEnd;
+    }
+
+    private void calcRotaShiftBounds() {
+        List<RotaShift> rotaShifts = this.getRotaShifts();
+        setFirstBeginn(null);
+        setLastEnd(null);
+        if (rotaShifts != null) {
+            for (int i = 0; i < rotaShifts.size(); i++) {
+                if (getFirstBeginn() == null || getFirstBeginn().after(rotaShifts.get(i).getTsBeginn()))
+                    setFirstBeginn(rotaShifts.get(i).getTsBeginn());
+                if (getLastEnd() == null || getLastEnd().before(rotaShifts.get(i).getTsEnd()))
+                    setLastEnd(rotaShifts.get(i).getTsEnd());
+            }
+        }
     }
 
     @Override

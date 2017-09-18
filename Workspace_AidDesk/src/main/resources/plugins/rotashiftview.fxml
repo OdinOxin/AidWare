@@ -126,9 +126,10 @@
             GridPane.rowIndex="1"
             GridPane.columnIndex="0"
             GridPane.columnSpan="2"/>
-    <TextArea id="txfAdditionalInformation"
-              GridPane.rowIndex="2"
-              GridPane.columnIndex="0"
-              GridPane.columnSpan="2"/>
+    <MergeablePane GridPane.rowIndex="2"
+                   GridPane.columnIndex="0"
+                   GridPane.columnSpan="2">
+        <TextArea id="txfAdditionalInformation"/>
+    </MergeablePane>
 
 </GridPane>

@@ -130,6 +130,8 @@ public class Translator extends RecordHandler<Translation> {
         translations.addAll(getTranslations("NutritionType", new String[]{"Ernährungsart", "Type of nutrition"}));
         translations.addAll(getTranslations("RotaEditor", new String[]{"Dienstplan", "Roster"}));
         translations.addAll(getTranslations("Rota", new String[]{"Dienst", "Rota"}));
+        translations.addAll(getTranslations("FirstShiftBeginn", new String[]{"Beginn der 1. Schicht", "Beginn of 1st shift"}));
+        translations.addAll(getTranslations("LastShiftEnd", new String[]{"Ende der letzten Schicht", "End of last shift"}));
         translations.addAll(getTranslations("RotaShiftEditor", new String[]{"Schichten", "Shift"}));
         translations.addAll(getTranslations("RotaShifts", new String[]{"Schichten", "Shift"}));
         translations.addAll(getTranslations("RotaShift", new String[]{"Schicht", "Shift"}));
