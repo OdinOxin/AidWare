@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.HBox"
+         xmlns:fx="http://javafx.com/fxml"
+         spacing="5">
+
+    <DatePicker fx:id="dtpDate"/>
+
+    <Spinner fx:id="spnHour"
+             minWidth="70"
+             maxWidth="70"/>
+
+    <Label text=":"
+           alignment="CENTER">
+        <HBox.margin>
+            <Insets top="5"/>
+        </HBox.margin>
+    </Label>
+
+    <Spinner fx:id="spnMinute"
+             minWidth="70"
+             maxWidth="70"/>
+
+</fx:root>

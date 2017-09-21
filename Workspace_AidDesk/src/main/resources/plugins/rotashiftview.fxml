@@ -2,9 +2,8 @@
 
 <?import de.odinoxin.aiddesk.controls.*?>
 <?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
-<?import de.odinoxin.aiddesk.controls.translateable.Label?>
+<?import de.odinoxin.aiddesk.controls.translateable.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns="http://javafx.com/javafx/8"
@@ -53,8 +52,8 @@
                GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="1"
                        GridPane.columnIndex="1">
-            <DatePicker id="dtpTsBeginn"
-                        maxWidth="400"/>
+            <DateTimePicker id="dtpTsBeginn"
+                            maxWidth="400"/>
         </MergeablePane>
 
         <Label id="lblBeginnInterpretation"
@@ -102,8 +101,8 @@
                GridPane.columnIndex="0"/>
         <MergeablePane GridPane.rowIndex="1"
                        GridPane.columnIndex="1">
-            <DatePicker id="dtpTsEnd"
-                        maxWidth="400"/>
+            <DateTimePicker id="dtpTsEnd"
+                            maxWidth="400"/>
         </MergeablePane>
 
         <Label id="lblEndInterpretation"
