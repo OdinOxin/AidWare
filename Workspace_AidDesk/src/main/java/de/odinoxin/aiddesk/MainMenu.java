@@ -13,8 +13,8 @@ import de.odinoxin.aiddesk.plugins.addresses.AddressEditor;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformationEditor;
 import de.odinoxin.aiddesk.plugins.contact.types.ContactTypeEditor;
 import de.odinoxin.aiddesk.plugins.countries.CountryEditor;
-import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionTypeEditor;
 import de.odinoxin.aiddesk.plugins.languages.LanguageEditor;
+import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionTypeEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
 import de.odinoxin.aiddesk.plugins.rota.RotaEditor;
 import de.odinoxin.aiddesk.plugins.rota.category.RotaCategoryEditor;
@@ -40,22 +40,12 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
     /**
      * Avaiable plugins
      */
-    private static final PluginItem[] PLUGIN_ITEMS = {
-            new PluginItem("PersonEditor", PersonEditor.class, PluginItem.MASTERDATA),
-            new PluginItem("AddressEditor", AddressEditor.class, PluginItem.MASTERDATA),
-            new PluginItem("CountryEditor", CountryEditor.class, PluginItem.MASTERDATA),
-            new PluginItem("LanguageEditor", LanguageEditor.class, PluginItem.MASTERDATA),
-            new PluginItem("ContactTypeEditor", ContactTypeEditor.class, PluginItem.MASTERDATA),
-            new PluginItem("ContactInformationEditor", ContactInformationEditor.class, PluginItem.MASTERDATA),
-            new PluginItem("NutritionTypeEditor", NutritionTypeEditor.class, PluginItem.MASTERDATA),
-
-            new PluginItem("RotaEditor", RotaEditor.class, PluginItem.TRANSACTIONDATA),
-            new PluginItem("RotaShiftEditor", RotaShiftEditor.class, PluginItem.TRANSACTIONDATA),
-            new PluginItem("RotaCategoryEditor", RotaCategoryEditor.class, PluginItem.MASTERDATA),
-    };
+    private static PluginItem[] pluginItems;
 
     public MainMenu() {
         super("/mainmenu.fxml", "Main menu");
+
+        this.setupMenu();
 
         this.refBoxPlugins = (RefBox<PluginItem>) this.root.lookup("#refBoxPlugins");
         this.refBoxPlugins.setProvider(this);
@@ -96,6 +86,22 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         this.centerOnScreen();
     }
 
+    private void setupMenu() {
+        pluginItems = new PluginItem[]{
+                new PluginItem("PersonEditor", PersonEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("AddressEditor", AddressEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("CountryEditor", CountryEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("LanguageEditor", LanguageEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("ContactTypeEditor", ContactTypeEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("ContactInformationEditor", ContactInformationEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("NutritionTypeEditor", NutritionTypeEditor.class, PluginItem.MASTERDATA),
+
+                new PluginItem("RotaEditor", RotaEditor.class, PluginItem.TRANSACTIONDATA),
+                new PluginItem("RotaShiftEditor", RotaShiftEditor.class, PluginItem.TRANSACTIONDATA),
+                new PluginItem("RotaCategoryEditor", RotaCategoryEditor.class, PluginItem.MASTERDATA),
+        };
+    }
+
     @Override
     public PluginItem get(int id) {
         return null;
@@ -121,7 +127,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
     @Override
     public List<RefBoxListItem<PluginItem>> search(List<String> exprs, int max) {
         List<RefBoxListItem<PluginItem>> items = new ArrayList<>();
-        for (PluginItem item : PLUGIN_ITEMS) {
+        for (PluginItem item : pluginItems) {
             RefBoxListItem<PluginItem> refBoxItem = getRefBoxItem(item);
             if (exprs != null)
                 for (String expr : exprs) {
