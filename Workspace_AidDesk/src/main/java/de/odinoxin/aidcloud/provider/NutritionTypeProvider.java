@@ -68,9 +68,9 @@ public class NutritionTypeProvider implements Provider<NutritionType> {
     }
 
     @Override
-    public List<RefBoxListItem<NutritionType>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<NutritionType>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (NutritionTypeProvider.getSvc() != null) {
-            List<NutritionTypeEntity> entities = NutritionTypeProvider.getSvc().searchNutritionType(expr, max);
+            List<NutritionTypeEntity> entities = NutritionTypeProvider.getSvc().searchNutritionType(expr, max, exceptedIds);
             List<RefBoxListItem<NutritionType>> result = new ArrayList<>();
             if (entities != null)
                 for (NutritionTypeEntity entity : entities)

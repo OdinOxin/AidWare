@@ -16,7 +16,7 @@ public interface Provider<T extends RecordItem<?>> {
 
     public abstract RefBoxListItem<T> getRefBoxItem(T item);
 
-    public abstract List<RefBoxListItem<T>> search(List<String> expr, int max);
+    public abstract List<RefBoxListItem<T>> search(List<String> expr, int max, List<Integer> exceptedIds);
 
     public abstract RecordEditor<T> openEditor(T entity);
 }

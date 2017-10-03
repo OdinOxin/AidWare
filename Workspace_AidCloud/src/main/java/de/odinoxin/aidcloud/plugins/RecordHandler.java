@@ -13,6 +13,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -130,24 +131,32 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         return true;
     }
 
-    protected List<T> search(String[] expressions, int max) {
+    protected List<T> search(String[] expressions, int max, int[] exceptIds) {
         Session session = DB.open();
         CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery(getParameterizedTypeClass());
         Predicate predicates = builder.conjunction();
         Root<T> root = criteria.from(getParameterizedTypeClass());
+        Expression<Integer> dbIdExpression = getIdExpression(root);
         if (expressions != null && expressions.length > 0) {
-            predicates = builder.disjunction();
-            Expression<Integer> dbIdExpression = getIdExpression(root);
+            Predicate exprPredicates = builder.disjunction();
             List<Expression<String>> dbExpressions = getSearchExpressions(root);
             for (String expr : expressions) {
                 if (dbIdExpression != null && expr.matches("-?\\d+"))
-                    predicates = builder.or(predicates, builder.equal(dbIdExpression, Integer.parseInt(expr)));
+                    exprPredicates = builder.or(exprPredicates, builder.equal(dbIdExpression, Integer.parseInt(expr)));
                 if (dbExpressions != null)
                     for (Expression<String> dbExpr : dbExpressions) {
-                        predicates = builder.or(predicates, builder.like(builder.lower(dbExpr), "%" + expr.toLowerCase() + "%"));
+                        exprPredicates = builder.or(exprPredicates, builder.like(builder.lower(dbExpr), "%" + expr.toLowerCase() + "%"));
                     }
             }
+            predicates.getExpressions().add(exprPredicates);
+        }
+        if (exceptIds != null && exceptIds.length > 0) {
+            Predicate exceptedIdsPredicates = builder.conjunction();
+            for (int i = 0; i < exceptIds.length; i++) {
+                exceptedIdsPredicates = builder.and(exceptedIdsPredicates, builder.equal(dbIdExpression, exceptIds[i]).not());
+            }
+            predicates.getExpressions().add(exceptedIdsPredicates);
         }
         criteria.where(predicates);
         EntityManager em = session.getEntityManagerFactory().createEntityManager();
@@ -160,10 +169,10 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         return result;
     }
 
-    protected List<T> search(String[] expressions, int max, WebServiceContext wsCtx) {
+    protected List<T> search(String[] expressions, int max, int[] exceptIds, WebServiceContext wsCtx) {
         if (!Login.checkSession(wsCtx))
             throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-        return search(expressions, max);
+        return search(expressions, max, exceptIds);
     }
 
     protected Expression<Integer> getIdExpression(Root<T> root) {

@@ -69,9 +69,9 @@ public class LanguageProvider implements Provider<Language> {
     }
 
     @Override
-    public List<RefBoxListItem<Language>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<Language>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (LanguageProvider.getSvc() != null) {
-            List<LanguageEntity> entities = LanguageProvider.getSvc().searchLanguage(expr, max);
+            List<LanguageEntity> entities = LanguageProvider.getSvc().searchLanguage(expr, max, exceptedIds);
             List<RefBoxListItem<Language>> result = new ArrayList<>();
             if (entities != null)
                 for (LanguageEntity entity : entities)

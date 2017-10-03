@@ -28,6 +28,7 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
     private ObjectProperty<Provider<T>> provider = new SimpleObjectProperty<>(this, "provider", null);
 
     private BooleanProperty showDetails = new SimpleBooleanProperty(this, "showDetails", false);
+    private BooleanProperty distinct = new SimpleBooleanProperty(this, "distinct", true);
 
     public RefList() {
         this.setSpacing(5);
@@ -215,15 +216,15 @@ public class RefList<T extends RecordItem<?>> extends VBox implements Observable
                     this.getChildren().remove(c.getFrom(), c.getFrom() + c.getRemovedSize());
                 else if (c.wasAdded())
                     for (int i = c.getFrom(); i < c.getFrom() + c.getAddedSize() && this.getChildren().size() <= items.size(); i++)
-                        this.getChildren().add(i, new RefListCell<>(this.provider, this.showDetails, this, i));
+                        this.getChildren().add(i, new RefListCell<>(this.provider, this.showDetails, this.distinct, this, i));
             }
             for (int i = 0; i < this.getChildren().size(); i++)
                 ((RefListCell<?>) this.getChildren().get(i)).update(i);
         });
         this.getChildren().clear();
         for (int i = 0; i < this.items.size(); i++)
-            this.getChildren().add(new RefListCell<>(this.provider, this.showDetails, this, i));
-        this.getChildren().add(new RefListCell<>(this.provider, this.showDetails, this, this.items.size()));
+            this.getChildren().add(new RefListCell<>(this.provider, this.showDetails, this.distinct, this, i));
+        this.getChildren().add(new RefListCell<>(this.provider, this.showDetails, this.distinct, this, this.items.size()));
     }
 
     @Override

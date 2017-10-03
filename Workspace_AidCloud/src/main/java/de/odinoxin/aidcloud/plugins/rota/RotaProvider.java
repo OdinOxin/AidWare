@@ -35,8 +35,8 @@ public class RotaProvider extends RecordHandler<Rota> {
     }
 
     @WebMethod
-    public List<Rota> searchRota(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
-        return super.search(expr, max, this.wsCtx);
+    public List<Rota> searchRota(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max, @WebParam(name = "exceptIds") int[] exceptIds) {
+        return super.search(expr, max, exceptIds, this.wsCtx);
     }
 
     @Override

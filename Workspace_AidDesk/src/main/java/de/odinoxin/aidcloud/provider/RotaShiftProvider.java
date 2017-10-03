@@ -72,9 +72,9 @@ public class RotaShiftProvider implements Provider<RotaShift> {
     }
 
     @Override
-    public List<RefBoxListItem<RotaShift>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<RotaShift>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (RotaShiftProvider.getSvc() != null) {
-            List<RotaShiftEntity> entities = RotaShiftProvider.getSvc().searchRotaShift(expr, max);
+            List<RotaShiftEntity> entities = RotaShiftProvider.getSvc().searchRotaShift(expr, max, exceptedIds);
             List<RefBoxListItem<RotaShift>> result = new ArrayList<>();
             if (entities != null)
                 for (RotaShiftEntity entity : entities)

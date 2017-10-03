@@ -70,9 +70,9 @@ public class CountryProvider implements Provider<Country> {
     }
 
     @Override
-    public List<RefBoxListItem<Country>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<Country>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (CountryProvider.getSvc() != null) {
-            List<CountryEntity> entities = CountryProvider.getSvc().searchCountry(expr, max);
+            List<CountryEntity> entities = CountryProvider.getSvc().searchCountry(expr, max, exceptedIds);
             List<RefBoxListItem<Country>> result = new ArrayList<>();
             if (entities != null)
                 for (CountryEntity entity : entities)

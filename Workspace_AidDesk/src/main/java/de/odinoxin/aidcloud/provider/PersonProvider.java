@@ -75,9 +75,9 @@ public class PersonProvider implements Provider<Person> {
     }
 
     @Override
-    public List<RefBoxListItem<Person>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<Person>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (PersonProvider.getSvc() != null) {
-            List<PersonEntity> entities = PersonProvider.getSvc().searchPerson(expr, max);
+            List<PersonEntity> entities = PersonProvider.getSvc().searchPerson(expr, max, exceptedIds);
             List<RefBoxListItem<Person>> result = new ArrayList<>();
             if (entities != null)
                 for (PersonEntity entity : entities) {

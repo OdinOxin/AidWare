@@ -35,8 +35,8 @@ public class RotaShiftProvider extends RecordHandler<RotaShift> {
     }
 
     @WebMethod
-    public List<RotaShift> searchRotaShift(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
-        return super.search(expr, max, this.wsCtx);
+    public List<RotaShift> searchRotaShift(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max, @WebParam(name = "exceptIds") int[] exceptIds) {
+        return super.search(expr, max, exceptIds, this.wsCtx);
     }
 
     @Override

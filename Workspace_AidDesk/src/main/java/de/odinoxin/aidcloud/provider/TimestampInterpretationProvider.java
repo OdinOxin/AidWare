@@ -68,9 +68,9 @@ public class TimestampInterpretationProvider implements Provider<TimestampInterp
     }
 
     @Override
-    public List<RefBoxListItem<TimestampInterpretation>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<TimestampInterpretation>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (TimestampInterpretationProvider.getSvc() != null) {
-            List<TimestampInterpretationEntity> entities = TimestampInterpretationProvider.getSvc().searchTimestampInterpretation(expr, max);
+            List<TimestampInterpretationEntity> entities = TimestampInterpretationProvider.getSvc().searchTimestampInterpretation(expr, max, exceptedIds);
             List<RefBoxListItem<TimestampInterpretation>> result = new ArrayList<>();
             if (entities != null)
                 for (TimestampInterpretationEntity entity : entities)

@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.shape.SVGPath;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +32,8 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
 
     private Command removeCmd;
 
+    private BooleanProperty distinct;
+
     /**
      * Initializes the {@link RefListCell} and its behavior.
      *
@@ -38,9 +41,10 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
      * @param source   The source to display an item from.
      * @param index    The index of the item to display.
      */
-    RefListCell(ObjectProperty<Provider<T>> provider, BooleanProperty showDetails, List<T> source, int index) {
+    RefListCell(ObjectProperty<Provider<T>> provider, BooleanProperty showDetails, BooleanProperty distinct, List<T> source, int index) {
         this.source = source;
         this.index = index;
+        this.distinct = distinct;
 
         FXMLLoader fxmlLoader = new FXMLLoader(RefListCell.class.getResource("/controls/reflistcell.fxml"));
         fxmlLoader.setRoot(this);
@@ -70,6 +74,8 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
             } else if (newValue != null)
                 this.source.add(newValue);
         });
+
+        distinct.addListener((observable, oldValue, newValue) -> this.update(this.index));
     }
 
     /**
@@ -87,6 +93,12 @@ class RefListCell<T extends RecordItem<?>> extends HBox {
             this.refBox.setRecord(this.source.get(this.index));
             this.refBox.addCommand(removeCmd);
         }
+        List<Integer> exceptedIds = new ArrayList<>();
+        if (this.distinct.get()) {
+            for (T record : this.source)
+                exceptedIds.add(record.getId());
+        }
+        this.refBox.setExceptedIds(exceptedIds);
         this.refBox.setShowSearchButton(pseudo);
         this.refBox.setShowNewButton(pseudo);
     }

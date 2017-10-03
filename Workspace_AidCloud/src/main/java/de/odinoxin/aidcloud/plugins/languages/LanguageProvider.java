@@ -44,8 +44,8 @@ public class LanguageProvider extends RecordHandler<Language> {
     }
 
     @WebMethod
-    public List<Language> searchLanguage(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
-        return super.search(expr, max, this.wsCtx);
+    public List<Language> searchLanguage(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max, @WebParam(name = "exceptIds") int[] exceptIds) {
+        return super.search(expr, max, exceptIds, this.wsCtx);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class LanguageProvider extends RecordHandler<Language> {
                 if (session.getEntityManagerFactory().createEntityManager().createQuery(query).getResultList().size() == 0)
                     session.save(languages[i]);
                 else
-                    languages[i] = search(new String[]{languages[i].getName(), languages[i].getCode()}, 1).get(0);
+                    languages[i] = search(new String[]{languages[i].getName(), languages[i].getCode()}, 1, null).get(0);
             }
             session.getTransaction().commit();
         }

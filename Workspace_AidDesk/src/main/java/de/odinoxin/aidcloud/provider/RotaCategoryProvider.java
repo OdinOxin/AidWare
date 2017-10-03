@@ -69,9 +69,9 @@ public class RotaCategoryProvider implements Provider<RotaCategory> {
     }
 
     @Override
-    public List<RefBoxListItem<RotaCategory>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<RotaCategory>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (RotaCategoryProvider.getSvc() != null) {
-            List<RotaCategoryEntity> entities = RotaCategoryProvider.getSvc().searchRotaCategory(expr, max);
+            List<RotaCategoryEntity> entities = RotaCategoryProvider.getSvc().searchRotaCategory(expr, max, exceptedIds);
             List<RefBoxListItem<RotaCategory>> result = new ArrayList<>();
             if (entities != null)
                 for (RotaCategoryEntity entity : entities)

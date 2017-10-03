@@ -65,7 +65,7 @@ public class LoginProvider implements Provider<Person> {
     }
 
     @Override
-    public List<RefBoxListItem<Person>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<Person>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (LoginProvider.getSvc() != null) {
             List<PersonEntity> entities = LoginProvider.getSvc().searchLogin(expr, max);
             List<RefBoxListItem<Person>> result = new ArrayList<>();

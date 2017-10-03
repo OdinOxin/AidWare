@@ -71,9 +71,9 @@ public class AddressProvider implements Provider<Address> {
     }
 
     @Override
-    public List<RefBoxListItem<Address>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<Address>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (AddressProvider.getSvc() != null) {
-            List<AddressEntity> entities = AddressProvider.getSvc().searchAddress(expr, max);
+            List<AddressEntity> entities = AddressProvider.getSvc().searchAddress(expr, max, exceptedIds);
             List<RefBoxListItem<Address>> result = new ArrayList<>();
             if (entities != null)
                 for (AddressEntity entity : entities)

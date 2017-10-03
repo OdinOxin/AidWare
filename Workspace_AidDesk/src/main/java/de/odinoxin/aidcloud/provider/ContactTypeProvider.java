@@ -69,9 +69,9 @@ public class ContactTypeProvider implements Provider<ContactType> {
     }
 
     @Override
-    public List<RefBoxListItem<ContactType>> search(List<String> expr, int max) {
+    public List<RefBoxListItem<ContactType>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         if (ContactTypeProvider.getSvc() != null) {
-            List<ContactTypeEntity> entities = ContactTypeProvider.getSvc().searchContactType(expr, max);
+            List<ContactTypeEntity> entities = ContactTypeProvider.getSvc().searchContactType(expr, max, exceptedIds);
             List<RefBoxListItem<ContactType>> result = new ArrayList<>();
             if (entities != null)
                 for (ContactTypeEntity entity : entities)

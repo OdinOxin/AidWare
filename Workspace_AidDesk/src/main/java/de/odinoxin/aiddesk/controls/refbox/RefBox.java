@@ -9,6 +9,8 @@ import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -107,6 +109,10 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
      * Whether this RefBox has custom commands.
      */
     private BooleanProperty hasCmds = new SimpleBooleanProperty(this, "hasCmds", false);
+    /**
+     * List of IDs to ignore while searching.
+     */
+    private ListProperty<Integer> exceptedIds = new SimpleListProperty<>(this, "exceptedIds", FXCollections.observableArrayList());
 
     private boolean ignoreTextChange;
     private boolean keepText;
@@ -361,6 +367,23 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.txfText.onActionProperty().set(value);
     }
 
+    public ObservableList<Integer> getExceptedIds() {
+        return exceptedIds.get();
+    }
+
+    public void setExceptedIds(List<Integer> exceptedIds) {
+        if (this.exceptedIds.get() != null) {
+            this.exceptedIds.get().clear();
+            if (exceptedIds != null)
+                this.exceptedIds.get().addAll(exceptedIds);
+        } else if (exceptedIds != null)
+            this.exceptedIds.set(FXCollections.observableArrayList(exceptedIds));
+    }
+
+    public ListProperty<Integer> exceptedIdsProperty() {
+        return exceptedIds;
+    }
+
     public void addCommand(Command cmd) {
         if (cmd == null)
             return;
@@ -463,7 +486,7 @@ public class RefBox<T extends RecordItem<?>> extends VBox {
         this.refBoxList.getSuggestionsList().setCellFactory(param -> new RefBoxListItemCell(max, showID.get()));
         String[] highlight = this.txfText.getText() == null || this.txfText.getText().isEmpty() ? null : this.txfText.getText().split(" ");
         if (this.getProvider() != null) {
-            List<RefBoxListItem<T>> result = this.getProvider().search(highlight == null ? null : Arrays.asList(highlight), max);
+            List<RefBoxListItem<T>> result = this.getProvider().search(highlight == null ? null : Arrays.asList(highlight), max, exceptedIds.get());
             if (result != null) {
                 for (RefBoxListItem<T> item : result)
                     item.setHighlight(highlight);
