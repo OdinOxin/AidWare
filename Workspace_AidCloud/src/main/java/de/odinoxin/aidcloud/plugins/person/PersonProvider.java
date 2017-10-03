@@ -1,12 +1,12 @@
-package de.odinoxin.aidcloud.plugins.people;
+package de.odinoxin.aidcloud.plugins.person;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.DB;
 import de.odinoxin.aidcloud.plugins.RecordHandler;
-import de.odinoxin.aidcloud.plugins.addresses.Address;
-import de.odinoxin.aidcloud.plugins.addresses.Address_;
-import de.odinoxin.aidcloud.plugins.countries.Country;
-import de.odinoxin.aidcloud.plugins.countries.Country_;
+import de.odinoxin.aidcloud.plugins.address.Address;
+import de.odinoxin.aidcloud.plugins.address.Address_;
+import de.odinoxin.aidcloud.plugins.country.Country;
+import de.odinoxin.aidcloud.plugins.country.Country_;
 import org.hibernate.Session;
 
 import javax.annotation.Resource;

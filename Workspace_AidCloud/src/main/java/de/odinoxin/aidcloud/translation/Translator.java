@@ -2,8 +2,8 @@ package de.odinoxin.aidcloud.translation;
 
 import de.odinoxin.aidcloud.DB;
 import de.odinoxin.aidcloud.plugins.RecordHandler;
-import de.odinoxin.aidcloud.plugins.languages.Language;
-import de.odinoxin.aidcloud.plugins.languages.LanguageProvider;
+import de.odinoxin.aidcloud.plugins.language.Language;
+import de.odinoxin.aidcloud.plugins.language.LanguageProvider;
 import org.hibernate.Session;
 
 import javax.jws.WebMethod;

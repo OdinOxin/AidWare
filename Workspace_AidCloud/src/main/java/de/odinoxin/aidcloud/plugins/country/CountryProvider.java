@@ -1,4 +1,4 @@
-package de.odinoxin.aidcloud.plugins.countries;
+package de.odinoxin.aidcloud.plugins.country;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.plugins.RecordHandler;

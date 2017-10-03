@@ -1,4 +1,4 @@
-package de.odinoxin.aidcloud.plugins.languages;
+package de.odinoxin.aidcloud.plugins.language;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.DB;

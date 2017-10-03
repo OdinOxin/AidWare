@@ -3,7 +3,7 @@ package de.odinoxin.aidcloud.plugins.contact.information;
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.RecordableComparer;
-import de.odinoxin.aidcloud.plugins.contact.types.ContactType;
+import de.odinoxin.aidcloud.plugins.contact.type.ContactType;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;

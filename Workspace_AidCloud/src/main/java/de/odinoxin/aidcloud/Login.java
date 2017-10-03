@@ -1,7 +1,7 @@
 package de.odinoxin.aidcloud;
 
-import de.odinoxin.aidcloud.plugins.people.Person;
-import de.odinoxin.aidcloud.plugins.people.Person_;
+import de.odinoxin.aidcloud.plugins.person.Person;
+import de.odinoxin.aidcloud.plugins.person.Person_;
 import org.hibernate.Session;
 
 import javax.jws.WebMethod;

@@ -1,9 +1,9 @@
-package de.odinoxin.aidcloud.plugins.addresses;
+package de.odinoxin.aidcloud.plugins.address;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.RecordableComparer;
-import de.odinoxin.aidcloud.plugins.countries.Country;
+import de.odinoxin.aidcloud.plugins.country.Country;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;

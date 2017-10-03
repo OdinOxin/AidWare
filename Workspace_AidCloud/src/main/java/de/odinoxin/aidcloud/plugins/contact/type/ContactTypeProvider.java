@@ -1,4 +1,4 @@
-package de.odinoxin.aidcloud.plugins.contact.types;
+package de.odinoxin.aidcloud.plugins.contact.type;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.plugins.RecordHandler;

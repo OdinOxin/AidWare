@@ -1,7 +1,7 @@
 package de.odinoxin.aidcloud.translation;
 
 import de.odinoxin.aidcloud.plugins.Recordable;
-import de.odinoxin.aidcloud.plugins.languages.Language;
+import de.odinoxin.aidcloud.plugins.language.Language;
 
 import javax.persistence.*;
 

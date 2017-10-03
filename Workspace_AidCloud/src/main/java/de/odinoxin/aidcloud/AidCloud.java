@@ -1,13 +1,13 @@
 package de.odinoxin.aidcloud;
 
 import de.odinoxin.aidcloud.plugins.TrackedChangeProvider;
-import de.odinoxin.aidcloud.plugins.addresses.AddressProvider;
+import de.odinoxin.aidcloud.plugins.address.AddressProvider;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformationProvider;
-import de.odinoxin.aidcloud.plugins.contact.types.ContactTypeProvider;
-import de.odinoxin.aidcloud.plugins.countries.CountryProvider;
-import de.odinoxin.aidcloud.plugins.languages.LanguageProvider;
+import de.odinoxin.aidcloud.plugins.contact.type.ContactTypeProvider;
+import de.odinoxin.aidcloud.plugins.country.CountryProvider;
+import de.odinoxin.aidcloud.plugins.language.LanguageProvider;
 import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionTypeProvider;
-import de.odinoxin.aidcloud.plugins.people.PersonProvider;
+import de.odinoxin.aidcloud.plugins.person.PersonProvider;
 import de.odinoxin.aidcloud.plugins.rota.RotaProvider;
 import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretationProvider;
 import de.odinoxin.aidcloud.plugins.rota.category.RotaCategoryProvider;

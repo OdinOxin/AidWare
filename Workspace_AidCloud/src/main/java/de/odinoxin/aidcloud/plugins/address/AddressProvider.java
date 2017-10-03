@@ -1,9 +1,9 @@
-package de.odinoxin.aidcloud.plugins.addresses;
+package de.odinoxin.aidcloud.plugins.address;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.plugins.RecordHandler;
-import de.odinoxin.aidcloud.plugins.countries.Country;
-import de.odinoxin.aidcloud.plugins.countries.Country_;
+import de.odinoxin.aidcloud.plugins.country.Country;
+import de.odinoxin.aidcloud.plugins.country.Country_;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;

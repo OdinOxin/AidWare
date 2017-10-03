@@ -2,8 +2,8 @@ package de.odinoxin.aidcloud.plugins.contact.information;
 
 import de.odinoxin.aidcloud.ConcurrentFault;
 import de.odinoxin.aidcloud.plugins.RecordHandler;
-import de.odinoxin.aidcloud.plugins.contact.types.ContactType;
-import de.odinoxin.aidcloud.plugins.contact.types.ContactType_;
+import de.odinoxin.aidcloud.plugins.contact.type.ContactType;
+import de.odinoxin.aidcloud.plugins.contact.type.ContactType_;
 
 import javax.annotation.Resource;
 import javax.jws.WebMethod;

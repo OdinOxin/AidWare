@@ -1,12 +1,12 @@
-package de.odinoxin.aidcloud.plugins.people;
+package de.odinoxin.aidcloud.plugins.person;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.RecordableComparer;
-import de.odinoxin.aidcloud.plugins.addresses.Address;
+import de.odinoxin.aidcloud.plugins.address.Address;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformation;
 import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType;
-import de.odinoxin.aidcloud.plugins.languages.Language;
+import de.odinoxin.aidcloud.plugins.language.Language;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.FetchProfile;

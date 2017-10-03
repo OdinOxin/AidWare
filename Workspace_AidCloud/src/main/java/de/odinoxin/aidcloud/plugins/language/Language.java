@@ -1,4 +1,4 @@
-package de.odinoxin.aidcloud.plugins.languages;
+package de.odinoxin.aidcloud.plugins.language;
 
 import de.odinoxin.aidcloud.plugins.EntityProperty;
 import de.odinoxin.aidcloud.plugins.Recordable;
