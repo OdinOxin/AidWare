@@ -9,53 +9,44 @@ import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
 import org.hibernate.Session;
 
-import javax.annotation.Resource;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
 import javax.persistence.Query;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
-import javax.xml.ws.WebServiceContext;
+import javax.ws.rs.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebService
+@Path("Person")
 public class PersonProvider extends RecordHandler<Person> {
 
-    @Resource
-    WebServiceContext wsCtx;
-
-    @WebMethod
-    public Person getPerson(@WebParam(name = "id") int id) {
-        Person p = super.get(id, this.wsCtx);
+    @GET
+    @Path("{id}")
+    @Override
+    public Person get(@PathParam("id") int id) {
+        Person p = super.get(id);
         if (p != null)
             p.setPwd(null);
         return p;
     }
 
-    @WebMethod
-    public Person savePerson(@WebParam(name = "entity") Person entity, @WebParam(name = "original") Person original) throws ConcurrentFault {
-        Person current = this.get(entity.getId(), this.wsCtx);
+    //    @POST
+//    @PUT
+    @Override
+    public Person save(Person entity, Person original) throws ConcurrentFault {
+        Person current = this.get(entity.getId());
         if (current != null)
             entity.setPwd(current.getPwd());
-        return this.getPerson(super.save(entity, original, this.wsCtx));
+        Person p = super.save(entity, original);
+        if (p != null)
+            p.setPwd(null);
+        return p;
     }
 
-    @WebMethod
-    public boolean deletePerson(@WebParam(name = "id") int id) {
-        return super.delete(id, this.wsCtx);
-    }
-
-    @WebMethod
-    public List<Person> searchPerson(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max, @WebParam(name = "exceptIds") int[] exceptIds) {
-        return super.search(expr, max, exceptIds, this.wsCtx);
-    }
-
-    @WebMethod
-    public boolean changePwd(@WebParam(name = "id") int id, @WebParam(name = "currentPwd") String currentPwd, @WebParam(name = "newPwd") String newPwd) {
+    @PUT
+    @Path("{id}/{currentPwd}/{newPwd}")
+    public boolean changePwd(@PathParam("id") int id, @PathParam("currentPwd") String currentPwd, @PathParam("newPwd") String newPwd) {
         if (id == 0)
             return false;
         Session session = DB.open();

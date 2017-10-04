@@ -7,8 +7,9 @@ import org.hibernate.annotations.FetchProfiles;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
-import javax.ws.rs.NotAuthorizedException;
-import javax.xml.ws.WebServiceContext;
+import javax.ws.rs.*;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -16,25 +17,23 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public abstract class RecordHandler<T extends Recordable> extends Provider {
 
     public RecordHandler() {
         generateDefaults();
     }
 
-    protected T get(int id) {
+    @GET
+    @Path("{id}")
+    public T get(@PathParam("id") int id) {
         T entity;
         try (Session session = DB.open()) {
             this.setFetchMode(session, getParameterizedTypeClass());
             entity = session.get(getParameterizedTypeClass(), id);
         }
         return entity;
-    }
-
-    protected T get(int id, WebServiceContext wsCtx) {
-        if (!Login.checkSession(wsCtx))
-            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-        return get(id);
     }
 
     protected int save(T entity, T original, int userId) throws ConcurrentFault {
@@ -98,15 +97,17 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
             return obj.toString();
     }
 
-    protected int save(T entity, T original) throws ConcurrentFault {
-        return save(entity, original, 0);
+//    @PUT
+//    @POST
+    public T save(T entity, T original) throws ConcurrentFault {
+        return this.get(save(entity, original, 0));
     }
 
-    protected int save(T entity, T original, WebServiceContext wsCtx) throws ConcurrentFault {
-        if (!Login.checkSession(wsCtx))
-            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-        return save(entity, original, Login.getUserIdFromContext(wsCtx));
-    }
+//    protected int save(T entity, T original, WebServiceContext wsCtx) throws ConcurrentFault {
+//        if (!Login.checkSession(wsCtx))
+//            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
+//        return save(entity, original, Login.getUserIdFromContext(wsCtx));
+//    }
 
     protected void generate(T entity) {
         try {
@@ -116,28 +117,29 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         }
     }
 
-    protected boolean delete(int id, WebServiceContext wsCtx) {
-        if (!Login.checkSession(wsCtx))
-            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-        T entity = this.get(id, wsCtx);
+    @PUT
+    @Path("{id}")
+    public boolean delete(@PathParam("id") int id) {
+        T entity = this.get(id);
         try (Session session = DB.open()) {
             session.beginTransaction();
             session.delete(entity);
             session.getTransaction().commit();
+            return true;
         } catch (Exception ex) {
             return false;
         }
-        return true;
     }
 
-    protected List<T> search(String[] expressions, int max, int[] exceptIds) {
+    @GET
+    public List<T> search(@QueryParam("expr") List<String> expressions, @DefaultValue("0") @QueryParam("max") int max, @QueryParam("exceptedIds") List<Integer> exceptIds) {
         Session session = DB.open();
         CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery(getParameterizedTypeClass());
         Predicate predicates = builder.conjunction();
         Root<T> root = criteria.from(getParameterizedTypeClass());
         Expression<Integer> dbIdExpression = getIdExpression(root);
-        if (expressions != null && expressions.length > 0) {
+        if (expressions != null && expressions.size() > 0) {
             Predicate exprPredicates = builder.disjunction();
             List<Expression<String>> dbExpressions = getSearchExpressions(root);
             for (String expr : expressions) {
@@ -150,28 +152,21 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
             }
             predicates.getExpressions().add(exprPredicates);
         }
-        if (exceptIds != null && exceptIds.length > 0) {
+        if (exceptIds != null && exceptIds.size() > 0) {
             Predicate exceptedIdsPredicates = builder.conjunction();
-            for (int i = 0; i < exceptIds.length; i++) {
-                exceptedIdsPredicates = builder.and(exceptedIdsPredicates, builder.equal(dbIdExpression, exceptIds[i]).not());
-            }
+            for (int exceptedId : exceptIds)
+                exceptedIdsPredicates = builder.and(exceptedIdsPredicates, builder.equal(dbIdExpression, exceptedId).not());
             predicates.getExpressions().add(exceptedIdsPredicates);
         }
         criteria.where(predicates);
         EntityManager em = session.getEntityManagerFactory().createEntityManager();
-        List<T> tmpList = em.createQuery(criteria).setMaxResults(Math.max(0, max) + 1).getResultList();
+        List<T> tmpList = em.createQuery(criteria).setMaxResults(Math.max(0, max)).getResultList();
         List<T> result = new ArrayList<>();
         for (T tmp : tmpList)
             result.add((T) tmp.clone());
         em.close();
         session.close();
         return result;
-    }
-
-    protected List<T> search(String[] expressions, int max, int[] exceptIds, WebServiceContext wsCtx) {
-        if (!Login.checkSession(wsCtx))
-            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-        return search(expressions, max, exceptIds);
     }
 
     protected Expression<Integer> getIdExpression(Root<T> root) {

@@ -4,7 +4,6 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 
-import de.odinoxin.aidware.aidcloud.plugins.TrackedChangeProvider;
 import de.odinoxin.aidware.aidcloud.plugins.address.AddressProvider;
 import de.odinoxin.aidware.aidcloud.plugins.contact.information.ContactInformationProvider;
 import de.odinoxin.aidware.aidcloud.plugins.contact.type.ContactTypeProvider;
@@ -17,7 +16,6 @@ import de.odinoxin.aidware.aidcloud.plugins.rota.RotaProvider;
 import de.odinoxin.aidware.aidcloud.plugins.rota.TimestampInterpretationProvider;
 import de.odinoxin.aidware.aidcloud.plugins.rota.category.RotaCategoryProvider;
 import de.odinoxin.aidware.aidcloud.plugins.rota.shift.RotaShiftProvider;
-import de.odinoxin.aidware.aidcloud.translation.Translator;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -27,7 +25,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.hibernate.cfg.Configuration;
 
-import javax.xml.ws.Endpoint;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -42,6 +39,26 @@ public class AidCloud extends Application {
     private static final int PORT = 15123;
 
     private static final String[] knownArgs = {"AidCloudURL", "AidCloudPort", "DBType", "DBURL", "DBPort", "DBName", "DBUser", "DBPwd", "StartDirect"};
+
+    /**
+     * The set of providers
+     * <p>
+     * Register new providers here!
+     */
+    private static final Class<?>[] PROVIDERS = {
+            AddressProvider.class,
+            ContactInformationProvider.class,
+            ContactTypeProvider.class,
+            CountryProvider.class,
+            LanguageProvider.class,
+            NutritionTypeProvider.class,
+            PersonalSettingProvider.class,
+            PersonProvider.class,
+            RotaCategoryProvider.class,
+            RotaShiftProvider.class,
+            RotaProvider.class,
+            TimestampInterpretationProvider.class,
+    };
 
     TextField txfAidCloudURL;
     TextField txfAidCloudPort;
@@ -188,30 +205,11 @@ public class AidCloud extends Application {
                 if (port == null || port.isEmpty())
                     port = String.valueOf(AidCloud.PORT);
                 String adr = String.format(AidCloud.ADDRESS, url, port);
-
                 final ResourceConfig resourceConfig = new ResourceConfig();
-                resourceConfig.register(Hello.class);
+                for (Class<?> clazz : PROVIDERS) {
+                    resourceConfig.register(clazz);
+                }
                 final HttpServer httpServer = GrizzlyHttpServerFactory.createHttpServer(URI.create(adr), resourceConfig);
-
-//                Endpoint.publish(adr + "Login", new Login());
-//
-//                Endpoint.publish(adr + "Translator", Translator.get());
-//                Endpoint.publish(adr + "TrackedChangeProvider", new TrackedChangeProvider());
-//
-//                Endpoint.publish(adr + "PersonProvider", new PersonProvider());
-//                Endpoint.publish(adr + "PersonalSettingProvider", new PersonalSettingProvider());
-//                Endpoint.publish(adr + "AddressProvider", new AddressProvider());
-//                Endpoint.publish(adr + "CountryProvider", new CountryProvider());
-//                Endpoint.publish(adr + "LanguageProvider", new LanguageProvider());
-//                Endpoint.publish(adr + "NutritionTypeProvider", new NutritionTypeProvider());
-//                Endpoint.publish(adr + "ContactTypeProvider", new ContactTypeProvider());
-//                Endpoint.publish(adr + "ContactInformationProvider", new ContactInformationProvider());
-//
-//                Endpoint.publish(adr + "TimestampInterpretationProvider", new TimestampInterpretationProvider());
-//                Endpoint.publish(adr + "RotaProvider", new RotaProvider());
-//                Endpoint.publish(adr + "RotaShiftProvider", new RotaShiftProvider());
-//                Endpoint.publish(adr + "RotaCategoryProvider", new RotaCategoryProvider());
-
                 Platform.runLater(() -> {
                     Button btnExit = new Button("Exit");
                     btnExit.setDefaultButton(true);

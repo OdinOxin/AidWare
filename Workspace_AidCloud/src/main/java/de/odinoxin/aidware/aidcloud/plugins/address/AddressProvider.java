@@ -1,47 +1,19 @@
 package de.odinoxin.aidware.aidcloud.plugins.address;
 
-import de.odinoxin.aidware.aidcloud.ConcurrentFault;
 import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
 
-import javax.annotation.Resource;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
-import javax.xml.ws.WebServiceContext;
+import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebService
+@Path("Address")
 public class AddressProvider extends RecordHandler<Address> {
-
-    @Resource
-    private WebServiceContext wsCtx;
-
-    @WebMethod
-    public Address getAddress(@WebParam(name = "id") int id) {
-        return super.get(id, this.wsCtx);
-    }
-
-    @WebMethod
-    public Address saveAddress(@WebParam(name = "entity") Address entity, @WebParam(name = "original") Address original) throws ConcurrentFault {
-        return this.getAddress(super.save(entity, original, this.wsCtx));
-    }
-
-    @WebMethod
-    public boolean deleteAddress(@WebParam(name = "id") int id) {
-        return super.delete(id, this.wsCtx);
-    }
-
-    @WebMethod
-    public List<Address> searchAddress(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max, @WebParam(name = "exceptIds") int[] exceptIds) {
-        return super.search(expr, max, exceptIds, this.wsCtx);
-    }
 
     @Override
     protected Expression<Integer> getIdExpression(Root<Address> root) {

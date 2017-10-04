@@ -1,47 +1,19 @@
 package de.odinoxin.aidware.aidcloud.plugins.contact.information;
 
-import de.odinoxin.aidware.aidcloud.ConcurrentFault;
 import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.contact.type.ContactType;
 import de.odinoxin.aidware.aidcloud.plugins.contact.type.ContactType_;
 
-import javax.annotation.Resource;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
-import javax.xml.ws.WebServiceContext;
+import javax.ws.rs.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebService
+@Path("ContactInformation")
 public class ContactInformationProvider extends RecordHandler<ContactInformation> {
-
-    @Resource
-    WebServiceContext wsCtx;
-
-    @WebMethod
-    public ContactInformation getContactInformation(@WebParam(name = "id") int id) {
-        return super.get(id, this.wsCtx);
-    }
-
-    @WebMethod
-    public ContactInformation saveContactInformation(@WebParam(name = "entity") ContactInformation entity, @WebParam(name = "original") ContactInformation original) throws ConcurrentFault {
-        return this.getContactInformation(super.save(entity, original, this.wsCtx));
-    }
-
-    @WebMethod
-    public boolean deleteContactInformation(@WebParam(name = "id") int id) {
-        return super.delete(id, this.wsCtx);
-    }
-
-    @WebMethod
-    public List<ContactInformation> searchContactInformation(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max, @WebParam(name = "exceptIds") int[] exceptIds) {
-        return super.search(expr, max, exceptIds, this.wsCtx);
-    }
 
     @Override
     protected Expression<Integer> getIdExpression(Root<ContactInformation> root) {
