@@ -17,6 +17,7 @@
         <mapping class="de.odinoxin.aidcloud.plugins.language.Language"/>
         <mapping class="de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType"/>
         <mapping class="de.odinoxin.aidcloud.plugins.person.Person"/>
+        <mapping class="de.odinoxin.aidcloud.plugins.person.personalsetting.PersonalSetting"/>
 
         <mapping class="de.odinoxin.aidcloud.plugins.rota.Rota"/>
         <mapping class="de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation"/>

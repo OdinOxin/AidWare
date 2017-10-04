@@ -181,14 +181,18 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @return The saved record.
      */
-    protected abstract T onSave() throws ConcurrentFault_Exception;
+    protected T onSave() throws ConcurrentFault_Exception {
+        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
+    }
 
     /**
      * Called, when the current record should be deleted.
      *
      * @return Success indicator
      */
-    protected abstract boolean onDelete();
+    protected boolean onDelete() {
+        return this.getProvider().delete(this.getRecord().getId());
+    }
 
     /**
      * Sets, whether saving is enabled.

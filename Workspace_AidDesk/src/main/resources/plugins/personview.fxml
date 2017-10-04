@@ -4,6 +4,7 @@
 <?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aiddesk.controls.reflist.RefList?>
 <?import de.odinoxin.aiddesk.controls.translateable.*?>
+<?import de.odinoxin.aiddesk.plugins.people.personalsetting.PersonalSettingView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -36,15 +37,6 @@
             <ColumnConstraints hgrow="NEVER"/>
             <ColumnConstraints hgrow="ALWAYS"/>
         </columnConstraints>
-
-        <rowConstraints>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-            <RowConstraints vgrow="NEVER"/>
-        </rowConstraints>
 
         <Header text="Person"
                 GridPane.rowIndex="0"
@@ -126,6 +118,14 @@
                     showNewButton="true"
                     maxWidth="400"/>
         </MergeablePane>
+
+        <Header text="PersonalSetting"
+                GridPane.rowIndex="7"
+                GridPane.columnSpan="2"/>
+
+        <PersonalSettingView id="icdPersonalSetting"
+                             GridPane.rowIndex="8"
+                             GridPane.columnSpan="2"/>
     </GridPane>
 
     <Separator orientation="VERTICAL"

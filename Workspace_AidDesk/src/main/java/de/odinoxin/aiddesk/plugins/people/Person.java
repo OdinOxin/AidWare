@@ -5,8 +5,9 @@ import de.odinoxin.aidcloud.service.PersonEntity;
 import de.odinoxin.aiddesk.plugins.RecordItem;
 import de.odinoxin.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
-import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionType;
 import de.odinoxin.aiddesk.plugins.languages.Language;
+import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionType;
+import de.odinoxin.aiddesk.plugins.people.personalsetting.PersonalSetting;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -25,6 +26,7 @@ public class Person extends RecordItem<PersonEntity> {
     private ObjectProperty<NutritionType> nutritionType = new SimpleObjectProperty<>(null, "NutritionType");
     private ObjectProperty<Address> address = new SimpleObjectProperty<>(null, "Address");
     private ListProperty<ContactInformation> contactInformation = new SimpleListProperty<>(null, "ContactInformation", FXCollections.observableArrayList());
+    private ObjectProperty<PersonalSetting> personalSetting = new SimpleObjectProperty<>(null, "PersonalSetting");
 
     public Person() {
         super();
@@ -36,6 +38,7 @@ public class Person extends RecordItem<PersonEntity> {
         this.nutritionType.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.address.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.contactInformation.addListener((ListChangeListener.Change<? extends ContactInformation> c) -> setChanged(true));
+        this.personalSetting.addListener((observable, oldValue, newValue) -> setChanged(true));
         this.setChanged(false);
     }
 
@@ -45,7 +48,7 @@ public class Person extends RecordItem<PersonEntity> {
         this.setChanged(false);
     }
 
-    public Person(int id, String name, String forename, String code, Language language, NutritionType nutritionType, Address address, List<ContactInformation> contactInformation) {
+    public Person(int id, String name, String forename, String code, Language language, NutritionType nutritionType, Address address, List<ContactInformation> contactInformation, PersonalSetting personalSetting) {
         this(id);
         this.setName(name);
         this.setForename(forename);
@@ -54,11 +57,12 @@ public class Person extends RecordItem<PersonEntity> {
         this.setNutritionType(nutritionType);
         this.setAddress(address);
         this.setContactInformation(contactInformation);
+        this.setPersonalSetting(personalSetting);
         this.setChanged(false);
     }
 
     public Person(PersonEntity entity) {
-        this(entity.getId(), entity.getName(), entity.getForename(), entity.getCode(), entity.getLanguage() == null ? null : new Language(entity.getLanguage()), entity.getNutritionType() == null ? null : new NutritionType(entity.getNutritionType()), entity.getAddress() == null ? null : new Address(entity.getAddress()), null);
+        this(entity.getId(), entity.getName(), entity.getForename(), entity.getCode(), entity.getLanguage() == null ? null : new Language(entity.getLanguage()), entity.getNutritionType() == null ? null : new NutritionType(entity.getNutritionType()), entity.getAddress() == null ? null : new Address(entity.getAddress()), null, entity.getPersonalSetting() == null ? null : new PersonalSetting(entity.getPersonalSetting()));
         if (entity.getContactInformation() != null) {
             List<ContactInformation> list = new ArrayList<>();
             for (ContactInformationEntity contactInformationEntity : entity.getContactInformation())
@@ -70,7 +74,7 @@ public class Person extends RecordItem<PersonEntity> {
 
     @Override
     protected Object clone() {
-        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getNutritionType(), this.getAddress(), this.getContactInformation());
+        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getNutritionType(), this.getAddress(), this.getContactInformation(), this.getPersonalSetting());
     }
 
     public String getName() {
@@ -174,6 +178,18 @@ public class Person extends RecordItem<PersonEntity> {
         return contactInformation;
     }
 
+    public PersonalSetting getPersonalSetting() {
+        return personalSetting.get();
+    }
+
+    public void setPersonalSetting(PersonalSetting personalSetting) {
+        this.personalSetting.set(personalSetting);
+    }
+
+    public ObjectProperty<PersonalSetting> personalSettingProperty() {
+        return personalSetting;
+    }
+
     public PersonEntity toEntity() {
         PersonEntity entity = new PersonEntity();
         entity.setId(this.getId());
@@ -186,6 +202,7 @@ public class Person extends RecordItem<PersonEntity> {
         for (ContactInformation item : this.getContactInformation())
             if (item != null)
                 entity.getContactInformation().add(item.toEntity());
+        entity.setPersonalSetting(this.getPersonalSetting().toEntity());
         return entity;
     }
 
@@ -200,6 +217,7 @@ public class Person extends RecordItem<PersonEntity> {
         properties.put(this.nutritionType.getName(), this.nutritionType);
         properties.put(this.address.getName(), this.address);
         properties.put(this.contactInformation.getName(), this.contactInformation);
+        properties.put(this.personalSetting.getName(), this.personalSetting);
         return properties;
     }
 }

@@ -16,6 +16,7 @@ import de.odinoxin.aiddesk.plugins.countries.CountryEditor;
 import de.odinoxin.aiddesk.plugins.languages.LanguageEditor;
 import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionTypeEditor;
 import de.odinoxin.aiddesk.plugins.people.PersonEditor;
+import de.odinoxin.aiddesk.plugins.people.personalsetting.PersonalSettingEditor;
 import de.odinoxin.aiddesk.plugins.rota.RotaEditor;
 import de.odinoxin.aiddesk.plugins.rota.category.RotaCategoryEditor;
 import de.odinoxin.aiddesk.plugins.rota.shift.RotaShiftEditor;
@@ -89,6 +90,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
     private void setupMenu() {
         pluginItems = new PluginItem[]{
                 new PluginItem("PersonEditor", PersonEditor.class, PluginItem.MASTERDATA),
+                new PluginItem("PersonalSettingEditor", PersonalSettingEditor.class, PluginItem.MASTERDATA),
                 new PluginItem("AddressEditor", AddressEditor.class, PluginItem.MASTERDATA),
                 new PluginItem("CountryEditor", CountryEditor.class, PluginItem.MASTERDATA),
                 new PluginItem("LanguageEditor", LanguageEditor.class, PluginItem.MASTERDATA),

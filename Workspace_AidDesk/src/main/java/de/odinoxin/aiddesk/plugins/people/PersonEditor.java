@@ -26,12 +26,7 @@ public class PersonEditor extends RecordEditor<Person> {
         if (this.currentPwdw != null && this.getRecord().getPwd() != null)
             if (!PersonProvider.changePwd(this.getRecord().getId(), this.currentPwdw, this.getRecord().getPwd()))
                 new MsgDialog(this, Alert.AlertType.ERROR, "Fehlgeschlagen!", "Passwort konnte nicht geändert werden.").showAndWait();
-        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
-    }
-
-    @Override
-    protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecord().getId());
+        return super.onSave();
     }
 
     @Override

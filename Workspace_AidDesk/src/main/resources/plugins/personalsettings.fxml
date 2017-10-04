@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import de.odinoxin.aiddesk.controls.translateable.Label?>
+<?import de.odinoxin.aiddesk.controls.MergeablePane?>
+<?import javafx.scene.control.TextField?>
+<GridPane xmlns="http://javafx.com/javafx/8"
+          vgap="5"
+          hgap="5">
+
+    <padding>
+        <Insets left="5" top="5" right="5" bottom="5"/>
+    </padding>
+
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER"/>
+        <ColumnConstraints hgrow="ALWAYS"/>
+    </columnConstraints>
+
+    <Label id="lblBgColor"
+           text="BgColor"
+           minWidth="125"
+           maxWidth="125"
+           GridPane.rowIndex="0"
+           GridPane.columnIndex="0"/>
+    <MergeablePane GridPane.rowIndex="0"
+                   GridPane.columnIndex="1">
+        <TextField id="txfBgColor"
+                   maxWidth="400"/>
+    </MergeablePane>
+
+    <Label id="lblBgColorPlugin"
+           text="BgColorPlugin"
+           minWidth="125"
+           maxWidth="125"
+           GridPane.rowIndex="1"
+           GridPane.columnIndex="0"/>
+    <MergeablePane GridPane.rowIndex="1"
+                   GridPane.columnIndex="1">
+        <TextField id="txfBgColorPlugin"
+                   maxWidth="400"/>
+    </MergeablePane>
+
+</GridPane>

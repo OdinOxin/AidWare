@@ -19,6 +19,7 @@ wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://
 wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/TrackedChangeProvider?wsdl
 wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/NutritionTypeProvider?wsdl
 wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/PersonProvider?wsdl
+wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/PersonalSettingProvider?wsdl
 wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/AddressProvider?wsdl
 wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/CountryProvider?wsdl
 wsimport -s %SrcMainJavaDir% -p de.odinoxin.aidcloud.service -Xnocompile http://%HOSTNAME%:15123/AidCloud/ContactTypeProvider?wsdl

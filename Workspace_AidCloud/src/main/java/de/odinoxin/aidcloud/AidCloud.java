@@ -8,6 +8,7 @@ import de.odinoxin.aidcloud.plugins.country.CountryProvider;
 import de.odinoxin.aidcloud.plugins.language.LanguageProvider;
 import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionTypeProvider;
 import de.odinoxin.aidcloud.plugins.person.PersonProvider;
+import de.odinoxin.aidcloud.plugins.person.personalsetting.PersonalSettingProvider;
 import de.odinoxin.aidcloud.plugins.rota.RotaProvider;
 import de.odinoxin.aidcloud.plugins.rota.TimestampInterpretationProvider;
 import de.odinoxin.aidcloud.plugins.rota.category.RotaCategoryProvider;
@@ -188,6 +189,7 @@ public class AidCloud extends Application {
                 Endpoint.publish(adr + "TrackedChangeProvider", new TrackedChangeProvider());
 
                 Endpoint.publish(adr + "PersonProvider", new PersonProvider());
+                Endpoint.publish(adr + "PersonalSettingProvider", new PersonalSettingProvider());
                 Endpoint.publish(adr + "AddressProvider", new AddressProvider());
                 Endpoint.publish(adr + "CountryProvider", new CountryProvider());
                 Endpoint.publish(adr + "LanguageProvider", new LanguageProvider());

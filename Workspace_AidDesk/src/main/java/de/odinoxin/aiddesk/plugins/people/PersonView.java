@@ -2,8 +2,8 @@ package de.odinoxin.aiddesk.plugins.people;
 
 import de.odinoxin.aidcloud.provider.AddressProvider;
 import de.odinoxin.aidcloud.provider.ContactInformationProvider;
-import de.odinoxin.aidcloud.provider.NutritionTypeProvider;
 import de.odinoxin.aidcloud.provider.LanguageProvider;
+import de.odinoxin.aidcloud.provider.NutritionTypeProvider;
 import de.odinoxin.aiddesk.controls.MergeablePane;
 import de.odinoxin.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aiddesk.controls.reflist.RefList;
@@ -12,8 +12,9 @@ import de.odinoxin.aiddesk.plugins.Plugin;
 import de.odinoxin.aiddesk.plugins.RecordView;
 import de.odinoxin.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aiddesk.plugins.contact.information.ContactInformation;
-import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionType;
 import de.odinoxin.aiddesk.plugins.languages.Language;
+import de.odinoxin.aiddesk.plugins.nutritiontype.NutritionType;
+import de.odinoxin.aiddesk.plugins.people.personalsetting.PersonalSettingView;
 import javafx.scene.control.TextField;
 
 public class PersonView extends RecordView<Person> {
@@ -26,6 +27,7 @@ public class PersonView extends RecordView<Person> {
     private RefBox<NutritionType> refBoxNutritionType;
     private RefBox<Address> refBoxAddress;
     private RefList<ContactInformation> refListContactInformation;
+    private PersonalSettingView icdPersonalSetting;
 
     PersonView(PersonEditor editor) {
         this(null, editor);
@@ -51,6 +53,7 @@ public class PersonView extends RecordView<Person> {
         this.refBoxAddress.setProvider(new AddressProvider());
         this.refListContactInformation = (RefList<ContactInformation>) this.root.lookup("#refListContactInformation");
         this.refListContactInformation.setProvider(new ContactInformationProvider());
+        this.icdPersonalSetting = (PersonalSettingView) this.root.lookup("#icdPersonalSetting");
         this.bind(person);
     }
 
@@ -67,6 +70,7 @@ public class PersonView extends RecordView<Person> {
         this.refBoxNutritionType.recordProperty().bindBidirectional(record.nutritionTypeProperty());
         this.refBoxAddress.recordProperty().bindBidirectional(record.addressProperty());
         this.refListContactInformation.bindBidirectional(record.contactInformationProperty());
+        this.icdPersonalSetting.bind(record.getPersonalSetting());
     }
 
     @Override

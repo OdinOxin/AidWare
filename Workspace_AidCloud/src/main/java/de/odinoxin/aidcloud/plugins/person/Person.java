@@ -5,8 +5,9 @@ import de.odinoxin.aidcloud.plugins.Recordable;
 import de.odinoxin.aidcloud.plugins.RecordableComparer;
 import de.odinoxin.aidcloud.plugins.address.Address;
 import de.odinoxin.aidcloud.plugins.contact.information.ContactInformation;
-import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType;
 import de.odinoxin.aidcloud.plugins.language.Language;
+import de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType;
+import de.odinoxin.aidcloud.plugins.person.personalsetting.PersonalSetting;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.FetchProfile;
@@ -73,6 +74,11 @@ public class Person implements Recordable {
     @EntityProperty
     private NutritionType nutritionType;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @XmlElement(name = "personalSetting")
+    @EntityProperty
+    private PersonalSetting personalSetting;
+
     public Person() {
 
     }
@@ -82,7 +88,7 @@ public class Person implements Recordable {
         this.id = id;
     }
 
-    public Person(int id, String name, String forename, String code, Language language, Address address, List<ContactInformation> contactInformation, NutritionType nutritionType) {
+    public Person(int id, String name, String forename, String code, Language language, Address address, List<ContactInformation> contactInformation, NutritionType nutritionType, PersonalSetting personalSetting) {
         this(id);
         this.name = name;
         this.forename = forename;
@@ -91,11 +97,12 @@ public class Person implements Recordable {
         this.address = address;
         this.contactInformation = contactInformation;
         this.nutritionType = nutritionType;
+        this.personalSetting = personalSetting;
     }
 
     @Override
     public Object clone() {
-        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getAddress(), this.getContactInformation(), this.getNutritionType());
+        return new Person(this.getId(), this.getName(), this.getForename(), this.getCode(), this.getLanguage(), this.getAddress(), this.getContactInformation(), this.getNutritionType(), this.getPersonalSetting());
     }
 
     @Override
@@ -112,7 +119,8 @@ public class Person implements Recordable {
                 && RecordableComparer.Equals(this.getLanguage(), other.getLanguage())
                 && RecordableComparer.Equals(this.getAddress(), other.getAddress())
                 && RecordableComparer.Equals(this.getNutritionType(), other.getNutritionType())
-                && RecordableComparer.Equals(this.getContactInformation(), other.getContactInformation());
+                && RecordableComparer.Equals(this.getContactInformation(), other.getContactInformation())
+                && RecordableComparer.Equals(this.getPersonalSetting(), other.getPersonalSetting());
     }
 
     @Override
@@ -195,5 +203,13 @@ public class Person implements Recordable {
 
     public void setNutritionType(NutritionType nutritionType) {
         this.nutritionType = nutritionType;
+    }
+
+    public PersonalSetting getPersonalSetting() {
+        return personalSetting;
+    }
+
+    public void setPersonalSetting(PersonalSetting personalSetting) {
+        this.personalSetting = personalSetting;
     }
 }
