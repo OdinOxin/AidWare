@@ -1,0 +1,22 @@
+package de.odinoxin.aidware.aidcloud.provider;
+
+import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
+import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
+import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
+import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
+
+import java.util.List;
+
+public interface Provider<T extends RecordItem<?>> {
+    public abstract T get(int id);
+
+    public abstract T save(T item, T original) throws ConcurrentFault_Exception;
+
+    public abstract boolean delete(int id);
+
+    public abstract RefBoxListItem<T> getRefBoxItem(T item);
+
+    public abstract List<RefBoxListItem<T>> search(List<String> expr, int max, List<Integer> exceptedIds);
+
+    public abstract RecordEditor<T> openEditor(T entity);
+}

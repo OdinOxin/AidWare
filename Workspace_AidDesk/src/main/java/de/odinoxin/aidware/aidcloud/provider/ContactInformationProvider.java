@@ -1,0 +1,92 @@
+package de.odinoxin.aidware.aidcloud.provider;
+
+import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
+import de.odinoxin.aidware.aidcloud.service.ContactInformationEntity;
+import de.odinoxin.aidware.aidcloud.service.ContactInformationProviderService;
+import de.odinoxin.aidware.aiddesk.Login;
+import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
+import de.odinoxin.aidware.aiddesk.plugins.contact.information.ContactInformation;
+import de.odinoxin.aidware.aiddesk.plugins.contact.information.ContactInformationEditor;
+import de.odinoxin.aidware.aiddesk.plugins.contact.types.ContactType;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ContactInformationProvider implements Provider<ContactInformation> {
+    private static de.odinoxin.aidware.aidcloud.service.ContactInformationProvider svc;
+
+    private static de.odinoxin.aidware.aidcloud.service.ContactInformationProvider getSvc() {
+        if (svc == null) {
+            if (Login.getServerUrl() == null)
+                return null;
+            try {
+                svc = new ContactInformationProviderService(new URL(Login.getServerUrl() + "/ContactInformationProvider?wsdl")).getContactInformationProviderPort();
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if (svc != null)
+            Requester.setRequestHeaders(svc);
+        return svc;
+    }
+
+    @Override
+    public ContactInformation get(int id) {
+        if (ContactInformationProvider.getSvc() != null) {
+            ContactInformationEntity entity = ContactInformationProvider.getSvc().getContactInformation(id);
+            if (entity != null)
+                return new ContactInformation(entity);
+        }
+        return null;
+    }
+
+    @Override
+    public ContactInformation save(ContactInformation item, ContactInformation original) throws ConcurrentFault_Exception {
+        if (ContactInformationProvider.getSvc() != null) {
+            ContactInformationEntity entity = ContactInformationProvider.getSvc().saveContactInformation(item.toEntity(), original.toEntity());
+            if (entity != null)
+                return new ContactInformation(entity);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        if (ContactInformationProvider.getSvc() != null)
+            return ContactInformationProvider.getSvc().deleteContactInformation(id);
+        return false;
+    }
+
+    @Override
+    public RefBoxListItem<ContactInformation> getRefBoxItem(ContactInformation item) {
+        if (item == null)
+            return null;
+        ContactType type = item.getContactType();
+        String format = type == null || item.getInformation() == null ? "%s%s" : "%s: %s";
+
+        return new RefBoxListItem<>(item,
+                String.format(format, type == null ? "" : type.getCode() == null ? "" : type.getCode(), item.getInformation() == null ? "" : item.getInformation()),
+                (type == null ? "" : type.getName() == null ? "" : type.getName()));
+    }
+
+    @Override
+    public List<RefBoxListItem<ContactInformation>> search(List<String> expr, int max, List<Integer> exceptedIds) {
+        if (ContactInformationProvider.getSvc() != null) {
+            List<ContactInformationEntity> entities = ContactInformationProvider.getSvc().searchContactInformation(expr, max, exceptedIds);
+            List<RefBoxListItem<ContactInformation>> result = new ArrayList<>();
+            if (entities != null)
+                for (ContactInformationEntity entity : entities)
+                    if (entity != null)
+                        result.add(getRefBoxItem(new ContactInformation(entity)));
+            return result;
+        }
+        return null;
+    }
+
+    @Override
+    public ContactInformationEditor openEditor(ContactInformation entity) {
+        return new ContactInformationEditor(entity);
+    }
+}

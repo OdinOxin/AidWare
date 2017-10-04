@@ -3,8 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<?import de.odinoxin.aiddesk.controls.translateable.Label?>
-<?import de.odinoxin.aiddesk.controls.MergeablePane?>
+<?import de.odinoxin.aidware.aiddesk.controls.translateable.Label?>
+<?import de.odinoxin.aidware.aiddesk.controls.MergeablePane?>
 <?import javafx.scene.control.TextField?>
 <GridPane xmlns="http://javafx.com/javafx/8"
           vgap="5"

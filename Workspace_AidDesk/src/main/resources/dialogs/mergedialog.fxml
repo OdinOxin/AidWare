@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.odinoxin.aiddesk.controls.translateable.Header?>
-<?import de.odinoxin.aiddesk.controls.translateable.Button?>
+<?import de.odinoxin.aidware.aiddesk.controls.translateable.Header?>
+<?import de.odinoxin.aidware.aiddesk.controls.translateable.Button?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

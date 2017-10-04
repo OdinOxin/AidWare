@@ -7,22 +7,22 @@
         <property name="hbm2ddl.auto">update</property>
 
         <!-- entity classes -->
-        <mapping class="de.odinoxin.aidcloud.plugins.TrackedChange"/>
-        <mapping class="de.odinoxin.aidcloud.translation.Translation"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.TrackedChange"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.translation.Translation"/>
 
-        <mapping class="de.odinoxin.aidcloud.plugins.address.Address"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.contact.information.ContactInformation"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.contact.type.ContactType"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.country.Country"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.language.Language"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.nutritiontype.NutritionType"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.person.Person"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.person.personalsetting.PersonalSetting"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.address.Address"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.contact.information.ContactInformation"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.contact.type.ContactType"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.country.Country"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.language.Language"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.nutritiontype.NutritionType"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.person.Person"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.person.personalsetting.PersonalSetting"/>
 
-        <mapping class="de.odinoxin.aidcloud.plugins.rota.Rota"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.rota.TimestampInterpretation"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.rota.shift.RotaShift"/>
-        <mapping class="de.odinoxin.aidcloud.plugins.rota.category.RotaCategory"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.rota.Rota"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.rota.TimestampInterpretation"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.rota.shift.RotaShift"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.rota.category.RotaCategory"/>
 
     </session-factory>
 </hibernate-configuration>

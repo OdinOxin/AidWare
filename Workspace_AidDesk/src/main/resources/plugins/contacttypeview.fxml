@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.odinoxin.aiddesk.controls.MergeablePane?>
-<?import de.odinoxin.aiddesk.controls.translateable.Label?>
+<?import de.odinoxin.aidware.aiddesk.controls.MergeablePane?>
+<?import de.odinoxin.aidware.aiddesk.controls.translateable.Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>

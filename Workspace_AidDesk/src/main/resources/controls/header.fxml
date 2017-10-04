@@ -2,7 +2,7 @@
 
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Separator?>
-<?import de.odinoxin.aiddesk.controls.translateable.Label?>
+<?import de.odinoxin.aidware.aiddesk.controls.translateable.Label?>
 
 <?import javafx.geometry.Insets?>
 <fx:root type="javafx.scene.layout.HBox"

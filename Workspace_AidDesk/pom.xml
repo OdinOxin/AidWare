@@ -35,7 +35,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>de.odinoxin.aiddesk.AidDesk</mainClass>
+                            <mainClass>de.odinoxin.aidware.aiddesk.AidDesk</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.odinoxin.aiddesk.controls.*?>
-<?import de.odinoxin.aiddesk.controls.refbox.RefBox?>
+<?import de.odinoxin.aidware.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aiddesk.controls.translateable.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TextField?>
