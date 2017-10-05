@@ -1,7 +1,5 @@
 package de.odinoxin.aidware.aidcloud.plugins;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -73,7 +71,7 @@ public class TrackedChange implements Recordable {
 
     @Override
     public Object clone() {
-        throw new NotImplementedException();
+        return new TrackedChange(this.getId(), this.getEntityName(), this.getEntityId(), this.getPropertyName(), this.getTimestamp(), this.getUserId(), this.getValueBefore(), this.getValueAfter());
     }
 
     @Override

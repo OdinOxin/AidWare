@@ -7,6 +7,7 @@ import de.odinoxin.aidware.aidcloud.plugins.address.Address;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address_;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
+import de.odinoxin.aidware.aidcloud.structures.Tuple;
 import org.hibernate.Session;
 
 import javax.persistence.Query;
@@ -31,14 +32,15 @@ public class PersonProvider extends RecordHandler<Person> {
         return p;
     }
 
-    //    @POST
-//    @PUT
+    @PUT
     @Override
-    public Person save(Person entity, Person original) throws ConcurrentFault {
-        Person current = this.get(entity.getId());
+    public Person update(Tuple<Person, Person> set) throws ConcurrentFault {
+        if (set == null || set.x == null)
+            throw new IllegalArgumentException("Entity cannot be null!");
+        Person current = super.get(set.x.getId()); // Get WITH pwd
         if (current != null)
-            entity.setPwd(current.getPwd());
-        Person p = super.save(entity, original);
+            set.x.setPwd(current.getPwd());
+        Person p = super.update(set);
         if (p != null)
             p.setPwd(null);
         return p;

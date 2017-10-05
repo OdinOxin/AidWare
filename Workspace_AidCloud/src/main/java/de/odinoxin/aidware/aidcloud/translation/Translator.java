@@ -13,33 +13,30 @@ import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebService
+@Path("Translation")
 public class Translator extends RecordHandler<Translation> {
 
-    private static Translator instance;
+    private static boolean defaultsGenerated = false;
 
     public Translator() {
-        if (Translator.instance == null)
-            this.generateDefaults();
+        Translator.defaultsGenerated = true;
     }
 
-    public static Translator get() {
-        if (instance == null)
-            instance = new Translator();
-        return instance;
-    }
-
-    @WebMethod
-    public String getTranslation(@WebParam(name = "text") String text, @WebParam(name = "lng") Language lng) {
+    @GET
+    @Path("{lng}/{text}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getTranslation(@PathParam("text") String text, @PathParam("lng") int lng) {
         if (text == null)
             return null;
-        if (lng == null)
+        if (lng <= 0)
             return text;
         Session session = DB.open();
-        Query q = session.createQuery("FROM Translation WHERE lng = :lng AND sys LIKE :text");
+        Query q = session.createQuery("FROM Translation WHERE lng_id = :lng AND sys LIKE :text");
         q.setParameter("lng", lng);
         q.setParameter("text", text);
         List<Translation> result = q.getResultList();
@@ -50,6 +47,9 @@ public class Translator extends RecordHandler<Translation> {
 
     @Override
     public void generateDefaults() {
+        if (defaultsGenerated)
+            return;
+
         new LanguageProvider().generateDefaults();
 
         List<Translation> translations = new ArrayList<>();

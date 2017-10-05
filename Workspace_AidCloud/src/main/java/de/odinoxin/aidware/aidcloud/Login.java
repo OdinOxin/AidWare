@@ -4,66 +4,21 @@ import de.odinoxin.aidware.aidcloud.plugins.person.Person;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person_;
 import org.hibernate.Session;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
-@WebService
+@Path("Login")
 public class Login {
-    private static final int SESSION_DURATION = 10000;
-    private static Map<Integer, String> sessions = new Hashtable<>();
 
-    public static int getUserIdFromContext(WebServiceContext wsCtx) {
-        MessageContext msgCtx = wsCtx.getMessageContext();
-        Map<String, List<String>> httpHeaders = (Map<String, List<String>>) msgCtx.get(MessageContext.HTTP_REQUEST_HEADERS);
-        List<String> users = httpHeaders.get("Username");
-        int userId = 0;
-        if (users != null && users.size() > 0 && users.get(0).matches("-?\\d+"))
-            userId = Integer.parseInt(users.get(0));
-        return userId;
-    }
-
-    public static boolean checkSession(WebServiceContext wsCtx) {
-        MessageContext msgCtx = wsCtx.getMessageContext();
-        Map<String, List<String>> httpHeaders = (Map<String, List<String>>) msgCtx.get(MessageContext.HTTP_REQUEST_HEADERS);
-        List<String> pwds = httpHeaders.get("Password");
-        int userId = getUserIdFromContext(wsCtx);
-        String pwd = "";
-        if (pwds != null && pwds.size() > 0)
-            pwd = pwds.get(0);
-        return Login.sessions.containsKey(userId) && Login.sessions.get(userId).equals(pwd);
-    }
-
-    @WebMethod
-    public String getSession(@WebParam(name = "id") int id, @WebParam(name = "pwd") String pwd) {
-        if (this.checkLogin(id, pwd)) {
-            Login.sessions.put(id, pwd);
-//            Login.sessions.put(id, UUID.randomUUID().toString());
-//            new Thread(() -> {
-//                try {
-//                    Thread.sleep(SESSION_DURATION);
-//                } catch (InterruptedException ex) {
-//                    ex.printStackTrace();
-//                }
-//                Login.sessions.remove(id);
-//            }).start();
-            return "OK"; //Login.sessions.get(id);
-        }
-        return null;
-    }
-
-    @WebMethod
-    public boolean checkLogin(@WebParam(name = "id") int id, @WebParam(name = "pwd") String pwd) {
+    @GET
+    @Path("{id}")
+    public boolean checkLogin(@PathParam("id") int id, @QueryParam("pwd") String pwd) {
         boolean access = false;
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
@@ -84,22 +39,23 @@ public class Login {
         return access;
     }
 
-    @WebMethod
-    public List<Person> searchLogin(@WebParam(name = "expr") String[] expr, @WebParam(name = "max") int max) {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Person> searchLogin(@QueryParam("expr") List<String> expr, @QueryParam("max") int max) {
         List<Person> result = new ArrayList<>();
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
             CriteriaQuery<Person> criteria = builder.createQuery(Person.class);
             Predicate predicates = builder.conjunction();
             Root<Person> root = criteria.from(Person.class);
-            if (expr != null && expr.length > 0) {
-                for (int i = 0; i < expr.length; i++)
-                    expr[i] = "%" + expr[i].toLowerCase() + "%";
+            if (expr != null && expr.size() > 0) {
+                for (int i = 0; i < expr.size(); i++)
+                    expr.set(i, "%" + expr.get(i).toLowerCase() + "%");
                 predicates = builder.disjunction();
-                for (int i = 0; i < expr.length; i++) {
-                    predicates = builder.or(predicates, builder.like(builder.lower(root.get(Person_.forename)), expr[i]));
-                    predicates = builder.or(predicates, builder.like(builder.lower(root.get(Person_.name)), expr[i]));
-                    predicates = builder.or(predicates, builder.like(builder.lower(root.get(Person_.code)), expr[i]));
+                for (int i = 0; i < expr.size(); i++) {
+                    predicates = builder.or(predicates, builder.like(builder.lower(root.get(Person_.forename)), expr.get(i)));
+                    predicates = builder.or(predicates, builder.like(builder.lower(root.get(Person_.name)), expr.get(i)));
+                    predicates = builder.or(predicates, builder.like(builder.lower(root.get(Person_.code)), expr.get(i)));
                 }
             }
             criteria.where(predicates);

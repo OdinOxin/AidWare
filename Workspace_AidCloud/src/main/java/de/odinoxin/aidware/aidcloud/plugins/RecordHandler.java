@@ -1,6 +1,7 @@
 package de.odinoxin.aidware.aidcloud.plugins;
 
 import de.odinoxin.aidware.aidcloud.*;
+import de.odinoxin.aidware.aidcloud.structures.Tuple;
 import org.hibernate.Session;
 import org.hibernate.annotations.FetchProfile;
 import org.hibernate.annotations.FetchProfiles;
@@ -30,24 +31,26 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
     public T get(@PathParam("id") int id) {
         T entity;
         try (Session session = DB.open()) {
-            this.setFetchMode(session, getParameterizedTypeClass());
-            entity = session.get(getParameterizedTypeClass(), id);
+            this.setFetchMode(session);
+            entity = session.get(getParameterizedType(), id);
         }
         return entity;
     }
 
-    protected int save(T entity, T original, int userId) throws ConcurrentFault {
-        if (entity != null && entity.getId() != 0) {
+    protected final int persist(T entity, T original, int userId) throws ConcurrentFault {
+        if (entity == null)
+            throw new IllegalArgumentException("Entity cannot be null!");
+        if (entity.getId() != 0) {
             if (original == null)
                 throw new IllegalArgumentException("Original entity cannot be null on update!");
             if (entity.getId() != original.getId())
                 throw new IllegalArgumentException("Entity is different from original entity!");
             T current = this.get(original.getId());
+            if (current == null)
+                throw new ConcurrentFault("Entity does not exist (anymore)!");
             if (!original.equals(current))
                 throw new ConcurrentFault("Entity was edited in the meantime!");
         }
-        if (entity == null)
-            throw new IllegalArgumentException("Entity cannot be null!");
         int id = entity.getId();
         boolean isNew = entity.getId() == 0;
         try (Session session = DB.open()) {
@@ -77,7 +80,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
                                 valueBefore = makeString(getter.invoke(original));
                             String valueAfter = makeString(getter.invoke(entity));
                             if (!(valueAfter == null && valueBefore == null) && (valueAfter != null && !valueAfter.equals(valueBefore)))
-                                TrackedChangeProvider.getInstance().save(new TrackedChange(0, getParameterizedTypeClass().getSimpleName(), entity.getId(), f.getName(), new Date(), userId, valueBefore, valueAfter), null);
+                                TrackedChangeProvider.getInstance().generate(new TrackedChange(0, getParameterizedType().getSimpleName(), entity.getId(), f.getName(), new Date(), userId, valueBefore, valueAfter));
                         } catch (Exception ex) {
                             ex.printStackTrace();
                         }
@@ -97,47 +100,46 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
             return obj.toString();
     }
 
-//    @PUT
-//    @POST
-    public T save(T entity, T original) throws ConcurrentFault {
-        return this.get(save(entity, original, 0));
+    @PUT
+    public T update(Tuple<T, T> set) throws ConcurrentFault {
+        return this.get(persist(set.x, set.y, 0));
     }
 
-//    protected int save(T entity, T original, WebServiceContext wsCtx) throws ConcurrentFault {
-//        if (!Login.checkSession(wsCtx))
-//            throw new NotAuthorizedException(AidCloud.INVALID_SESSION);
-//        return save(entity, original, Login.getUserIdFromContext(wsCtx));
-//    }
+    @POST
+    public T insert(T entity) throws ConcurrentFault {
+        return this.get(persist(entity, null, 0));
+    }
 
     protected void generate(T entity) {
         try {
-            save(entity, null);
+            persist(entity, null, 0);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    @PUT
+    @DELETE
     @Path("{id}")
     public boolean delete(@PathParam("id") int id) {
         T entity = this.get(id);
-        try (Session session = DB.open()) {
-            session.beginTransaction();
-            session.delete(entity);
-            session.getTransaction().commit();
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
+        if (entity != null)
+            try (Session session = DB.open()) {
+                session.beginTransaction();
+                session.delete(entity);
+                session.getTransaction().commit();
+            } catch (Exception ex) {
+                return false;
+            }
+        return true;
     }
 
     @GET
     public List<T> search(@QueryParam("expr") List<String> expressions, @DefaultValue("0") @QueryParam("max") int max, @QueryParam("exceptedIds") List<Integer> exceptIds) {
         Session session = DB.open();
         CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
-        CriteriaQuery<T> criteria = builder.createQuery(getParameterizedTypeClass());
+        CriteriaQuery<T> criteria = builder.createQuery(getParameterizedType());
         Predicate predicates = builder.conjunction();
-        Root<T> root = criteria.from(getParameterizedTypeClass());
+        Root<T> root = criteria.from(getParameterizedType());
         Expression<Integer> dbIdExpression = getIdExpression(root);
         if (expressions != null && expressions.size() > 0) {
             Predicate exprPredicates = builder.disjunction();
@@ -177,10 +179,11 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         return null;
     }
 
-    private void setFetchMode(Session session, Class<T> clazz) {
+    private void setFetchMode(Session session) {
+        Class<T> clazz = getParameterizedType();
         if (session == null || clazz == null)
             return;
-        FetchProfiles annotation = (FetchProfiles) clazz.getAnnotation(FetchProfiles.class);
+        FetchProfiles annotation = clazz.getAnnotation(FetchProfiles.class);
         if (annotation != null) {
             for (FetchProfile profile : annotation.value()) {
                 session.enableFetchProfile(profile.name());
@@ -192,12 +195,12 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
             CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
-            criteria.select(builder.count(criteria.from(getParameterizedTypeClass())));
+            criteria.select(builder.count(criteria.from(getParameterizedType())));
             return session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList().get(0);
         }
     }
 
-    private Class<T> getParameterizedTypeClass() {
+    private Class<T> getParameterizedType() {
         return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 }

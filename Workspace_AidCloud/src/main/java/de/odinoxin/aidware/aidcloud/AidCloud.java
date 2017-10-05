@@ -1,5 +1,6 @@
 package de.odinoxin.aidware.aidcloud;
 
+import de.odinoxin.aidware.aidcloud.translation.Translator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -51,6 +52,7 @@ public class AidCloud extends Application {
             ContactTypeProvider.class,
             CountryProvider.class,
             LanguageProvider.class,
+            Login.class,
             NutritionTypeProvider.class,
             PersonalSettingProvider.class,
             PersonProvider.class,
@@ -58,6 +60,7 @@ public class AidCloud extends Application {
             RotaShiftProvider.class,
             RotaProvider.class,
             TimestampInterpretationProvider.class,
+            Translator.class,
     };
 
     TextField txfAidCloudURL;
