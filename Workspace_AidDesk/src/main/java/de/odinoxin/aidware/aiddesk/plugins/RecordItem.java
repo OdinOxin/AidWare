@@ -12,10 +12,8 @@ import java.util.stream.Collectors;
 
 /**
  * Base class for RecordItems.
- *
- * @param <T> Class of the related service entity class.
  */
-public abstract class RecordItem<T> implements Cloneable {
+public abstract class RecordItem implements Cloneable {
 
     /**
      * ID of the RecordItem.
@@ -62,16 +60,9 @@ public abstract class RecordItem<T> implements Cloneable {
         return changed;
     }
 
-    /**
-     * Convertes the RecordItem into the related service entity class.
-     *
-     * @return the converted entity
-     */
-    public abstract T toEntity();
-
     protected abstract Hashtable<String, Property<?>> getProperties();
 
-    public List<String> getDifferentPropertyNames(RecordItem<?> other) {
+    public List<String> getDifferentPropertyNames(RecordItem other) {
         if (other == null || !this.getClass().getName().equals(other.getClass().getName()) || this.getId() != other.getId())
             return new ArrayList<>();
         Hashtable<String, Property<?>> properties = getProperties();
@@ -80,11 +71,11 @@ public abstract class RecordItem<T> implements Cloneable {
         {
             boolean notNull = properties.get(key).getValue() != null && otherProperties.get(key).getValue() != null;
             if (notNull) {
-                if (properties.get(key).getValue() instanceof RecordItem<?>)
-                    return ((RecordItem<?>) properties.get(key).getValue()).getId() != ((RecordItem<?>) otherProperties.get(key).getValue()).getId();
+                if (properties.get(key).getValue() instanceof RecordItem)
+                    return ((RecordItem) properties.get(key).getValue()).getId() != ((RecordItem) otherProperties.get(key).getValue()).getId();
                 else if (properties.get(key).getValue() instanceof List<?>) {
-                    List<? extends RecordItem<?>> thisList = (List<? extends RecordItem<?>>) properties.get(key).getValue();
-                    List<? extends RecordItem<?>> thatList = (List<? extends RecordItem<?>>) otherProperties.get(key).getValue();
+                    List<? extends RecordItem> thisList = (List<? extends RecordItem>) properties.get(key).getValue();
+                    List<? extends RecordItem> thatList = (List<? extends RecordItem>) otherProperties.get(key).getValue();
                     boolean diff = thisList.size() != thatList.size();
                     for (int i = 0; i < thisList.size() && !diff; i++) {
                         if (thisList.get(i).getId() != thatList.get(i).getId())

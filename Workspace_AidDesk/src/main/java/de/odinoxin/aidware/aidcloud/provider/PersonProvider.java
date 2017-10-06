@@ -1,62 +1,10 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
-import de.odinoxin.aidware.aidcloud.service.PersonEntity;
-import de.odinoxin.aidware.aidcloud.service.PersonProviderService;
-import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.people.Person;
 import de.odinoxin.aidware.aiddesk.plugins.people.PersonEditor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-public class PersonProvider implements Provider<Person> {
-    private static de.odinoxin.aidware.aidcloud.service.PersonProvider svc;
-
-    private static de.odinoxin.aidware.aidcloud.service.PersonProvider getSvc() {
-        if (svc == null) {
-            if (Login.getServerUrl() == null)
-                return null;
-            try {
-                svc = new PersonProviderService(new URL(Login.getServerUrl() + "/PersonProvider?wsdl")).getPersonProviderPort();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (svc != null)
-            Requester.setRequestHeaders(svc);
-        return svc;
-    }
-
-    @Override
-    public Person get(int id) {
-        if (PersonProvider.getSvc() != null) {
-            PersonEntity entity = PersonProvider.getSvc().getPerson(id);
-            if (entity != null)
-                return new Person(entity);
-        }
-        return null;
-    }
-
-    @Override
-    public Person save(Person item, Person original) throws ConcurrentFault_Exception {
-        if (PersonProvider.getSvc() != null) {
-            PersonEntity entity = PersonProvider.getSvc().savePerson(item.toEntity(), original.toEntity());
-            if (entity != null)
-                return new Person(entity);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        if (PersonProvider.getSvc() != null)
-            return PersonProvider.getSvc().deletePerson(id);
-        return false;
-    }
+public class PersonProvider extends Provider<Person> {
 
     @Override
     public RefBoxListItem<Person> getRefBoxItem(Person item) {
@@ -75,28 +23,13 @@ public class PersonProvider implements Provider<Person> {
     }
 
     @Override
-    public List<RefBoxListItem<Person>> search(List<String> expr, int max, List<Integer> exceptedIds) {
-        if (PersonProvider.getSvc() != null) {
-            List<PersonEntity> entities = PersonProvider.getSvc().searchPerson(expr, max, exceptedIds);
-            List<RefBoxListItem<Person>> result = new ArrayList<>();
-            if (entities != null)
-                for (PersonEntity entity : entities) {
-                    if (entity != null)
-                        result.add(getRefBoxItem(new Person(entity)));
-                }
-            return result;
-        }
-        return null;
-    }
-
-    @Override
     public PersonEditor openEditor(Person entity) {
         return new PersonEditor(entity);
     }
 
-    public static boolean changePwd(int id, String currentPwd, String newPwd) {
-        if (PersonProvider.getSvc() != null)
-            return PersonProvider.getSvc().changePwd(id, currentPwd, newPwd);
-        return false;
-    }
+//    public static boolean changePwd(int id, String currentPwd, String newPwd) {
+//        if (PersonProvider.getSvc() != null)
+//            return PersonProvider.getSvc().changePwd(id, currentPwd, newPwd);
+//        return false;
+//    }
 }

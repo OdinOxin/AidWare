@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.rota.shift;
 
-import de.odinoxin.aidware.aidcloud.service.RotaShiftEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import de.odinoxin.aidware.aiddesk.plugins.rota.TimestampInterpretation;
 import javafx.beans.property.*;
@@ -8,7 +7,7 @@ import javafx.beans.property.*;
 import java.util.Date;
 import java.util.Hashtable;
 
-public class RotaShift extends RecordItem<RotaShiftEntity> {
+public class RotaShift extends RecordItem {
 
     private StringProperty text = new SimpleStringProperty(null, "Text");
     private ObjectProperty<Date> tsBeginn = new SimpleObjectProperty<>(null, "TsBginn");
@@ -40,14 +39,6 @@ public class RotaShift extends RecordItem<RotaShiftEntity> {
         this.setTsEnd(tsEnd);
         this.setEndInterpretation(endInterpretation);
         this.setChanged(false);
-    }
-
-    public RotaShift(RotaShiftEntity entity) {
-        this(entity.getId(), entity.getText(),
-                RecordItem.toDate(entity.getTsBeginn()),
-                entity.getBeginnInterpretation() == null ? null : new TimestampInterpretation(entity.getBeginnInterpretation()),
-                RecordItem.toDate(entity.getTsEnd()),
-                entity.getEndInterpretation() == null ? null : new TimestampInterpretation(entity.getEndInterpretation()));
     }
 
     @Override
@@ -113,18 +104,6 @@ public class RotaShift extends RecordItem<RotaShiftEntity> {
 
     public ObjectProperty<TimestampInterpretation> endInterpretationProperty() {
         return endInterpretation;
-    }
-
-    @Override
-    public RotaShiftEntity toEntity() {
-        RotaShiftEntity entity = new RotaShiftEntity();
-        entity.setId(this.getId());
-        entity.setText(this.getText());
-        entity.setTsBeginn(RecordItem.toXMLGregorianCalendar(this.getTsBeginn()));
-        entity.setBeginnInterpretation(this.getBeginnInterpretation() == null ? null : this.getBeginnInterpretation().toEntity());
-        entity.setTsEnd(RecordItem.toXMLGregorianCalendar(this.getTsEnd()));
-        entity.setEndInterpretation(this.getEndInterpretation() == null ? null : this.getEndInterpretation().toEntity());
-        return entity;
     }
 
     @Override

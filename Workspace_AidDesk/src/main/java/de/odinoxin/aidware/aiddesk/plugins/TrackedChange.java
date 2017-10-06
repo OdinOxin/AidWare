@@ -1,12 +1,11 @@
 package de.odinoxin.aidware.aiddesk.plugins;
 
-import de.odinoxin.aidware.aidcloud.service.TrackedChangeEntity;
 import javafx.beans.property.*;
 
 import java.util.Date;
 import java.util.Hashtable;
 
-public class TrackedChange extends RecordItem<TrackedChangeEntity> {
+public class TrackedChange extends RecordItem {
 
     private StringProperty entityName = new SimpleStringProperty(null, "EntityName");
     private IntegerProperty entityId = new SimpleIntegerProperty(null, "EntityId");
@@ -38,10 +37,6 @@ public class TrackedChange extends RecordItem<TrackedChangeEntity> {
         this.setValueBefore(valueBefore);
         this.setValueAfter(valueAfter);
         this.setChanged(false);
-    }
-
-    public TrackedChange(TrackedChangeEntity entity) {
-        this(entity.getId(), entity.getEntityName(), entity.getEntityId(), entity.getPropertyName(), RecordItem.toDate(entity.getTimestamp()), entity.getUserId(), entity.getValueBefore(), entity.getValueAfter());
     }
 
     @Override
@@ -131,20 +126,6 @@ public class TrackedChange extends RecordItem<TrackedChangeEntity> {
 
     public StringProperty valueAfterProperty() {
         return valueAfter;
-    }
-
-    @Override
-    public TrackedChangeEntity toEntity() {
-        TrackedChangeEntity entity = new TrackedChangeEntity();
-        entity.setId(this.getId());
-        entity.setEntityName(this.getEntityName());
-        entity.setEntityId(this.getEntityId());
-        entity.setPropertyName(this.getPropertyName());
-        entity.setTimestamp(RecordItem.toXMLGregorianCalendar(this.getTimestamp()));
-        entity.setUserId(this.getUserId());
-        entity.setValueBefore(this.getValueBefore());
-        entity.setValueAfter(this.getValueAfter());
-        return entity;
     }
 
     @Override

@@ -10,7 +10,7 @@ import javafx.scene.layout.Region;
 import java.io.IOException;
 import java.util.Hashtable;
 
-public abstract class RecordView<T extends RecordItem<?>> extends GridPane {
+public abstract class RecordView<T extends RecordItem> extends GridPane {
 
     private static final String[] PREFIXES = {
             "txf",

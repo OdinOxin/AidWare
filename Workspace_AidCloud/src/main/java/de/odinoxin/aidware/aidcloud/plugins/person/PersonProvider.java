@@ -1,13 +1,13 @@
 package de.odinoxin.aidware.aidcloud.plugins.person;
 
-import de.odinoxin.aidware.aidcloud.structures.ConcurrentFault;
 import de.odinoxin.aidware.aidcloud.DB;
-import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address_;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
-import de.odinoxin.aidware.aidcloud.structures.Tuple;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
+import de.odinoxin.aidware.aidcloud.utils.ConcurrentFault;
+import de.odinoxin.aidware.aidcloud.utils.Tuple;
 import org.hibernate.Session;
 
 import javax.persistence.Query;
@@ -15,7 +15,10 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Root;
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import java.util.ArrayList;
 import java.util.List;
 

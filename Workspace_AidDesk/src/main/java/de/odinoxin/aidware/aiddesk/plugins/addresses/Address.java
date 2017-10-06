@@ -1,13 +1,12 @@
 package de.odinoxin.aidware.aiddesk.plugins.addresses;
 
-import de.odinoxin.aidware.aidcloud.service.AddressEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import de.odinoxin.aidware.aiddesk.plugins.countries.Country;
 import javafx.beans.property.*;
 
 import java.util.Hashtable;
 
-public class Address extends RecordItem<AddressEntity> {
+public class Address extends RecordItem {
 
     private StringProperty street = new SimpleStringProperty(null, "Street");
     private StringProperty hsNo = new SimpleStringProperty(null, "HsNo");
@@ -39,10 +38,6 @@ public class Address extends RecordItem<AddressEntity> {
         this.setCity(city);
         this.setCountry(country);
         this.setChanged(true);
-    }
-
-    public Address(AddressEntity entity) {
-        this(entity.getId(), entity.getStreet(), entity.getHsNo(), entity.getZip(), entity.getCity(), entity.getCountry() == null ? null : new Country(entity.getCountry()));
     }
 
     @Override
@@ -108,18 +103,6 @@ public class Address extends RecordItem<AddressEntity> {
 
     public ObjectProperty<Country> countryProperty() {
         return country;
-    }
-
-    @Override
-    public AddressEntity toEntity() {
-        AddressEntity entity = new AddressEntity();
-        entity.setId(this.getId());
-        entity.setStreet(this.getStreet());
-        entity.setHsNo(this.getHsNo());
-        entity.setZip(this.getZip());
-        entity.setCity(this.getCity());
-        entity.setCountry(this.getCountry() == null ? null : this.getCountry().toEntity());
-        return entity;
     }
 
     @Override

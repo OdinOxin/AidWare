@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.languages;
 
-import de.odinoxin.aidware.aidcloud.service.LanguageEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class Language extends RecordItem<LanguageEntity> {
+public class Language extends RecordItem {
 
     private StringProperty name = new SimpleStringProperty(null, "Name");
     private StringProperty code = new SimpleStringProperty(null, "Code");
@@ -31,10 +30,6 @@ public class Language extends RecordItem<LanguageEntity> {
         this.setName(name);
         this.setCode(code);
         this.setChanged(false);
-    }
-
-    public Language(LanguageEntity entity) {
-        this(entity.getId(), entity.getName(), entity.getCode());
     }
 
     @Override
@@ -64,15 +59,6 @@ public class Language extends RecordItem<LanguageEntity> {
 
     public StringProperty codeProperty() {
         return code;
-    }
-
-    @Override
-    public LanguageEntity toEntity() {
-        LanguageEntity entity = new LanguageEntity();
-        entity.setId(this.getId());
-        entity.setName(this.getName());
-        entity.setCode(this.getCode());
-        return entity;
     }
 
     @Override

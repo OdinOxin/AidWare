@@ -23,11 +23,6 @@ public class AidDesk extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Properties to enable logging
-//        System.setProperty("com.sun.xml.ws.transport.http.client.HttpTransportPipe.dump", "true");
-//        System.setProperty("com.sun.xml.internal.ws.transport.http.client.HttpTransportPipe.dump", "true");
-//        System.setProperty("com.sun.xml.ws.transport.http.HttpAdapter.dump", "true");
-//        System.setProperty("com.sun.xml.internal.ws.transport.http.HttpAdapter.dump", "true");
         new Login(); //Start Login plugin
     }
 }

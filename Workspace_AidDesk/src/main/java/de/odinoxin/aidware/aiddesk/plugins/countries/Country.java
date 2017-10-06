@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.countries;
 
-import de.odinoxin.aidware.aidcloud.service.CountryEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class Country extends RecordItem<CountryEntity> {
+public class Country extends RecordItem {
     private StringProperty alpha2 = new SimpleStringProperty(null, "Alpha2");
     private StringProperty alpha3 = new SimpleStringProperty(null, "Alpha3");
     private StringProperty name = new SimpleStringProperty(null, "Name");
@@ -36,10 +35,6 @@ public class Country extends RecordItem<CountryEntity> {
         this.setName(name);
         this.setAreaCode(areaCode);
         this.setChanged(false);
-    }
-
-    public Country(CountryEntity entity) {
-        this(entity.getId(), entity.getAlpha2(), entity.getAlpha3(), entity.getName(), entity.getAreaCode());
     }
 
     @Override
@@ -93,17 +88,6 @@ public class Country extends RecordItem<CountryEntity> {
 
     public StringProperty areaCodeProperty() {
         return areaCode;
-    }
-
-    @Override
-    public CountryEntity toEntity() {
-        CountryEntity countryEntity = new CountryEntity();
-        countryEntity.setId(this.getId());
-        countryEntity.setAlpha2(this.getAlpha2());
-        countryEntity.setAlpha3(this.getAlpha3());
-        countryEntity.setName(this.getName());
-        countryEntity.setAreaCode(this.getAreaCode());
-        return countryEntity;
     }
 
     @Override

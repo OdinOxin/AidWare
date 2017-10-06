@@ -140,7 +140,7 @@ public class MergeablePane extends HBox {
             else if (node instanceof CheckBox)
                 ((CheckBox) node).setSelected((boolean) content);
             else if (node instanceof RefBox)
-                ((RefBox) node).setRecord((RecordItem<?>) content);
+                ((RefBox) node).setRecord((RecordItem) content);
             else if (node instanceof RefList<?>) {
                 RefList<?> refList = (RefList<?>) node;
                 refList.clear();

@@ -1,62 +1,10 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.service.AddressEntity;
-import de.odinoxin.aidware.aidcloud.service.AddressProviderService;
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
-import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aidware.aiddesk.plugins.addresses.AddressEditor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-public class AddressProvider implements Provider<Address> {
-    private static de.odinoxin.aidware.aidcloud.service.AddressProvider svc;
-
-    private static de.odinoxin.aidware.aidcloud.service.AddressProvider getSvc() {
-        if (svc == null) {
-            if (Login.getServerUrl() == null)
-                return null;
-            try {
-                svc = new AddressProviderService(new URL(Login.getServerUrl() + "/AddressProvider?wsdl")).getAddressProviderPort();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (svc != null)
-            Requester.setRequestHeaders(svc);
-        return svc;
-    }
-
-    @Override
-    public Address get(int id) {
-        if (AddressProvider.getSvc() != null) {
-            AddressEntity entity = AddressProvider.getSvc().getAddress(id);
-            if (entity != null)
-                return new Address(entity);
-        }
-        return null;
-    }
-
-    @Override
-    public Address save(Address item, Address original) throws ConcurrentFault_Exception {
-        if (AddressProvider.getSvc() != null) {
-            AddressEntity entity = AddressProvider.getSvc().saveAddress(item.toEntity(), original.toEntity());
-            if (entity != null)
-                return new Address(entity);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        if (AddressProvider.getSvc() != null)
-            return AddressProvider.getSvc().deleteAddress(id);
-        return false;
-    }
+public class AddressProvider extends Provider<Address> {
 
     @Override
     public RefBoxListItem<Address> getRefBoxItem(Address item) {
@@ -68,20 +16,6 @@ public class AddressProvider implements Provider<Address> {
                 (item.getZip() == null ? "" : item.getZip()) + " " +
                         (item.getCity() == null ? "" : item.getCity()) + "\n" +
                         (item.getCountry() == null ? "" : item.getCountry().getName() == null ? "" : item.getCountry().getName()));
-    }
-
-    @Override
-    public List<RefBoxListItem<Address>> search(List<String> expr, int max, List<Integer> exceptedIds) {
-        if (AddressProvider.getSvc() != null) {
-            List<AddressEntity> entities = AddressProvider.getSvc().searchAddress(expr, max, exceptedIds);
-            List<RefBoxListItem<Address>> result = new ArrayList<>();
-            if (entities != null)
-                for (AddressEntity entity : entities)
-                    if (entity != null)
-                        result.add(getRefBoxItem(new Address(entity)));
-            return result;
-        }
-        return null;
     }
 
     @Override

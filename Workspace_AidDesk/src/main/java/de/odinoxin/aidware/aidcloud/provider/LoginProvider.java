@@ -1,59 +1,18 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.service.LoginService;
-import de.odinoxin.aidware.aidcloud.service.PersonEntity;
+import de.odinoxin.aidware.aidcloud.Result;
 import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.people.Person;
 import de.odinoxin.aidware.aiddesk.plugins.people.PersonEditor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-public class LoginProvider implements Provider<Person> {
-    private static de.odinoxin.aidware.aidcloud.service.Login svc;
-
-    private static de.odinoxin.aidware.aidcloud.service.Login getSvc() {
-        if (svc == null) {
-            if (Login.getServerUrl() == null)
-                return null;
-            try {
-                svc = new LoginService(new URL(Login.getServerUrl() + "/Login?wsdl")).getLoginPort();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return svc;
-    }
-
-    public static String getSession(int id, String pwd) {
-        if (LoginProvider.getSvc() != null)
-            return LoginProvider.getSvc().getSession(id, pwd);
-        return null;
-    }
-
-    public static boolean checkLogin(int id, String pwd) {
-        if (LoginProvider.getSvc() != null)
-            return LoginProvider.getSvc().checkLogin(id, pwd);
-        return false;
-    }
-
-    @Override
-    public Person get(int id) {
-        return null;
-    }
-
-    @Override
-    public Person save(Person item, Person original) {
-        return null;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        return false;
-    }
+public class LoginProvider extends Provider<Person> {
 
     @Override
     public RefBoxListItem<Person> getRefBoxItem(Person item) {
@@ -65,21 +24,18 @@ public class LoginProvider implements Provider<Person> {
     }
 
     @Override
-    public List<RefBoxListItem<Person>> search(List<String> expr, int max, List<Integer> exceptedIds) {
-        if (LoginProvider.getSvc() != null) {
-            List<PersonEntity> entities = LoginProvider.getSvc().searchLogin(expr, max);
-            List<RefBoxListItem<Person>> result = new ArrayList<>();
-            if (entities != null)
-                for (PersonEntity entity : entities)
-                    if (entity != null)
-                        result.add(this.getRefBoxItem(new Person(entity)));
-            return result;
-        }
+    public PersonEditor openEditor(Person entity) {
         return null;
     }
 
-    @Override
-    public PersonEditor openEditor(Person entity) {
-        return null;
+    public boolean checkConnection() {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Login.getServerUrl()).path("Login").path("CheckConnection");
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+        return (Boolean) response.readEntity(Result.class).x;
+    }
+
+    public boolean checkLogin(int id, String pwd) {
+        return true;
     }
 }

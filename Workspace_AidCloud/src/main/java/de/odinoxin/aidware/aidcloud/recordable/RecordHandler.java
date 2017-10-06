@@ -1,11 +1,12 @@
 package de.odinoxin.aidware.aidcloud.recordable;
 
-import de.odinoxin.aidware.aidcloud.*;
+import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChange;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChangeProvider;
-import de.odinoxin.aidware.aidcloud.structures.ConcurrentFault;
-import de.odinoxin.aidware.aidcloud.structures.Provider;
-import de.odinoxin.aidware.aidcloud.structures.Tuple;
+import de.odinoxin.aidware.aidcloud.utils.ConcurrentFault;
+import de.odinoxin.aidware.aidcloud.utils.Provider;
+import de.odinoxin.aidware.aidcloud.utils.Result;
+import de.odinoxin.aidware.aidcloud.utils.Tuple;
 import org.hibernate.Session;
 import org.hibernate.annotations.FetchProfile;
 import org.hibernate.annotations.FetchProfiles;
@@ -124,7 +125,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
 
     @DELETE
     @Path("{id}")
-    public boolean delete(@PathParam("id") int id) {
+    public Result<Boolean> delete(@PathParam("id") int id) {
         T entity = this.get(id);
         if (entity != null)
             try (Session session = DB.open()) {
@@ -132,9 +133,9 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
                 session.delete(entity);
                 session.getTransaction().commit();
             } catch (Exception ex) {
-                return false;
+                return new Result<>(false);
             }
-        return true;
+        return new Result<>(true);
     }
 
     @GET

@@ -2,7 +2,6 @@ package de.odinoxin.aidware.aiddesk.plugins.addresses;
 
 import de.odinoxin.aidware.aidcloud.provider.AddressProvider;
 import de.odinoxin.aidware.aidcloud.provider.Provider;
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordView;
 
@@ -14,16 +13,6 @@ public class AddressEditor extends RecordEditor<Address> {
 
     public AddressEditor(Address record) {
         super("Addresses", record);
-    }
-
-    @Override
-    protected Address onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
-    }
-
-    @Override
-    protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override

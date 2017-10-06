@@ -1,7 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.people;
 
-import de.odinoxin.aidware.aidcloud.service.ContactInformationEntity;
-import de.odinoxin.aidware.aidcloud.service.PersonEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import de.odinoxin.aidware.aiddesk.plugins.addresses.Address;
 import de.odinoxin.aidware.aiddesk.plugins.contact.information.ContactInformation;
@@ -12,11 +10,10 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Person extends RecordItem<PersonEntity> {
+public class Person extends RecordItem {
 
     private StringProperty name = new SimpleStringProperty(null, "Name");
     private StringProperty forename = new SimpleStringProperty(null, "Forename");
@@ -58,17 +55,6 @@ public class Person extends RecordItem<PersonEntity> {
         this.setAddress(address);
         this.setContactInformation(contactInformation);
         this.setPersonalSetting(personalSetting);
-        this.setChanged(false);
-    }
-
-    public Person(PersonEntity entity) {
-        this(entity.getId(), entity.getName(), entity.getForename(), entity.getCode(), entity.getLanguage() == null ? null : new Language(entity.getLanguage()), entity.getNutritionType() == null ? null : new NutritionType(entity.getNutritionType()), entity.getAddress() == null ? null : new Address(entity.getAddress()), null, entity.getPersonalSetting() == null ? null : new PersonalSetting(entity.getPersonalSetting()));
-        if (entity.getContactInformation() != null) {
-            List<ContactInformation> list = new ArrayList<>();
-            for (ContactInformationEntity contactInformationEntity : entity.getContactInformation())
-                list.add(new ContactInformation(contactInformationEntity));
-            this.setContactInformation(list);
-        }
         this.setChanged(false);
     }
 
@@ -188,22 +174,6 @@ public class Person extends RecordItem<PersonEntity> {
 
     public ObjectProperty<PersonalSetting> personalSettingProperty() {
         return personalSetting;
-    }
-
-    public PersonEntity toEntity() {
-        PersonEntity entity = new PersonEntity();
-        entity.setId(this.getId());
-        entity.setName(this.getName());
-        entity.setForename(this.getForename());
-        entity.setCode(this.getCode());
-        entity.setLanguage(this.getLanguage() == null ? null : this.getLanguage().toEntity());
-        entity.setNutritionType(this.getNutritionType() == null ? null : this.getNutritionType().toEntity());
-        entity.setAddress(this.getAddress() == null ? null : this.getAddress().toEntity());
-        for (ContactInformation item : this.getContactInformation())
-            if (item != null)
-                entity.getContactInformation().add(item.toEntity());
-        entity.setPersonalSetting(this.getPersonalSetting().toEntity());
-        return entity;
     }
 
     @Override

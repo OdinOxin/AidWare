@@ -3,6 +3,7 @@ package de.odinoxin.aidware.aidcloud.plugins;
 import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person_;
+import de.odinoxin.aidware.aidcloud.utils.Result;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,11 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Path("Login")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class Login {
 
     @GET
     @Path("{id}")
-    public boolean checkLogin(@PathParam("id") int id, @QueryParam("pwd") String pwd) {
+    public Result<Boolean> checkLogin(@PathParam("id") int id, @QueryParam("pwd") String pwd) {
         boolean access = false;
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
@@ -37,12 +40,12 @@ public class Login {
             if (tmpList != null && tmpList.size() == 1)
                 access = true;
         }
-        return access;
+        return new Result<>(access);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Person> searchLogin(@QueryParam("expr") List<String> expr, @QueryParam("max") int max) {
+    public List<Person> search(@QueryParam("expr") List<String> expr, @DefaultValue("0") @QueryParam("max") int max) {
         List<Person> result = new ArrayList<>();
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
@@ -60,11 +63,17 @@ public class Login {
                 }
             }
             criteria.where(predicates);
-            List<Person> tmpList = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).setMaxResults(Math.max(0, max) + 1).getResultList();
+            List<Person> tmpList = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).setMaxResults(Math.max(0, max)).getResultList();
             if (tmpList != null)
                 for (Person tmp : tmpList)
                     result.add(new Person(tmp.getId(), tmp.getName(), tmp.getForename(), tmp.getCode(), null, null, null, null, null));
         }
         return result;
+    }
+
+    @GET
+    @Path("CheckConnection")
+    public Result<Boolean> checkConnection() {
+        return new Result<>(true);
     }
 }

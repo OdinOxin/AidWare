@@ -2,7 +2,6 @@ package de.odinoxin.aidware.aiddesk.plugins.rota;
 
 import de.odinoxin.aidware.aidcloud.provider.Provider;
 import de.odinoxin.aidware.aidcloud.provider.RotaProvider;
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordView;
 
@@ -14,16 +13,6 @@ public class RotaEditor extends RecordEditor<Rota> {
 
     public RotaEditor(Rota record) {
         super("Rota", record);
-    }
-
-    @Override
-    protected Rota onSave() throws ConcurrentFault_Exception {
-        return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
-    }
-
-    @Override
-    protected boolean onDelete() {
-        return this.getProvider().delete(this.getRecord().getId());
     }
 
     @Override

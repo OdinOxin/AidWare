@@ -1,13 +1,12 @@
 package de.odinoxin.aidware.aiddesk.plugins.contact.information;
 
-import de.odinoxin.aidware.aidcloud.service.ContactInformationEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import de.odinoxin.aidware.aiddesk.plugins.contact.types.ContactType;
 import javafx.beans.property.*;
 
 import java.util.Hashtable;
 
-public class ContactInformation extends RecordItem<ContactInformationEntity> {
+public class ContactInformation extends RecordItem {
 
     private ObjectProperty<ContactType> contactType = new SimpleObjectProperty<>(null, "ContactType");
     private StringProperty information = new SimpleStringProperty(null, "Information");
@@ -30,10 +29,6 @@ public class ContactInformation extends RecordItem<ContactInformationEntity> {
         this.setContactType(contactType);
         this.setInformation(information);
         this.setChanged(false);
-    }
-
-    public ContactInformation(ContactInformationEntity entity) {
-        this(entity.getId(), entity.getContactType() == null ? null : new ContactType(entity.getContactType()), entity.getInformation());
     }
 
     @Override
@@ -63,15 +58,6 @@ public class ContactInformation extends RecordItem<ContactInformationEntity> {
 
     public StringProperty informationProperty() {
         return information;
-    }
-
-    @Override
-    public ContactInformationEntity toEntity() {
-        ContactInformationEntity entity = new ContactInformationEntity();
-        entity.setId(this.getId());
-        entity.setContactType(this.getContactType() == null ? null : this.getContactType().toEntity());
-        entity.setInformation(this.getInformation());
-        return entity;
     }
 
     @Override

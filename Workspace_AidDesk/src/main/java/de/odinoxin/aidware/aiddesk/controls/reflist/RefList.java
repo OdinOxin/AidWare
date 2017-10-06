@@ -1,8 +1,8 @@
 package de.odinoxin.aidware.aiddesk.controls.reflist;
 
 import de.odinoxin.aidware.aidcloud.provider.Provider;
-import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBox;
+import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -23,7 +23,7 @@ import java.util.ListIterator;
  *
  * @param <T> The type of the records.
  */
-public class RefList<T extends RecordItem<?>> extends VBox implements ObservableList<T> {
+public class RefList<T extends RecordItem> extends VBox implements ObservableList<T> {
 
     private ObservableList<T> items;
     private ObjectProperty<Provider<T>> provider = new SimpleObjectProperty<>(this, "provider", null);

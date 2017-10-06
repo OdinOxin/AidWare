@@ -23,7 +23,7 @@ import java.util.List;
  *
  * @param <T> The type of the record.
  */
-class RefListCell<T extends RecordItem<?>> extends HBox {
+class RefListCell<T extends RecordItem> extends HBox {
 
     private List<T> source;
     private int index;

@@ -2,7 +2,6 @@ package de.odinoxin.aidware.aiddesk;
 
 import de.odinoxin.aidware.aidcloud.provider.LoginProvider;
 import de.odinoxin.aidware.aidcloud.provider.PersonProvider;
-import de.odinoxin.aidware.aidcloud.service.LoginService;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aidware.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aidware.aiddesk.plugins.Plugin;
@@ -13,10 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 
-import javax.xml.ws.WebServiceException;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * The Login plugin.
@@ -25,7 +21,6 @@ import java.net.URL;
 public class Login extends Plugin {
 
     private static String serverUrl;
-    private static String session;
     private static Person person;
 
     private TextField txfServer;
@@ -47,15 +42,16 @@ public class Login extends Plugin {
         this.btnConnect = (Button) this.root.lookup("#btnConnect");
         this.btnConnect.setOnAction(ev -> {
             try {
-                String url = this.txfServer.getText();
-                new LoginService(new URL(url + "/Login?wsdl")); //May throw an Exception
-                Login.serverUrl = url;
-                this.refboxUser.setDisable(false);
-                this.pwfPwd.setDisable(false);
-                this.btnLogin.setDisable(false);
-                this.refboxUser.requestFocus();
-            } catch (WebServiceException | MalformedURLException ex) {
+                Login.serverUrl = this.txfServer.getText();
+                if (new LoginProvider().checkConnection()) {
+                    this.refboxUser.setDisable(false);
+                    this.pwfPwd.setDisable(false);
+                    this.btnLogin.setDisable(false);
+                    this.refboxUser.requestFocus();
+                }
+            } catch (Exception ex) {
                 new MsgDialog(this, Alert.AlertType.ERROR, null, ex.getLocalizedMessage()).showAndWait();
+                ex.printStackTrace();
             }
         });
         Plugin.setButtonEnter(this.btnConnect);
@@ -95,24 +91,16 @@ public class Login extends Plugin {
     }
 
     public static boolean openSession(int id, String pwd) {
-        Login.session = LoginProvider.getSession(id, pwd);
-        if (Login.session != null) {
-            Login.person = new Person(id); //Not useless, cause of auth info source; Used to perform next line!
-            Login.person.setPwd(pwd);
-            Login.person = new PersonProvider().get(id);
-            Login.person.setPwd(pwd);
-            Login.person.setChanged(false);
-            return true;
-        }
-        return false;
+        Login.person = new Person(id); //Not useless, cause of auth info source; Used to perform next line!
+        Login.person.setPwd(pwd);
+        Login.person = new PersonProvider().get(id);
+        Login.person.setPwd(pwd);
+        Login.person.setChanged(false);
+        return true;
     }
 
     public static String getServerUrl() {
         return Login.serverUrl;
-    }
-
-    public static String getSession() {
-        return Login.session;
     }
 
     public static Person getPerson() {

@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.people.personalsetting;
 
-import de.odinoxin.aidcloud.service.PersonalSettingEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class PersonalSetting extends RecordItem<PersonalSettingEntity> {
+public class PersonalSetting extends RecordItem {
     private StringProperty bgColor = new SimpleStringProperty(null, "bgColor");
     private StringProperty bgColorPlugin = new SimpleStringProperty(null, "bgColorPlugin");
 
@@ -29,10 +28,6 @@ public class PersonalSetting extends RecordItem<PersonalSettingEntity> {
         this.setBgColor(bgColor);
         this.setBgColorPlugin(bgColorPlugin);
         this.setChanged(false);
-    }
-
-    public PersonalSetting(PersonalSettingEntity entity) {
-        this(entity.getId(), entity.getBgColor(), entity.getBgColorPlugin());
     }
 
     @Override
@@ -62,15 +57,6 @@ public class PersonalSetting extends RecordItem<PersonalSettingEntity> {
 
     public StringProperty bgColorPluginProperty() {
         return bgColorPlugin;
-    }
-
-    @Override
-    public PersonalSettingEntity toEntity() {
-        PersonalSettingEntity entity = new PersonalSettingEntity();
-        entity.setId(this.getId());
-        entity.setBgColor(this.getBgColor());
-        entity.setBgColorPlugin(this.getBgColorPlugin());
-        return entity;
     }
 
     @Override

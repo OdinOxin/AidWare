@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-public class MergeDialog<T extends RecordItem<?>> extends Plugin {
+public class MergeDialog<T extends RecordItem> extends Plugin {
 
     private T original;
     private RecordView<T> serverView, localView, resultView;
@@ -91,9 +91,9 @@ public class MergeDialog<T extends RecordItem<?>> extends Plugin {
             else if (contentResult instanceof RefList<?>) {
                 ((RefList<?>) contentResult).addListener((ListChangeListener<Object>) c -> {
                     markGreen(key);
-                    RefList<? extends RecordItem<?>> listServer = ((RefList<? extends RecordItem<?>>) contentServer);
-                    RefList<? extends RecordItem<?>> listLocal = ((RefList<? extends RecordItem<?>>) contentLocal);
-                    RefList<? extends RecordItem<?>> listResult = ((RefList<? extends RecordItem<?>>) contentResult);
+                    RefList<? extends RecordItem> listServer = ((RefList<? extends RecordItem>) contentServer);
+                    RefList<? extends RecordItem> listLocal = ((RefList<? extends RecordItem>) contentLocal);
+                    RefList<? extends RecordItem> listResult = ((RefList<? extends RecordItem>) contentResult);
                     boolean equals = listServer.size() == listResult.size();
                     for (int i = 0; i < listResult.size() && equals; i++) {
                         if ((listServer.get(i) == null && listResult.get(i) == null)

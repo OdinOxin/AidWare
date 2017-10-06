@@ -32,7 +32,7 @@ import java.util.Optional;
 /**
  * Main menu of AidDesk
  */
-public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
+public class MainMenu extends Plugin {
 
     private RefBox<PluginItem> refBoxPlugins;
     private Button btnLogot;
@@ -49,7 +49,7 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         this.setupMenu();
 
         this.refBoxPlugins = (RefBox<PluginItem>) this.root.lookup("#refBoxPlugins");
-        this.refBoxPlugins.setProvider(this);
+        this.refBoxPlugins.setProvider(new MainMenu.PluginProvider());
         this.refBoxPlugins.recordProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 newValue.launch();
@@ -104,53 +104,55 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
         };
     }
 
-    @Override
-    public PluginItem get(int id) {
-        return null;
-    }
-
-    @Override
-    public PluginItem save(PluginItem item, PluginItem original) {
-        return null;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        return false;
-    }
-
-    @Override
-    public RefBoxListItem<PluginItem> getRefBoxItem(PluginItem item) {
-        if (item == null)
+    class PluginProvider extends Provider<MainMenu.PluginItem> {
+        @Override
+        public PluginItem get(int id) {
             return null;
-        return new RefBoxListItem<>(item, item.getName(), item.getSubText());
-    }
-
-    @Override
-    public List<RefBoxListItem<PluginItem>> search(List<String> exprs, int max, List<Integer> exceptedIds) {
-        List<RefBoxListItem<PluginItem>> items = new ArrayList<>();
-        for (PluginItem item : pluginItems) {
-            RefBoxListItem<PluginItem> refBoxItem = getRefBoxItem(item);
-            if (exprs != null)
-                for (String expr : exprs) {
-                    expr = expr.toLowerCase();
-                    if (refBoxItem.getText().toLowerCase().contains(expr) || refBoxItem.getSubText().toLowerCase().contains(expr)) {
-                        items.add(refBoxItem);
-                        break;
-                    }
-                }
-            else
-                items.add(refBoxItem);
         }
-        return items;
+
+        @Override
+        public PluginItem save(PluginItem item, PluginItem original) {
+            return null;
+        }
+
+        @Override
+        public boolean delete(int id) {
+            return false;
+        }
+
+        @Override
+        public RefBoxListItem<PluginItem> getRefBoxItem(PluginItem item) {
+            if (item == null)
+                return null;
+            return new RefBoxListItem<>(item, item.getName(), item.getSubText());
+        }
+
+        @Override
+        public List<RefBoxListItem<PluginItem>> search(List<String> exprs, int max, List<Integer> exceptedIds) {
+            List<RefBoxListItem<PluginItem>> items = new ArrayList<>();
+            for (PluginItem item : pluginItems) {
+                RefBoxListItem<PluginItem> refBoxItem = getRefBoxItem(item);
+                if (exprs != null)
+                    for (String expr : exprs) {
+                        expr = expr.toLowerCase();
+                        if (refBoxItem.getText().toLowerCase().contains(expr) || refBoxItem.getSubText().toLowerCase().contains(expr)) {
+                            items.add(refBoxItem);
+                            break;
+                        }
+                    }
+                else
+                    items.add(refBoxItem);
+            }
+            return items;
+        }
+
+        @Override
+        public RecordEditor<PluginItem> openEditor(PluginItem entity) {
+            return null;
+        }
     }
 
-    @Override
-    public RecordEditor<PluginItem> openEditor(PluginItem entity) {
-        return null;
-    }
-
-    static class PluginItem extends RecordItem<Object> {
+    static class PluginItem extends RecordItem {
         private static int nextID = 0;
         private String name;
         private String subText;
@@ -188,11 +190,6 @@ public class MainMenu extends Plugin implements Provider<MainMenu.PluginItem> {
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }
-
-        @Override
-        public Object toEntity() {
-            return null;
         }
 
         @Override

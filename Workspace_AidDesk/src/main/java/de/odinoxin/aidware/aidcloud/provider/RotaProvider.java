@@ -1,62 +1,10 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
-import de.odinoxin.aidware.aidcloud.service.RotaEntity;
-import de.odinoxin.aidware.aidcloud.service.RotaProviderService;
-import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.rota.Rota;
 import de.odinoxin.aidware.aiddesk.plugins.rota.RotaEditor;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-public class RotaProvider implements Provider<Rota> {
-    private static de.odinoxin.aidware.aidcloud.service.RotaProvider svc;
-
-    private static de.odinoxin.aidware.aidcloud.service.RotaProvider getSvc() {
-        if (svc == null) {
-            if (Login.getServerUrl() == null)
-                return null;
-            try {
-                svc = new RotaProviderService(new URL(Login.getServerUrl() + "/RotaProvider?wsdl")).getRotaProviderPort();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if (svc != null)
-            Requester.setRequestHeaders(svc);
-        return svc;
-    }
-
-    @Override
-    public Rota get(int id) {
-        if (RotaProvider.getSvc() != null) {
-            RotaEntity entity = RotaProvider.getSvc().getRota(id);
-            if (entity != null)
-                return new Rota(entity);
-        }
-        return null;
-    }
-
-    @Override
-    public Rota save(Rota item, Rota original) throws ConcurrentFault_Exception {
-        if (RotaProvider.getSvc() != null) {
-            RotaEntity entity = RotaProvider.getSvc().saveRota(item.toEntity(), original.toEntity());
-            if (entity != null)
-                return new Rota(entity);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean delete(int id) {
-        if (RotaProvider.getSvc() != null)
-            return RotaProvider.getSvc().deleteRota(id);
-        return false;
-    }
+public class RotaProvider extends Provider<Rota> {
 
     @Override
     public RefBoxListItem<Rota> getRefBoxItem(Rota item) {
@@ -65,20 +13,6 @@ public class RotaProvider implements Provider<Rota> {
         return new RefBoxListItem<>(item,
                 (item.getTitle() == null ? "" : item.getTitle()),
                 (item.getRotaCategory() == null ? "" : item.getRotaCategory().getName()));
-    }
-
-    @Override
-    public List<RefBoxListItem<Rota>> search(List<String> expr, int max, List<Integer> exceptedIds) {
-        if (RotaProvider.getSvc() != null) {
-            List<RotaEntity> entities = RotaProvider.getSvc().searchRota(expr, max, exceptedIds);
-            List<RefBoxListItem<Rota>> result = new ArrayList<>();
-            if (entities != null)
-                for (RotaEntity entity : entities)
-                    if (entity != null)
-                        result.add(getRefBoxItem(new Rota(entity)));
-            return result;
-        }
-        return null;
     }
 
     @Override

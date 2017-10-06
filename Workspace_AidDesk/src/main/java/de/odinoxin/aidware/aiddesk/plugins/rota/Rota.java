@@ -1,7 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.rota;
 
-import de.odinoxin.aidware.aidcloud.service.RotaEntity;
-import de.odinoxin.aidware.aidcloud.service.RotaShiftEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import de.odinoxin.aidware.aiddesk.plugins.rota.category.RotaCategory;
 import de.odinoxin.aidware.aiddesk.plugins.rota.shift.RotaShift;
@@ -9,12 +7,11 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
-public class Rota extends RecordItem<RotaEntity> {
+public class Rota extends RecordItem {
 
     private StringProperty title = new SimpleStringProperty(null, "title");
     private ObjectProperty<RotaCategory> rotaCategory = new SimpleObjectProperty<>(null, "rotaCategory");
@@ -44,17 +41,6 @@ public class Rota extends RecordItem<RotaEntity> {
         this.setTitle(title);
         this.setRotaCategory(category);
         this.setRotaShifts(rotaShifts);
-        this.setChanged(false);
-    }
-
-    public Rota(RotaEntity entity) {
-        this(entity.getId(), entity.getTitle(), entity.getRotaCategory() == null ? null : new RotaCategory(entity.getRotaCategory()), null);
-        if (entity.getRotaShifts() != null) {
-            List<RotaShift> list = new ArrayList<>();
-            for (RotaShiftEntity contactInformationEntity : entity.getRotaShifts())
-                list.add(new RotaShift(contactInformationEntity));
-            this.setRotaShifts(list);
-        }
         this.setChanged(false);
     }
 
@@ -140,18 +126,6 @@ public class Rota extends RecordItem<RotaEntity> {
                     setLastEnd(rotaShifts.get(i).getTsEnd());
             }
         }
-    }
-
-    @Override
-    public RotaEntity toEntity() {
-        RotaEntity entity = new RotaEntity();
-        entity.setId(this.getId());
-        entity.setTitle(this.getTitle());
-        entity.setRotaCategory(this.getRotaCategory() == null ? null : this.getRotaCategory().toEntity());
-        for (RotaShift item : this.getRotaShifts())
-            if (item != null)
-                entity.getRotaShifts().add(item.toEntity());
-        return entity;
     }
 
     @Override

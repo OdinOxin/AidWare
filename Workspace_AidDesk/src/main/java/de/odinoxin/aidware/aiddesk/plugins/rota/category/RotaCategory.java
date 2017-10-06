@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.rota.category;
 
-import de.odinoxin.aidware.aidcloud.service.RotaCategoryEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class RotaCategory extends RecordItem<RotaCategoryEntity> {
+public class RotaCategory extends RecordItem {
 
     private StringProperty name = new SimpleStringProperty(null, "Name");
 
@@ -30,10 +29,6 @@ public class RotaCategory extends RecordItem<RotaCategoryEntity> {
         this.setChanged(false);
     }
 
-    public RotaCategory(RotaCategoryEntity entity) {
-        this(entity.getId(), entity.getName());
-    }
-
     @Override
     protected Object clone() {
         return new RotaCategory(this.getId(), this.getName());
@@ -49,14 +44,6 @@ public class RotaCategory extends RecordItem<RotaCategoryEntity> {
 
     public StringProperty nameProperty() {
         return name;
-    }
-
-    @Override
-    public RotaCategoryEntity toEntity() {
-        RotaCategoryEntity entity = new RotaCategoryEntity();
-        entity.setId(this.getId());
-        entity.setName(this.getName());
-        return entity;
     }
 
     @Override

@@ -2,12 +2,9 @@ package de.odinoxin.aidware.aiddesk.plugins.people;
 
 import de.odinoxin.aidware.aidcloud.provider.PersonProvider;
 import de.odinoxin.aidware.aidcloud.provider.Provider;
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aidware.aiddesk.Login;
-import de.odinoxin.aidware.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordView;
-import javafx.scene.control.Alert;
 
 public class PersonEditor extends RecordEditor<Person> {
 
@@ -22,10 +19,10 @@ public class PersonEditor extends RecordEditor<Person> {
     }
 
     @Override
-    protected Person onSave() throws ConcurrentFault_Exception {
-        if (this.currentPwdw != null && this.getRecord().getPwd() != null)
-            if (!PersonProvider.changePwd(this.getRecord().getId(), this.currentPwdw, this.getRecord().getPwd()))
-                new MsgDialog(this, Alert.AlertType.ERROR, "Fehlgeschlagen!", "Passwort konnte nicht geändert werden.").showAndWait();
+    protected Person onSave() {
+//        if (this.currentPwdw != null && this.getRecord().getPwd() != null)
+//            if (!PersonProvider.changePwd(this.getRecord().getId(), this.currentPwdw, this.getRecord().getPwd()))
+//                new MsgDialog(this, Alert.AlertType.ERROR, "Fehlgeschlagen!", "Passwort konnte nicht geändert werden.").showAndWait();
         return super.onSave();
     }
 

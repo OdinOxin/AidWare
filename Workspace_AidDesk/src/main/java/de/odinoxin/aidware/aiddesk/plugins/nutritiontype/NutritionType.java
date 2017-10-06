@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.nutritiontype;
 
-import de.odinoxin.aidware.aidcloud.service.NutritionTypeEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class NutritionType extends RecordItem<NutritionTypeEntity> {
+public class NutritionType extends RecordItem {
 
     private StringProperty name = new SimpleStringProperty(null, "Name");
 
@@ -30,10 +29,6 @@ public class NutritionType extends RecordItem<NutritionTypeEntity> {
         this.setChanged(false);
     }
 
-    public NutritionType(NutritionTypeEntity entity) {
-        this(entity.getId(), entity.getName());
-    }
-
     @Override
     protected Object clone() {
         return new NutritionType(this.getId(), this.getName());
@@ -49,14 +44,6 @@ public class NutritionType extends RecordItem<NutritionTypeEntity> {
 
     public StringProperty nameProperty() {
         return name;
-    }
-
-    @Override
-    public NutritionTypeEntity toEntity() {
-        NutritionTypeEntity entity = new NutritionTypeEntity();
-        entity.setId(this.getId());
-        entity.setName(this.getName());
-        return entity;
     }
 
     @Override

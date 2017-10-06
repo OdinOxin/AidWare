@@ -1,12 +1,8 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.service.Translator;
-import de.odinoxin.aidware.aidcloud.service.TranslatorService;
 import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.plugins.languages.Language;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -14,20 +10,6 @@ import java.util.Map;
  * Translation provider.
  */
 public abstract class TranslatorProvider {
-    private static Translator svc;
-
-    private static Translator getSvc() {
-        if (svc == null) {
-            if (Login.getServerUrl() == null)
-                return null;
-            try {
-                svc = new TranslatorService(new URL(Login.getServerUrl() + "/Translator?wsdl")).getTranslatorPort();
-            } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        return svc;
-    }
 
     private static Map<Language, Map<String, String>> cache = new Hashtable<>();
 
@@ -45,13 +27,13 @@ public abstract class TranslatorProvider {
             if (cache.get(lng).containsKey(text))
                 return cache.get(lng).get(text);
         }
-        if (TranslatorProvider.getSvc() != null) {
-            String translation = TranslatorProvider.getSvc().getTranslation(text, Login.getPerson().getLanguage().toEntity());
-            if (!cache.containsKey(lng))
-                cache.put(lng, new Hashtable<>());
-            cache.get(lng).put(text, translation);
-            return translation;
-        }
+//        if (TranslatorProvider.getSvc() != null) {
+//            String translation = TranslatorProvider.getSvc().getTranslation(text, Login.getPerson().getLanguage().toEntity());
+//            if (!cache.containsKey(lng))
+//                cache.put(lng, new Hashtable<>());
+//            cache.get(lng).put(text, translation);
+//            return translation;
+//        }
         return text;
     }
 }

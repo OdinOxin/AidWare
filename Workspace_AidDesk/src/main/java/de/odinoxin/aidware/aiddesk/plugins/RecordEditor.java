@@ -4,7 +4,6 @@ import de.odinoxin.aidware.aidcloud.provider.PersonProvider;
 import de.odinoxin.aidware.aidcloud.provider.Provider;
 import de.odinoxin.aidware.aidcloud.provider.TrackedChangeProvider;
 import de.odinoxin.aidware.aidcloud.provider.TranslatorProvider;
-import de.odinoxin.aidware.aidcloud.service.ConcurrentFault_Exception;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aidware.aiddesk.controls.translateable.Button;
 import de.odinoxin.aidware.aiddesk.dialogs.DecisionDialog;
@@ -28,10 +27,8 @@ import java.util.Optional;
 
 /**
  * Base class for RecordEditors.
- *
- * @param <T> The type of the RecordItem to edit
  */
-public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
+public abstract class RecordEditor<T extends RecordItem> extends Plugin {
 
     private TextField txfId;
     private RefBox<T> refBoxKey;
@@ -181,7 +178,7 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
      *
      * @return The saved record.
      */
-    protected T onSave() throws ConcurrentFault_Exception {
+    protected T onSave() {
         return this.getProvider().save(this.getRecord(), this.getOriginalRecord());
     }
 
@@ -353,8 +350,6 @@ public abstract class RecordEditor<T extends RecordItem<?>> extends Plugin {
                     this.attemptLoadRecord(newObj);
                     this.refBoxKey.setRecord(newObj);
                 }
-            } catch (ConcurrentFault_Exception ex) {
-                ex.printStackTrace();
             } catch (Exception ex) {
                 MergeDialog mergeDialog = new MergeDialog<T>(this);
                 mergeDialog.show();

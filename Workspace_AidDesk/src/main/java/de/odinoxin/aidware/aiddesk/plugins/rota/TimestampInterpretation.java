@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aiddesk.plugins.rota;
 
-import de.odinoxin.aidware.aidcloud.service.TimestampInterpretationEntity;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
@@ -8,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.util.Hashtable;
 
-public class TimestampInterpretation extends RecordItem<TimestampInterpretationEntity> {
+public class TimestampInterpretation extends RecordItem {
 
     private StringProperty name = new SimpleStringProperty(null, "Name");
 
@@ -30,10 +29,6 @@ public class TimestampInterpretation extends RecordItem<TimestampInterpretationE
         this.setChanged(false);
     }
 
-    public TimestampInterpretation(TimestampInterpretationEntity entity) {
-        this(entity.getId(), entity.getName());
-    }
-
     @Override
     protected Object clone() {
         return new TimestampInterpretation(this.getId(), this.getName());
@@ -49,14 +44,6 @@ public class TimestampInterpretation extends RecordItem<TimestampInterpretationE
 
     public StringProperty nameProperty() {
         return name;
-    }
-
-    @Override
-    public TimestampInterpretationEntity toEntity() {
-        TimestampInterpretationEntity entity = new TimestampInterpretationEntity();
-        entity.setId(this.getId());
-        entity.setName(this.getName());
-        return entity;
     }
 
     @Override
