@@ -1,15 +1,11 @@
-package de.odinoxin.aidware.aidcloud.plugins;
+package de.odinoxin.aidware.aidcloud.plugins.trackedchange;
 
 import de.odinoxin.aidware.aidcloud.DB;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import org.hibernate.Session;
 
-import javax.annotation.Resource;
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
 import javax.persistence.Query;
 import javax.ws.rs.*;
-import javax.xml.ws.WebServiceContext;
 import java.util.Date;
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package de.odinoxin.aidware.aidcloud.plugins.address;
 
-import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
 

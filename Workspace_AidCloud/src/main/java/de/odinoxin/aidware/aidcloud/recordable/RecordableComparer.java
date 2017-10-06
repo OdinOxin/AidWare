@@ -1,4 +1,4 @@
-package de.odinoxin.aidware.aidcloud.plugins;
+package de.odinoxin.aidware.aidcloud.recordable;
 
 import java.util.Date;
 import java.util.List;

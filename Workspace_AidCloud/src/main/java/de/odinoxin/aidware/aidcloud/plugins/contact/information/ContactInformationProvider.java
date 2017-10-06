@@ -1,6 +1,6 @@
 package de.odinoxin.aidware.aidcloud.plugins.contact.information;
 
-import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.contact.type.ContactType;
 import de.odinoxin.aidware.aidcloud.plugins.contact.type.ContactType_;
 

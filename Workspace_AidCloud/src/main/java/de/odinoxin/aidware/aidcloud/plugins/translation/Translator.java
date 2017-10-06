@@ -1,14 +1,10 @@
-package de.odinoxin.aidware.aidcloud.translation;
+package de.odinoxin.aidware.aidcloud.plugins.translation;
 
 import de.odinoxin.aidware.aidcloud.DB;
-import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
-import de.odinoxin.aidware.aidcloud.plugins.language.Language;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.language.LanguageProvider;
 import org.hibernate.Session;
 
-import javax.jws.WebMethod;
-import javax.jws.WebParam;
-import javax.jws.WebService;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

@@ -1,5 +1,6 @@
-package de.odinoxin.aidware.aidcloud;
+package de.odinoxin.aidware.aidcloud.plugins;
 
+import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person_;
 import org.hibernate.Session;

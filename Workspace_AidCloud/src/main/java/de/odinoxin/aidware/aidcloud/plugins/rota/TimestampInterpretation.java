@@ -1,8 +1,8 @@
 package de.odinoxin.aidware.aidcloud.plugins.rota;
 
-import de.odinoxin.aidware.aidcloud.plugins.EntityProperty;
-import de.odinoxin.aidware.aidcloud.plugins.Recordable;
-import de.odinoxin.aidware.aidcloud.plugins.RecordableComparer;
+import de.odinoxin.aidware.aidcloud.recordable.EntityProperty;
+import de.odinoxin.aidware.aidcloud.recordable.Recordable;
+import de.odinoxin.aidware.aidcloud.recordable.RecordableComparer;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

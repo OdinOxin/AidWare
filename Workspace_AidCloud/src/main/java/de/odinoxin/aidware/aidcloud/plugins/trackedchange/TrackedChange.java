@@ -1,4 +1,7 @@
-package de.odinoxin.aidware.aidcloud.plugins;
+package de.odinoxin.aidware.aidcloud.plugins.trackedchange;
+
+import de.odinoxin.aidware.aidcloud.recordable.EntityProperty;
+import de.odinoxin.aidware.aidcloud.recordable.Recordable;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

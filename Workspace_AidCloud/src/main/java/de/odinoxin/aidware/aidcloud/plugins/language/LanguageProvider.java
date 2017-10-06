@@ -1,7 +1,7 @@
 package de.odinoxin.aidware.aidcloud.plugins.language;
 
 import de.odinoxin.aidware.aidcloud.DB;
-import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;

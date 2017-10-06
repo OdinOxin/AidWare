@@ -7,8 +7,8 @@
         <property name="hbm2ddl.auto">update</property>
 
         <!-- entity classes -->
-        <mapping class="de.odinoxin.aidware.aidcloud.plugins.TrackedChange"/>
-        <mapping class="de.odinoxin.aidware.aidcloud.translation.Translation"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChange"/>
+        <mapping class="de.odinoxin.aidware.aidcloud.plugins.translation.Translation"/>
 
         <mapping class="de.odinoxin.aidware.aidcloud.plugins.address.Address"/>
         <mapping class="de.odinoxin.aidware.aidcloud.plugins.contact.information.ContactInformation"/>

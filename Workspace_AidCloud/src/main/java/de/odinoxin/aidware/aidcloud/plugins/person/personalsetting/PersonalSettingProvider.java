@@ -1,6 +1,6 @@
 package de.odinoxin.aidware.aidcloud.plugins.person.personalsetting;
 
-import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Root;

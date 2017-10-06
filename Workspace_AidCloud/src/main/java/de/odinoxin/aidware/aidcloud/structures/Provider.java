@@ -1,4 +1,4 @@
-package de.odinoxin.aidware.aidcloud;
+package de.odinoxin.aidware.aidcloud.structures;
 
 public class Provider {
 

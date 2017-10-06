@@ -1,6 +1,10 @@
-package de.odinoxin.aidware.aidcloud.plugins;
+package de.odinoxin.aidware.aidcloud.recordable;
 
 import de.odinoxin.aidware.aidcloud.*;
+import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChange;
+import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChangeProvider;
+import de.odinoxin.aidware.aidcloud.structures.ConcurrentFault;
+import de.odinoxin.aidware.aidcloud.structures.Provider;
 import de.odinoxin.aidware.aidcloud.structures.Tuple;
 import org.hibernate.Session;
 import org.hibernate.annotations.FetchProfile;

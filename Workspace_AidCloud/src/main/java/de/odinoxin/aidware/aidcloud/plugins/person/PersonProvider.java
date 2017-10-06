@@ -1,8 +1,8 @@
 package de.odinoxin.aidware.aidcloud.plugins.person;
 
-import de.odinoxin.aidware.aidcloud.ConcurrentFault;
+import de.odinoxin.aidware.aidcloud.structures.ConcurrentFault;
 import de.odinoxin.aidware.aidcloud.DB;
-import de.odinoxin.aidware.aidcloud.plugins.RecordHandler;
+import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address_;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;

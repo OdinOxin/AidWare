@@ -1,4 +1,4 @@
-package de.odinoxin.aidware.aidcloud.plugins;
+package de.odinoxin.aidware.aidcloud.recordable;
 
 public interface Recordable extends Cloneable {
     public abstract int getId();

@@ -1,6 +1,7 @@
 package de.odinoxin.aidware.aidcloud;
 
-import de.odinoxin.aidware.aidcloud.translation.Translator;
+import de.odinoxin.aidware.aidcloud.plugins.Login;
+import de.odinoxin.aidware.aidcloud.plugins.translation.Translator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
