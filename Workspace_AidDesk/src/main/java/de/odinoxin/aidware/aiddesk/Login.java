@@ -50,8 +50,8 @@ public class Login extends Plugin {
                     this.refboxUser.requestFocus();
                 }
             } catch (Exception ex) {
-                new MsgDialog(this, Alert.AlertType.ERROR, null, ex.getLocalizedMessage()).showAndWait();
                 ex.printStackTrace();
+                new MsgDialog(this, Alert.AlertType.ERROR, null, ex.getLocalizedMessage()).showAndWait();
             }
         });
         Plugin.setButtonEnter(this.btnConnect);

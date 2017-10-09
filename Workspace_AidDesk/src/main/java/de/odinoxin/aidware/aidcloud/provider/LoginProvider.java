@@ -4,7 +4,6 @@ import de.odinoxin.aidware.aidcloud.Result;
 import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.people.Person;
-import de.odinoxin.aidware.aiddesk.plugins.people.PersonEditor;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -13,6 +12,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 public class LoginProvider extends Provider<Person> {
+
+    public LoginProvider() {
+        this.basePath = "Login";
+    }
 
     @Override
     public RefBoxListItem<Person> getRefBoxItem(Person item) {
@@ -23,14 +26,9 @@ public class LoginProvider extends Provider<Person> {
                 (item.getCode() == null ? "" : item.getCode()));
     }
 
-    @Override
-    public PersonEditor openEditor(Person entity) {
-        return null;
-    }
-
     public boolean checkConnection() {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Login.getServerUrl()).path("Login").path("CheckConnection");
+        WebTarget webTarget = client.target(Login.getServerUrl()).path(this.basePath).path("CheckConnection");
         Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
         return (Boolean) response.readEntity(Result.class).x;
     }
