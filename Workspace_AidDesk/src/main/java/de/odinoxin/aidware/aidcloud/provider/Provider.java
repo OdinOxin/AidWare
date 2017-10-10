@@ -17,7 +17,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Provider<T extends RecordItem> {
+public abstract class Provider<T extends RecordItem> {
 
     protected String basePath;
 
@@ -41,10 +41,6 @@ public class Provider<T extends RecordItem> {
 
     public boolean delete(int id) {
         return false;
-    }
-
-    public RefBoxListItem<T> getRefBoxItem(T item) {
-        return null;
     }
 
     /**
@@ -79,6 +75,23 @@ public class Provider<T extends RecordItem> {
         return refBoxListItems;
     }
 
+    /**
+     * Subclasses should implement: Gets a RefBoxItem for the given item.
+     * This method is not marked abstract, because subclasses don't have to implement this.
+     *
+     * @param item The item to get a RefBoxItem for.
+     * @return null (If not overridden by subclass)
+     */
+    public RefBoxListItem<T> getRefBoxItem(T item) {
+        return null;
+    }
+
+    /**
+     * Subclasses should open a editor and initialise it with the given entity.
+     *
+     * @param entity The init-entity.
+     * @return null (If not overridden by subclass)
+     */
     public RecordEditor<T> openEditor(T entity) {
         return null;
     }
