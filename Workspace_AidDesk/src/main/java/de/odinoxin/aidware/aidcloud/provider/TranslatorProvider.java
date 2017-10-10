@@ -1,8 +1,12 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
 import de.odinoxin.aidware.aiddesk.Login;
-import de.odinoxin.aidware.aiddesk.plugins.languages.Language;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -11,7 +15,7 @@ import java.util.Map;
  */
 public abstract class TranslatorProvider {
 
-    private static Map<Language, Map<String, String>> cache = new Hashtable<>();
+    private static Map<Integer, Map<String, String>> cache = new Hashtable<>();
 
     /**
      * Returns translation for the given text, by users selected language.
@@ -22,18 +26,18 @@ public abstract class TranslatorProvider {
     public static String getTranslation(String text) {
         if (Login.getPerson() == null || Login.getPerson().getLanguage() == null)
             return text;
-        Language lng = Login.getPerson().getLanguage();
-        if (cache.containsKey(lng)) {
-            if (cache.get(lng).containsKey(text))
-                return cache.get(lng).get(text);
+        int lngId = Login.getPerson().getLanguage().getId();
+        if (cache.containsKey(lngId)) {
+            if (cache.get(lngId).containsKey(text))
+                return cache.get(lngId).get(text);
         }
-//        if (TranslatorProvider.getSvc() != null) {
-//            String translation = TranslatorProvider.getSvc().getTranslation(text, Login.getPerson().getLanguage().toEntity());
-//            if (!cache.containsKey(lng))
-//                cache.put(lng, new Hashtable<>());
-//            cache.get(lng).put(text, translation);
-//            return translation;
-//        }
-        return text;
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Login.getServerUrl()).path("Translation").path(String.valueOf(lngId)).path(text);
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN);
+        String translation = invocationBuilder.get(String.class);
+        if (!cache.containsKey(lngId))
+            cache.put(lngId, new Hashtable<>());
+        cache.get(lngId).put(text, translation);
+        return translation;
     }
 }
