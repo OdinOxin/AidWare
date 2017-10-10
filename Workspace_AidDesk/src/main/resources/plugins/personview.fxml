@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import de.odinoxin.aiddesk.controls.*?>
+<?import de.odinoxin.aidware.aiddesk.controls.*?>
 <?import de.odinoxin.aidware.aiddesk.controls.refbox.RefBox?>
 <?import de.odinoxin.aidware.aiddesk.controls.reflist.RefList?>
-<?import de.odinoxin.aiddesk.controls.translateable.*?>
+<?import de.odinoxin.aidware.aiddesk.controls.translateable.*?>
 <?import de.odinoxin.aidware.aiddesk.plugins.people.personalsetting.PersonalSettingView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Separator?>
