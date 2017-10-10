@@ -21,26 +21,9 @@ import java.util.List;
 public class Login {
 
     @GET
-    @Path("{id}")
-    public Result<Boolean> checkLogin(@PathParam("id") int id, @QueryParam("pwd") String pwd) {
-        boolean access = false;
-        try (Session session = DB.open()) {
-            CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
-            CriteriaQuery<Person> criteria = builder.createQuery(Person.class);
-            Predicate predicates = builder.conjunction();
-            Root<Person> root = criteria.from(Person.class);
-            predicates = builder.and(predicates, builder.equal(root.get(Person_.id), id));
-            Predicate pwdPredicates = builder.disjunction();
-            pwdPredicates = builder.or(pwdPredicates, builder.equal(root.get(Person_.pwd), pwd));
-            if (pwd == null || pwd.isEmpty())
-                pwdPredicates = builder.or(pwdPredicates, builder.isNull(root.get(Person_.pwd)));
-            predicates = builder.and(predicates, pwdPredicates);
-            criteria.where(predicates);
-            List<Person> tmpList = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList();
-            if (tmpList != null && tmpList.size() == 1)
-                access = true;
-        }
-        return new Result<>(access);
+    @Path("CheckConnection")
+    public Result<Boolean> checkConnection() {
+        return new Result<>(true);
     }
 
     @GET
@@ -72,8 +55,25 @@ public class Login {
     }
 
     @GET
-    @Path("CheckConnection")
-    public Result<Boolean> checkConnection() {
-        return new Result<>(true);
+    @Path("{id}")
+    public Result<Boolean> checkLogin(@PathParam("id") int id, @QueryParam("pwd") String pwd) {
+        boolean access = false;
+        try (Session session = DB.open()) {
+            CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
+            CriteriaQuery<Person> criteria = builder.createQuery(Person.class);
+            Predicate predicates = builder.conjunction();
+            Root<Person> root = criteria.from(Person.class);
+            predicates = builder.and(predicates, builder.equal(root.get(Person_.id), id));
+            Predicate pwdPredicates = builder.disjunction();
+            pwdPredicates = builder.or(pwdPredicates, builder.equal(root.get(Person_.pwd), pwd));
+            if (pwd == null || pwd.isEmpty())
+                pwdPredicates = builder.or(pwdPredicates, builder.isNull(root.get(Person_.pwd)));
+            predicates = builder.and(predicates, pwdPredicates);
+            criteria.where(predicates);
+            List<Person> tmpList = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList();
+            if (tmpList != null && tmpList.size() == 1)
+                access = true;
+        }
+        return new Result<>(access);
     }
 }

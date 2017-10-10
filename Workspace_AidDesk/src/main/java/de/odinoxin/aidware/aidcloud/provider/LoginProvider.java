@@ -34,6 +34,9 @@ public class LoginProvider extends Provider<Person> {
     }
 
     public boolean checkLogin(int id, String pwd) {
-        return true;
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Login.getServerUrl()).path(this.basePath).path(String.valueOf(id)).queryParam("pwd", pwd);
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
+        return (Boolean) response.readEntity(Result.class).x;
     }
 }

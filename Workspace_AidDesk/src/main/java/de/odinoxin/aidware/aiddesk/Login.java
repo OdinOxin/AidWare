@@ -29,6 +29,8 @@ public class Login extends Plugin {
     private PasswordField pwfPwd;
     private Button btnLogin;
 
+    private LoginProvider loginProvider = new LoginProvider();
+
     public Login() {
         super("/login.fxml", "Login");
 
@@ -43,7 +45,7 @@ public class Login extends Plugin {
         this.btnConnect.setOnAction(ev -> {
             try {
                 Login.serverUrl = this.txfServer.getText();
-                if (new LoginProvider().checkConnection()) {
+                if (loginProvider.checkConnection()) {
                     this.refboxUser.setDisable(false);
                     this.pwfPwd.setDisable(false);
                     this.btnLogin.setDisable(false);
@@ -57,7 +59,7 @@ public class Login extends Plugin {
         Plugin.setButtonEnter(this.btnConnect);
         this.refboxUser = (RefBox<Person>) this.root.lookup("#refboxUser");
         this.refboxUser.setOnAction(ev -> this.tryLogin());
-        this.refboxUser.setProvider(new LoginProvider());
+        this.refboxUser.setProvider(loginProvider);
         this.pwfPwd = (PasswordField) this.root.lookup("#pwfPwd");
         this.pwfPwd.setOnAction(ev -> this.tryLogin());
         this.btnLogin = (Button) this.root.lookup("#btnLogin");
@@ -82,21 +84,15 @@ public class Login extends Plugin {
         Person p = this.refboxUser.getRecord();
         if (p == null)
             return;
-        if (Login.openSession(p.getId(), this.pwfPwd.getText())) {
+        String pwd = this.pwfPwd.getText();
+        if (loginProvider.checkLogin(p.getId(), pwd)) {
+            Login.person = new PersonProvider().get(p.getId());
+            Login.person.setPwd(pwd);
             this.close();
             new MainMenu();
             return;
         }
         new MsgDialog(this, Alert.AlertType.ERROR, "Login", "User or password incorrect!").showAndWait();
-    }
-
-    public static boolean openSession(int id, String pwd) {
-        Login.person = new Person(id); //Not useless, cause of auth info source; Used to perform next line!
-        Login.person.setPwd(pwd);
-        Login.person = new PersonProvider().get(id);
-        Login.person.setPwd(pwd);
-        Login.person.setChanged(false);
-        return true;
     }
 
     public static String getServerUrl() {
