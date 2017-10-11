@@ -3,7 +3,7 @@ package de.odinoxin.aidware.aidcloud.recordable;
 import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChange;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChangeProvider;
-import de.odinoxin.aidware.aidcloud.utils.ConcurrentFault;
+import de.odinoxin.aidware.aidcloud.utils.ConcurrentException;
 import de.odinoxin.aidware.aidcloud.utils.Provider;
 import de.odinoxin.aidware.aidcloud.utils.Result;
 import de.odinoxin.aidware.aidcloud.utils.Tuple;
@@ -42,7 +42,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
         return entity;
     }
 
-    protected final int persist(T entity, T original, int userId) throws ConcurrentFault {
+    protected final int persist(T entity, T original, int userId) throws ConcurrentException {
         if (entity == null)
             throw new IllegalArgumentException("The entity cannot be null!");
         if (entity.getId() != 0) {
@@ -52,9 +52,9 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
                 throw new IllegalArgumentException("Entity is different from the original entity!");
             T current = this.get(original.getId());
             if (current == null)
-                throw new ConcurrentFault("Entity does not exist (anymore)!");
+                throw new ConcurrentException("Entity does not exist (anymore)!");
             if (!original.equals(current))
-                throw new ConcurrentFault("Entity was edited in the meantime!");
+                throw new ConcurrentException("Entity was edited in the meantime!");
         }
         int id = entity.getId();
         boolean isNew = entity.getId() == 0;
@@ -106,12 +106,12 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
     }
 
     @PUT
-    public T update(Tuple<T, T> set) throws ConcurrentFault {
+    public T update(Tuple<T, T> set) throws ConcurrentException {
         return this.get(persist(set.x, set.y, 0));
     }
 
     @POST
-    public T insert(T entity) throws ConcurrentFault {
+    public T insert(T entity) throws ConcurrentException {
         return this.get(persist(entity, null, 0));
     }
 

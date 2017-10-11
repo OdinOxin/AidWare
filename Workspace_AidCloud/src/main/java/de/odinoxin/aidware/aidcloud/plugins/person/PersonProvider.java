@@ -6,7 +6,7 @@ import de.odinoxin.aidware.aidcloud.plugins.address.Address_;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
 import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
-import de.odinoxin.aidware.aidcloud.utils.ConcurrentFault;
+import de.odinoxin.aidware.aidcloud.utils.ConcurrentException;
 import de.odinoxin.aidware.aidcloud.utils.Tuple;
 import org.hibernate.Session;
 
@@ -37,7 +37,7 @@ public class PersonProvider extends RecordHandler<Person> {
 
     @PUT
     @Override
-    public Person update(Tuple<Person, Person> set) throws ConcurrentFault {
+    public Person update(Tuple<Person, Person> set) throws ConcurrentException {
         if (set == null || set.x == null)
             throw new IllegalArgumentException("Entity cannot be null!");
         Person current = super.get(set.x.getId()); // Get WITH pwd
