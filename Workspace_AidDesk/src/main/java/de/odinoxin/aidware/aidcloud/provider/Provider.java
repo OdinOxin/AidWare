@@ -1,5 +1,6 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
+import de.odinoxin.aidware.aidcloud.Result;
 import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
@@ -33,6 +34,13 @@ public abstract class Provider<T extends RecordItem> {
         return response.readEntity(getParameterizedType());
     }
 
+    /**
+     * Saves the given item. New items (id == 0) will be post to the service, existing items (id > 0) will be put to service, along with the known original item.
+     *
+     * @param item     The item to save.
+     * @param original The original item (null for new items); Used to detect concurrent exceptions.
+     * @return The saved item.
+     */
     public T save(T item, T original) {
         if (item == null)
             throw new IllegalArgumentException("The item cannot be null!");
@@ -55,8 +63,18 @@ public abstract class Provider<T extends RecordItem> {
         return response != null ? response.readEntity(getParameterizedType()) : null;
     }
 
+    /**
+     * Sends a delete request to the service.
+     *
+     * @param id The id of the item to delete.
+     * @return Whether the operation was successful.
+     */
     public boolean delete(int id) {
-        return false;
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id));
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        Response response = invocationBuilder.delete();
+        return (Boolean) response.readEntity(Result.class).x;
     }
 
     /**
