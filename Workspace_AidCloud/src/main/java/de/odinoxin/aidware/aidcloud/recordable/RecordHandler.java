@@ -44,12 +44,12 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
 
     protected final int persist(T entity, T original, int userId) throws ConcurrentFault {
         if (entity == null)
-            throw new IllegalArgumentException("Entity cannot be null!");
+            throw new IllegalArgumentException("The entity cannot be null!");
         if (entity.getId() != 0) {
             if (original == null)
-                throw new IllegalArgumentException("Original entity cannot be null on update!");
+                throw new IllegalArgumentException("The original entity cannot be null on update!");
             if (entity.getId() != original.getId())
-                throw new IllegalArgumentException("Entity is different from original entity!");
+                throw new IllegalArgumentException("Entity is different from the original entity!");
             T current = this.get(original.getId());
             if (current == null)
                 throw new ConcurrentFault("Entity does not exist (anymore)!");

@@ -4,11 +4,9 @@ import de.odinoxin.aidware.aiddesk.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
+import de.odinoxin.aidware.aiddesk.utils.Tuple;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -36,7 +34,25 @@ public abstract class Provider<T extends RecordItem> {
     }
 
     public T save(T item, T original) {
-        return null;
+        if (item == null)
+            throw new IllegalArgumentException("The item cannot be null!");
+
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath());
+        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
+        Response response = null;
+
+        if (item.getId() == 0) {
+            response = invocationBuilder.post(Entity.entity(item, MediaType.APPLICATION_JSON));
+        } else if (item.getId() > 0) {
+            if (original == null)
+                throw new IllegalArgumentException("The original item cannot be null on update!");
+            if (item.getId() != original.getId())
+                throw new IllegalArgumentException("The item is different from the original item!");
+            Tuple<T, T> set = new Tuple<>(item, original);
+            response = invocationBuilder.put(Entity.entity(set, MediaType.APPLICATION_JSON));
+        }
+        return response != null ? response.readEntity(getParameterizedType()) : null;
     }
 
     public boolean delete(int id) {
