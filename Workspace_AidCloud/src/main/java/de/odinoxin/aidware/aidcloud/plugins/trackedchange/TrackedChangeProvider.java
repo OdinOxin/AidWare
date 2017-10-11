@@ -26,16 +26,17 @@ public class TrackedChangeProvider extends RecordHandler<TrackedChange> {
         Query q = null;
         try (Session session = DB.open()) {
             if (since != null && lastN >= 0) {
-                q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId AND timestamp >= :since");
+                q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId AND timestamp >= :since order by timestamp desc");
                 q.setParameter("since", since);
             }
             if (lastN > 0) {
                 if (q == null)
-                    q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId");
+                    q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId order by timestamp desc");
                 q.setMaxResults(lastN);
             } else if (lastN < 0) {
                 q = session.createQuery("FROM TrackedChange WHERE entityName = :entityName AND entityId = :entityId AND propertyName = :propertyName AND valueBefore IS NULL");
                 q.setParameter("propertyName", "id");
+                q.setMaxResults(1);
             }
             if (q != null) {
                 q.setParameter("entityName", entityName);
