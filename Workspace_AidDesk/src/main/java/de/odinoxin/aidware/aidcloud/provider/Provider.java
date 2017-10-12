@@ -4,9 +4,14 @@ import de.odinoxin.aidware.aiddesk.auth.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
+import de.odinoxin.aidware.aiddesk.utils.CallTarget;
 import de.odinoxin.aidware.aiddesk.utils.Tuple;
 
-import javax.ws.rs.client.*;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -26,10 +31,10 @@ public abstract class Provider<T extends RecordItem> {
      * @return The read entity; Or null if no entity was found.
      */
     public T get(int id) {
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id));
-        Response response = newInvocationBuilder(webTarget).get();
-        return response.readEntity(getParameterizedType());
+        return webCall(webTarget -> {
+            Response response = newInvocationBuilder(webTarget).get();
+            return response.readEntity(getParameterizedType());
+        }, ClientBuilder.newClient().target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id)));
     }
 
     /**
@@ -42,22 +47,21 @@ public abstract class Provider<T extends RecordItem> {
     public T save(T item, T original) {
         if (item == null)
             throw new IllegalArgumentException("The item cannot be null!");
+        return webCall(webTarget -> {
+            Response response = null;
 
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath());
-        Response response = null;
-
-        if (item.getId() == 0) {
-            response = newInvocationBuilder(webTarget).post(Entity.entity(item, MediaType.APPLICATION_JSON));
-        } else if (item.getId() > 0) {
-            if (original == null)
-                throw new IllegalArgumentException("The original item cannot be null on update!");
-            if (item.getId() != original.getId())
-                throw new IllegalArgumentException("The item is different from the original item!");
-            Tuple<T, T> set = new Tuple<>(item, original);
-            response = newInvocationBuilder(webTarget).put(Entity.entity(set, MediaType.APPLICATION_JSON));
-        }
-        return response != null ? response.readEntity(getParameterizedType()) : null;
+            if (item.getId() == 0) {
+                response = newInvocationBuilder(webTarget).post(Entity.entity(item, MediaType.APPLICATION_JSON));
+            } else if (item.getId() > 0) {
+                if (original == null)
+                    throw new IllegalArgumentException("The original item cannot be null on update!");
+                if (item.getId() != original.getId())
+                    throw new IllegalArgumentException("The item is different from the original item!");
+                Tuple<T, T> set = new Tuple<>(item, original);
+                response = newInvocationBuilder(webTarget).put(Entity.entity(set, MediaType.APPLICATION_JSON));
+            }
+            return response != null ? response.readEntity(getParameterizedType()) : null;
+        }, ClientBuilder.newClient().target(Login.getServerUrl()).path(getBasePath()));
     }
 
     /**
@@ -67,10 +71,10 @@ public abstract class Provider<T extends RecordItem> {
      * @return Whether the operation was successful.
      */
     public boolean delete(int id) {
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id));
-        Response response = newInvocationBuilder(webTarget).delete();
-        return response.getStatus() == Response.Status.OK.getStatusCode();
+        return unbox(webCall(webTarget -> {
+            Response response = newInvocationBuilder(webTarget).delete();
+            return response.getStatus() == Response.Status.OK.getStatusCode();
+        }, ClientBuilder.newClient().target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id))));
     }
 
     /**
@@ -82,26 +86,26 @@ public abstract class Provider<T extends RecordItem> {
      * @return A List of RefBoxItems representing the read entities.
      */
     public List<RefBoxListItem<T>> search(List<String> expr, int max, List<Integer> exceptedIds) {
-        Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).queryParam("expr", expr).queryParam("max", max);
-        List<T> entities = newInvocationBuilder(webTarget).get(new GenericType<List<T>>(new ParameterizedType() {
-            public Type[] getActualTypeArguments() {
-                return new Type[]{getParameterizedType()};
-            }
+        return webCall((webTarget) -> {
+            List<T> entities = newInvocationBuilder(webTarget).get(new GenericType<List<T>>(new ParameterizedType() {
+                public Type[] getActualTypeArguments() {
+                    return new Type[]{getParameterizedType()};
+                }
 
-            public Type getRawType() {
-                return List.class;
-            }
+                public Type getRawType() {
+                    return List.class;
+                }
 
-            public Type getOwnerType() {
-                return List.class;
-            }
-        }) {
-        });
-        List<RefBoxListItem<T>> refBoxListItems = new ArrayList<>();
-        for (T entity : entities)
-            refBoxListItems.add(getRefBoxItem(entity));
-        return refBoxListItems;
+                public Type getOwnerType() {
+                    return List.class;
+                }
+            }) {
+            });
+            List<RefBoxListItem<T>> refBoxListItems = new ArrayList<>();
+            for (T entity : entities)
+                refBoxListItems.add(getRefBoxItem(entity));
+            return refBoxListItems;
+        }, ClientBuilder.newClient().target(Login.getServerUrl()).path(getBasePath()).queryParam("expr", expr).queryParam("max", max));
     }
 
     /**
@@ -143,5 +147,30 @@ public abstract class Provider<T extends RecordItem> {
         Invocation.Builder invocationBuilder = webTarget.request(mediaType);
         invocationBuilder = invocationBuilder.header("Authorization", String.format("Bearer %s", Login.getCurrentToken()));
         return invocationBuilder;
+    }
+
+    public static <X> X webCall(CallTarget<X> callTarget, WebTarget webTarget) {
+        if (callTarget == null || webTarget == null)
+            throw new IllegalArgumentException();
+        try {
+            return callTarget.execute(webTarget);
+        } catch (NotAuthorizedException ex) {
+            if (Login.newToken(Login.getPerson())) { // Token may expired; Try to get new token
+                try {
+                    return callTarget.execute(webTarget);
+                } catch (Exception innerEx) {
+                    innerEx.printStackTrace();
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static boolean unbox(Boolean bool) {
+        if (bool == null)
+            return false;
+        return bool;
     }
 }

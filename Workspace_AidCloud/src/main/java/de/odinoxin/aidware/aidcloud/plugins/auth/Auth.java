@@ -88,4 +88,15 @@ public class Auth {
     static boolean isValidToken(String token) {
         return Auth.knownTokens.containsKey(token) && Auth.knownTokens.get(token).after(new Date());
     }
+
+    //TODO: Call every x seconds.
+    private static void removeExpiredTokens() {
+        Date now = new Date();
+        List<String> expired = new ArrayList<>();
+        knownTokens.keySet().forEach(key -> {
+            if (knownTokens.get(key).before(now))
+                expired.add(key);
+        });
+        expired.forEach(key -> knownTokens.remove(key));
+    }
 }

@@ -31,7 +31,7 @@ public class Login extends Plugin {
     private PasswordField pwfPwd;
     private Button btnLogin;
 
-    private LoginProvider loginProvider = new LoginProvider();
+    private static LoginProvider loginProvider = new LoginProvider();
 
     public Login() {
         super("/login.fxml", "Login");
@@ -97,7 +97,7 @@ public class Login extends Plugin {
         new MsgDialog(this, Alert.AlertType.ERROR, "Login", "User or password incorrect!").showAndWait();
     }
 
-    private boolean newToken(Person p) {
+    public static boolean newToken(Person p) {
         Login.token = loginProvider.authenticate(p.getId(), p.getPwd());
         return token != null && !token.isEmpty();
     }
