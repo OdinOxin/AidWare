@@ -3,6 +3,7 @@ package de.odinoxin.aidware.aidcloud.plugins.auth;
 import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person_;
+import de.odinoxin.aidware.aidcloud.utils.Tuple;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,7 +22,7 @@ import java.util.*;
 @Produces(MediaType.APPLICATION_JSON)
 public class Auth {
 
-    private static Map<String, Date> knownTokens = new Hashtable<>();
+    private static Map<String, Tuple<Integer, Date>> knownTokens = new Hashtable<>();
     private static final long TOKEN_EXPIRATION = 5 * 60 * 1000; // 5min // TODO: Make this configurable.
 
     @GET
@@ -71,22 +72,26 @@ public class Auth {
             criteria.where(predicates);
             List<Person> tmpList = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList();
             if (tmpList != null && tmpList.size() == 1)
-                return Response.ok(newToken()).build();
+                return Response.ok(newToken(id)).build();
         }
         throw new ForbiddenException();
     }
 
-    private static String newToken() {
+    private static String newToken(int userId) {
         Date expire = new Date();
         expire.setTime(expire.getTime() + TOKEN_EXPIRATION);
         Random random = new SecureRandom();
         String token = new BigInteger(130, random).toString(32);
-        Auth.knownTokens.put(token, expire);
+        Auth.knownTokens.put(token, new Tuple<>(userId, expire));
         return token;
     }
 
     static boolean isValidToken(String token) {
-        return Auth.knownTokens.containsKey(token) && Auth.knownTokens.get(token).after(new Date());
+        return Auth.knownTokens.containsKey(token) && Auth.knownTokens.get(token).y.after(new Date());
+    }
+
+    static int getCurrentUser(String token) {
+        return Auth.knownTokens.containsKey(token) ? Auth.knownTokens.get(token).x : 0;
     }
 
     //TODO: Call every x seconds.
@@ -94,7 +99,7 @@ public class Auth {
         Date now = new Date();
         List<String> expired = new ArrayList<>();
         knownTokens.keySet().forEach(key -> {
-            if (knownTokens.get(key).before(now))
+            if (knownTokens.get(key).y.before(now))
                 expired.add(key);
         });
         expired.forEach(key -> knownTokens.remove(key));

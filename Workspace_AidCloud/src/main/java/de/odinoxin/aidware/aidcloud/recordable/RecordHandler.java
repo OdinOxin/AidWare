@@ -15,8 +15,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -27,6 +29,9 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public abstract class RecordHandler<T extends Recordable> extends Provider {
+
+    @Context
+    private SecurityContext securityContext;
 
     public RecordHandler() {
         generateDefaults();
@@ -110,13 +115,13 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
     @PUT
     @Secured
     public T update(Tuple<T, T> set) throws ConcurrentException {
-        return this.get(persist(set.x, set.y, 0));
+        return this.get(persist(set.x, set.y, getCurrentUser()));
     }
 
     @POST
     @Secured
     public T insert(T entity) throws ConcurrentException {
-        return this.get(persist(entity, null, 0));
+        return this.get(persist(entity, null, getCurrentUser()));
     }
 
     protected void generate(T entity) {
@@ -209,6 +214,10 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
             criteria.select(builder.count(criteria.from(getParameterizedType())));
             return session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList().get(0);
         }
+    }
+
+    private int getCurrentUser() {
+        return Integer.parseInt(securityContext.getUserPrincipal().getName());
     }
 
     private Class<T> getParameterizedType() {
