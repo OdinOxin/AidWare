@@ -29,7 +29,7 @@ public class PwdEditor extends Plugin {
                 new MsgDialog(this, Alert.AlertType.ERROR, "Ungültige Eingabe!", "Geben Sie das neue Passwort ein und wiederholen Sie dieses korrekt.").showAndWait();
                 return;
             }
-            if (!new LoginProvider().checkLogin(personEditor.getRecord().getId(), this.pwfCurrent.getText())) {
+            if (!new LoginProvider().authenticate(personEditor.getRecord().getId(), this.pwfCurrent.getText())) {
                 new MsgDialog(this, Alert.AlertType.ERROR, "Ungültige Eingabe!", "Geben Sie das aktuelle Passwort an, um ein neues Passwort zu speichern.").showAndWait();
                 return;
             }

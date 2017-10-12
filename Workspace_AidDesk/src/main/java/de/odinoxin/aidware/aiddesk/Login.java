@@ -85,7 +85,7 @@ public class Login extends Plugin {
         if (p == null)
             return;
         String pwd = this.pwfPwd.getText();
-        if (loginProvider.checkLogin(p.getId(), pwd)) {
+        if (loginProvider.authenticate(p.getId(), pwd)) {
             Login.person = new PersonProvider().get(p.getId());
             Login.person.setPwd(pwd);
             this.close();

@@ -1,11 +1,11 @@
 package de.odinoxin.aidware.aidcloud.recordable;
 
 import de.odinoxin.aidware.aidcloud.DB;
+import de.odinoxin.aidware.aidcloud.plugins.auth.Secured;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChange;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChangeProvider;
 import de.odinoxin.aidware.aidcloud.utils.ConcurrentException;
 import de.odinoxin.aidware.aidcloud.utils.Provider;
-import de.odinoxin.aidware.aidcloud.utils.Result;
 import de.odinoxin.aidware.aidcloud.utils.Tuple;
 import org.hibernate.Session;
 import org.hibernate.annotations.FetchProfile;
@@ -16,6 +16,7 @@ import javax.persistence.criteria.*;
 import javax.ws.rs.*;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -33,6 +34,7 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
 
     @GET
     @Path("{id}")
+    @Secured
     public T get(@PathParam("id") int id) {
         T entity;
         try (Session session = DB.open()) {
@@ -106,11 +108,13 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
     }
 
     @PUT
+    @Secured
     public T update(Tuple<T, T> set) throws ConcurrentException {
         return this.get(persist(set.x, set.y, 0));
     }
 
     @POST
+    @Secured
     public T insert(T entity) throws ConcurrentException {
         return this.get(persist(entity, null, 0));
     }
@@ -125,7 +129,8 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
 
     @DELETE
     @Path("{id}")
-    public Result<Boolean> delete(@PathParam("id") int id) {
+    @Secured
+    public Response delete(@PathParam("id") int id) {
         T entity = this.get(id);
         if (entity != null)
             try (Session session = DB.open()) {
@@ -133,12 +138,13 @@ public abstract class RecordHandler<T extends Recordable> extends Provider {
                 session.delete(entity);
                 session.getTransaction().commit();
             } catch (Exception ex) {
-                return new Result<>(false);
+                Response.serverError().build();
             }
-        return new Result<>(true);
+        return Response.ok().build();
     }
 
     @GET
+    @Secured
     public List<T> search(@QueryParam("expr") List<String> expressions, @DefaultValue("0") @QueryParam("max") int max, @QueryParam("exceptedIds") List<Integer> exceptIds) {
         Session session = DB.open();
         CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();

@@ -3,6 +3,7 @@ package de.odinoxin.aidware.aidcloud.plugins.person;
 import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address;
 import de.odinoxin.aidware.aidcloud.plugins.address.Address_;
+import de.odinoxin.aidware.aidcloud.plugins.auth.Secured;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country;
 import de.odinoxin.aidware.aidcloud.plugins.country.Country_;
 import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
@@ -28,6 +29,7 @@ public class PersonProvider extends RecordHandler<Person> {
     @GET
     @Path("{id}")
     @Override
+    @Secured
     public Person get(@PathParam("id") int id) {
         Person p = super.get(id);
         if (p != null)
@@ -37,6 +39,7 @@ public class PersonProvider extends RecordHandler<Person> {
 
     @PUT
     @Override
+    @Secured
     public Person update(Tuple<Person, Person> set) throws ConcurrentException {
         if (set == null || set.x == null)
             throw new IllegalArgumentException("Entity cannot be null!");
@@ -51,6 +54,7 @@ public class PersonProvider extends RecordHandler<Person> {
 
     @PUT
     @Path("{id}/{currentPwd}/{newPwd}")
+    @Secured
     public boolean changePwd(@PathParam("id") int id, @PathParam("currentPwd") String currentPwd, @PathParam("newPwd") String newPwd) {
         if (id == 0)
             return false;

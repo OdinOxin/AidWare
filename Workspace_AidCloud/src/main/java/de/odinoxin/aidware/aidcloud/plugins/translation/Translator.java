@@ -1,6 +1,7 @@
 package de.odinoxin.aidware.aidcloud.plugins.translation;
 
 import de.odinoxin.aidware.aidcloud.DB;
+import de.odinoxin.aidware.aidcloud.plugins.auth.Secured;
 import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import de.odinoxin.aidware.aidcloud.plugins.language.LanguageProvider;
 import org.hibernate.Session;
@@ -26,6 +27,7 @@ public class Translator extends RecordHandler<Translation> {
     @GET
     @Path("{lng}/{text}")
     @Produces(MediaType.TEXT_PLAIN)
+    @Secured
     public String getTranslation(@PathParam("text") String text, @PathParam("lng") int lng) {
         if (text == null)
             return null;

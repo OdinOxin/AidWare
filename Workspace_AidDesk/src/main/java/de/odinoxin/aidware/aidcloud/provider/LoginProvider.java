@@ -30,13 +30,13 @@ public class LoginProvider extends Provider<Person> {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(this.basePath).path("CheckConnection");
         Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-        return (Boolean) response.readEntity(Result.class).x;
+        return response.getStatus() == Response.Status.OK.getStatusCode();
     }
 
-    public boolean checkLogin(int id, String pwd) {
+    public String authenticate(int id, String pwd) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(this.basePath).path(String.valueOf(id)).queryParam("pwd", pwd);
         Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-        return (Boolean) response.readEntity(Result.class).x;
+        return response.getStatus() == Response.Status.OK.getStatusCode() ? response.getEntity().toString() : null;
     }
 }

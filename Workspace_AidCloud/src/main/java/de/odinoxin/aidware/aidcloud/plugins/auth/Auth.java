@@ -1,9 +1,8 @@
-package de.odinoxin.aidware.aidcloud.plugins;
+package de.odinoxin.aidware.aidcloud.plugins.auth;
 
 import de.odinoxin.aidware.aidcloud.DB;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person;
 import de.odinoxin.aidware.aidcloud.plugins.person.Person_;
-import de.odinoxin.aidware.aidcloud.utils.Result;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -12,18 +11,23 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
+import javax.ws.rs.core.Response;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.*;
 
-@Path("Login")
+@Path("Auth")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class Login {
+public class Auth {
+
+    private static Map<String, Date> knownTokens = new Hashtable<>();
+    private static final long TOKEN_EXPIRATION = 5 * 60 * 1000; // 5min // TODO: Make this configurable.
 
     @GET
     @Path("CheckConnection")
-    public Result<Boolean> checkConnection() {
-        return new Result<>(true);
+    public Response checkConnection() {
+        return Response.ok().build();
     }
 
     @GET
@@ -54,26 +58,34 @@ public class Login {
         return result;
     }
 
-    @GET
+    @POST
     @Path("{id}")
-    public Result<Boolean> checkLogin(@PathParam("id") int id, @QueryParam("pwd") String pwd) {
-        boolean access = false;
+    public Response authenticate(@PathParam("id") int id, Credentials credentials) {
         try (Session session = DB.open()) {
             CriteriaBuilder builder = session.getEntityManagerFactory().getCriteriaBuilder();
             CriteriaQuery<Person> criteria = builder.createQuery(Person.class);
             Predicate predicates = builder.conjunction();
             Root<Person> root = criteria.from(Person.class);
             predicates = builder.and(predicates, builder.equal(root.get(Person_.id), id));
-            Predicate pwdPredicates = builder.disjunction();
-            pwdPredicates = builder.or(pwdPredicates, builder.equal(root.get(Person_.pwd), pwd));
-            if (pwd == null || pwd.isEmpty())
-                pwdPredicates = builder.or(pwdPredicates, builder.isNull(root.get(Person_.pwd)));
-            predicates = builder.and(predicates, pwdPredicates);
+            predicates = builder.and(predicates, builder.equal(root.get(Person_.pwd), credentials.getPwd()));
             criteria.where(predicates);
             List<Person> tmpList = session.getEntityManagerFactory().createEntityManager().createQuery(criteria).getResultList();
             if (tmpList != null && tmpList.size() == 1)
-                access = true;
+                return Response.ok(newToken()).build();
         }
-        return new Result<>(access);
+        throw new ForbiddenException();
+    }
+
+    private static String newToken() {
+        Date expire = new Date();
+        expire.setTime(expire.getTime() + TOKEN_EXPIRATION);
+        Random random = new SecureRandom();
+        String token = new BigInteger(130, random).toString(32);
+        Auth.knownTokens.put(token, expire);
+        return token;
+    }
+
+    static boolean isValidToken(String token) {
+        return Auth.knownTokens.containsKey(token) && Auth.knownTokens.get(token).after(new Date());
     }
 }

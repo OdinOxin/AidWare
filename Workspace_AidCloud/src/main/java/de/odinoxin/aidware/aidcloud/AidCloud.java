@@ -1,6 +1,7 @@
 package de.odinoxin.aidware.aidcloud;
 
-import de.odinoxin.aidware.aidcloud.plugins.Login;
+import de.odinoxin.aidware.aidcloud.plugins.auth.Auth;
+import de.odinoxin.aidware.aidcloud.plugins.auth.AuthenticationFilter;
 import de.odinoxin.aidware.aidcloud.plugins.trackedchange.TrackedChangeProvider;
 import de.odinoxin.aidware.aidcloud.plugins.translation.Translator;
 import org.glassfish.grizzly.http.server.HttpServer;
@@ -49,12 +50,13 @@ public class AidCloud extends Application {
      * Register new providers here!
      */
     private static final Class<?>[] PROVIDERS = {
+            AuthenticationFilter.class,
             AddressProvider.class,
             ContactInformationProvider.class,
             ContactTypeProvider.class,
             CountryProvider.class,
             LanguageProvider.class,
-            Login.class,
+            Auth.class,
             NutritionTypeProvider.class,
             PersonalSettingProvider.class,
             PersonProvider.class,

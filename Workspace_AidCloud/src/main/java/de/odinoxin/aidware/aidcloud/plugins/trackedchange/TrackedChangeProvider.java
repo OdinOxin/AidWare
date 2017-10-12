@@ -1,6 +1,7 @@
 package de.odinoxin.aidware.aidcloud.plugins.trackedchange;
 
 import de.odinoxin.aidware.aidcloud.DB;
+import de.odinoxin.aidware.aidcloud.plugins.auth.Secured;
 import de.odinoxin.aidware.aidcloud.recordable.RecordHandler;
 import org.hibernate.Session;
 
@@ -20,6 +21,7 @@ public class TrackedChangeProvider extends RecordHandler<TrackedChange> {
 
     @GET
     @Path("{entityName}/{entityId}")
+    @Secured
     public List<TrackedChange> getEntityChanges(@PathParam("entityName") String entityName, @PathParam("entityId") int entityId, @QueryParam("since") Date since, @DefaultValue("0") @QueryParam("lastN") int lastN) {
         if (entityName == null || entityId <= 0)
             return null;
