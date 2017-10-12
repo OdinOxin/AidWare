@@ -1,6 +1,5 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.Result;
 import de.odinoxin.aidware.aiddesk.auth.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
@@ -71,7 +70,7 @@ public abstract class Provider<T extends RecordItem> {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id));
         Response response = newInvocationBuilder(webTarget).delete();
-        return (Boolean) response.readEntity(Result.class).x;
+        return response.getStatus() == Response.Status.OK.getStatusCode();
     }
 
     /**
