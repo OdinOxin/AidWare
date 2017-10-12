@@ -2,7 +2,7 @@ package de.odinoxin.aidware.aiddesk.plugins.people;
 
 import de.odinoxin.aidware.aidcloud.provider.PersonProvider;
 import de.odinoxin.aidware.aidcloud.provider.Provider;
-import de.odinoxin.aidware.aiddesk.Login;
+import de.odinoxin.aidware.aiddesk.auth.Login;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordView;
 

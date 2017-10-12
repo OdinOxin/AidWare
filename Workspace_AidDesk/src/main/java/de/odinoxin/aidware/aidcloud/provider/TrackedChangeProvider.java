@@ -1,14 +1,12 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aiddesk.Login;
+import de.odinoxin.aidware.aiddesk.auth.Login;
 import de.odinoxin.aidware.aiddesk.plugins.TrackedChange;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
-import javax.ws.rs.core.MediaType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -19,8 +17,7 @@ public class TrackedChangeProvider {
     public List<TrackedChange> getEntityChanges(String entityName, int entityId, Date since) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path("TrackedChange").path(entityName).path(String.valueOf(entityId)).queryParam("since", since);
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        List<TrackedChange> entities = invocationBuilder.get(new GenericType<List<TrackedChange>>(new ParameterizedType() {
+        List<TrackedChange> entities = Provider.newInvocationBuilder(webTarget).get(new GenericType<List<TrackedChange>>(new ParameterizedType() {
             public Type[] getActualTypeArguments() {
                 return new Type[]{TrackedChange.class};
             }
@@ -48,8 +45,7 @@ public class TrackedChangeProvider {
     private TrackedChange get(String entityName, int entityId, int lastN) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path("TrackedChange").path(entityName).path(String.valueOf(entityId)).queryParam("lastN", lastN);
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        List<TrackedChange> entities = invocationBuilder.get(new GenericType<List<TrackedChange>>(new ParameterizedType() {
+        List<TrackedChange> entities = Provider.newInvocationBuilder(webTarget).get(new GenericType<List<TrackedChange>>(new ParameterizedType() {
             public Type[] getActualTypeArguments() {
                 return new Type[]{TrackedChange.class};
             }

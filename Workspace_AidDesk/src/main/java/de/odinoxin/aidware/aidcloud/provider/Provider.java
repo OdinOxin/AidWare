@@ -1,7 +1,7 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
 import de.odinoxin.aidware.aidcloud.Result;
-import de.odinoxin.aidware.aiddesk.Login;
+import de.odinoxin.aidware.aiddesk.auth.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.RecordEditor;
 import de.odinoxin.aidware.aiddesk.plugins.RecordItem;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public abstract class Provider<T extends RecordItem> {
 
-    protected String basePath;
+    String basePath;
 
     /**
      * Gets a single Entity for the given ID; Or null if no entity was found.
@@ -29,8 +29,7 @@ public abstract class Provider<T extends RecordItem> {
     public T get(int id) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id));
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        Response response = invocationBuilder.get();
+        Response response = newInvocationBuilder(webTarget).get();
         return response.readEntity(getParameterizedType());
     }
 
@@ -47,18 +46,17 @@ public abstract class Provider<T extends RecordItem> {
 
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath());
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
         Response response = null;
 
         if (item.getId() == 0) {
-            response = invocationBuilder.post(Entity.entity(item, MediaType.APPLICATION_JSON));
+            response = newInvocationBuilder(webTarget).post(Entity.entity(item, MediaType.APPLICATION_JSON));
         } else if (item.getId() > 0) {
             if (original == null)
                 throw new IllegalArgumentException("The original item cannot be null on update!");
             if (item.getId() != original.getId())
                 throw new IllegalArgumentException("The item is different from the original item!");
             Tuple<T, T> set = new Tuple<>(item, original);
-            response = invocationBuilder.put(Entity.entity(set, MediaType.APPLICATION_JSON));
+            response = newInvocationBuilder(webTarget).put(Entity.entity(set, MediaType.APPLICATION_JSON));
         }
         return response != null ? response.readEntity(getParameterizedType()) : null;
     }
@@ -72,8 +70,7 @@ public abstract class Provider<T extends RecordItem> {
     public boolean delete(int id) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).path(String.valueOf(id));
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        Response response = invocationBuilder.delete();
+        Response response = newInvocationBuilder(webTarget).delete();
         return (Boolean) response.readEntity(Result.class).x;
     }
 
@@ -88,8 +85,7 @@ public abstract class Provider<T extends RecordItem> {
     public List<RefBoxListItem<T>> search(List<String> expr, int max, List<Integer> exceptedIds) {
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path(getBasePath()).queryParam("expr", expr).queryParam("max", max);
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.APPLICATION_JSON);
-        List<T> entities = invocationBuilder.get(new GenericType<List<T>>(new ParameterizedType() {
+        List<T> entities = newInvocationBuilder(webTarget).get(new GenericType<List<T>>(new ParameterizedType() {
             public Type[] getActualTypeArguments() {
                 return new Type[]{getParameterizedType()};
             }
@@ -138,5 +134,15 @@ public abstract class Provider<T extends RecordItem> {
         if (basePath == null || basePath.isEmpty())
             basePath = getParameterizedType().getSimpleName();
         return basePath;
+    }
+
+    static Invocation.Builder newInvocationBuilder(WebTarget webTarget) {
+        return newInvocationBuilder(webTarget, MediaType.APPLICATION_JSON);
+    }
+
+    static Invocation.Builder newInvocationBuilder(WebTarget webTarget, String mediaType) {
+        Invocation.Builder invocationBuilder = webTarget.request(mediaType);
+        invocationBuilder = invocationBuilder.header("Authorization", String.format("Bearer %s", Login.getCurrentToken()));
+        return invocationBuilder;
     }
 }

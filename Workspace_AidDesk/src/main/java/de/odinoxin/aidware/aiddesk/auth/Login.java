@@ -1,7 +1,8 @@
-package de.odinoxin.aidware.aiddesk;
+package de.odinoxin.aidware.aiddesk.auth;
 
 import de.odinoxin.aidware.aidcloud.provider.LoginProvider;
 import de.odinoxin.aidware.aidcloud.provider.PersonProvider;
+import de.odinoxin.aidware.aiddesk.MainMenu;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBox;
 import de.odinoxin.aidware.aiddesk.dialogs.MsgDialog;
 import de.odinoxin.aidware.aiddesk.plugins.Plugin;
@@ -22,6 +23,7 @@ public class Login extends Plugin {
 
     private static String serverUrl;
     private static Person person;
+    private static String token;
 
     private TextField txfServer;
     private Button btnConnect;
@@ -84,15 +86,20 @@ public class Login extends Plugin {
         Person p = this.refboxUser.getRecord();
         if (p == null)
             return;
-        String pwd = this.pwfPwd.getText();
-        if (loginProvider.authenticate(p.getId(), pwd)) {
+        p.setPwd(this.pwfPwd.getText());
+        if (newToken(p)) {
             Login.person = new PersonProvider().get(p.getId());
-            Login.person.setPwd(pwd);
+            Login.person.setPwd(p.getPwd());
             this.close();
             new MainMenu();
             return;
         }
         new MsgDialog(this, Alert.AlertType.ERROR, "Login", "User or password incorrect!").showAndWait();
+    }
+
+    private boolean newToken(Person p) {
+        Login.token = loginProvider.authenticate(p.getId(), p.getPwd());
+        return token != null && !token.isEmpty();
     }
 
     public static String getServerUrl() {
@@ -101,5 +108,9 @@ public class Login extends Plugin {
 
     public static Person getPerson() {
         return Login.person;
+    }
+
+    public static String getCurrentToken() {
+        return Login.token;
     }
 }

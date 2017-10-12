@@ -1,10 +1,9 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aiddesk.Login;
+import de.odinoxin.aidware.aiddesk.auth.Login;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import java.util.Hashtable;
@@ -33,8 +32,7 @@ public abstract class TranslatorProvider {
         }
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(Login.getServerUrl()).path("Translation").path(String.valueOf(lngId)).path(text);
-        Invocation.Builder invocationBuilder = webTarget.request(MediaType.TEXT_PLAIN);
-        String translation = invocationBuilder.get(String.class);
+        String translation = Provider.newInvocationBuilder(webTarget, MediaType.TEXT_PLAIN).get(String.class);
         if (!cache.containsKey(lngId))
             cache.put(lngId, new Hashtable<>());
         cache.get(lngId).put(text, translation);

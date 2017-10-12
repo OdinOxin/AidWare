@@ -1,12 +1,13 @@
 package de.odinoxin.aidware.aidcloud.provider;
 
-import de.odinoxin.aidware.aidcloud.Result;
-import de.odinoxin.aidware.aiddesk.Login;
+import de.odinoxin.aidware.aiddesk.auth.Credentials;
+import de.odinoxin.aidware.aiddesk.auth.Login;
 import de.odinoxin.aidware.aiddesk.controls.refbox.RefBoxListItem;
 import de.odinoxin.aidware.aiddesk.plugins.people.Person;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -14,7 +15,7 @@ import javax.ws.rs.core.Response;
 public class LoginProvider extends Provider<Person> {
 
     public LoginProvider() {
-        this.basePath = "Login";
+        this.basePath = "Auth";
     }
 
     @Override
@@ -35,8 +36,8 @@ public class LoginProvider extends Provider<Person> {
 
     public String authenticate(int id, String pwd) {
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(Login.getServerUrl()).path(this.basePath).path(String.valueOf(id)).queryParam("pwd", pwd);
-        Response response = webTarget.request(MediaType.APPLICATION_JSON).get();
-        return response.getStatus() == Response.Status.OK.getStatusCode() ? response.getEntity().toString() : null;
+        WebTarget webTarget = client.target(Login.getServerUrl()).path(this.basePath).path(String.valueOf(id));
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).post(Entity.entity(new Credentials(pwd), MediaType.APPLICATION_JSON));
+        return response.getStatus() == Response.Status.OK.getStatusCode() ? response.readEntity(String.class) : null;
     }
 }
