@@ -103,6 +103,10 @@ public class Translator extends RecordHandler<Translation> {
         translations.addAll(getTranslations("Current password", new String[]{"Aktuelles Passwort", "Current password"}));
         translations.addAll(getTranslations("New password", new String[]{"Neues Passwort", "New password"}));
         translations.addAll(getTranslations("Repetition", new String[]{"Wiederholung", "Repetition"}));
+        translations.addAll(getTranslations("PersonalSettingEditor", new String[]{"Persönliche Einstellungen", "Personal settings"}));
+        translations.addAll(getTranslations("PersonalSetting", new String[]{"Persönliche Einstellungen", "Personal settings"}));
+        translations.addAll(getTranslations("BgColor", new String[]{"Hintergrundfarbe", "Background color"}));
+        translations.addAll(getTranslations("BgColorPlugin", new String[]{"Hintergrundfarbe (Plugin)", "Background color (plugin)"}));
         translations.addAll(getTranslations("AddressEditor", new String[]{"Adressen", "Addresses"}));
         translations.addAll(getTranslations("Addresses", new String[]{"Adressen", "Adresses"}));
         translations.addAll(getTranslations("Address", new String[]{"Adresse", "Address"}));
